@@ -15,8 +15,8 @@ function withRoute(BaseComponent) {
 
         componentDidMount() {
             ifNot(
-                this.router.hasPlugin('LISTENERS_PLUGIN'),
-                '[react-router5][withRoute] missing listeners plugin'
+              this.router.hasPlugin('MOBX_PLUGIN'),
+              '[react-router5][withRoute] missing mobx plugin'
             );
 
             this.listener = (toState, fromState) => this.setState({ previousRoute: fromState, route: toState });

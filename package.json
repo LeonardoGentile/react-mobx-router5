@@ -22,8 +22,8 @@
   "bugs": {
     "url": "https://github.com/LeonardoGentile/mobx-router5-react/issues"
   },
-  "main": "index.js",
-  "jsnext:main": "index.es.js",
+  "main": "dist/index.js",
+  "jsnext:main": "dist/index.es.js",
   "babel": {
     "presets": [
       "latest",
