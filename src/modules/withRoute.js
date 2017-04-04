@@ -45,9 +45,8 @@ function withRoute(BaseComponent, storeName='routerStore') {
     }
   }
 
-  // ComponentWithRoute.contextTypes = {
-  //   router: React.PropTypes.object.isRequired
-  // };
+  // ComponentWithRoute.wrappedComponent.contextTypes = {};
+  // ComponentWithRoute.wrappedComponent.contextTypes[storeName] =  React.PropTypes.object.isRequired;
 
   ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
 

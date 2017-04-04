@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer, inject} from 'mobx-react';
+import { inject } from 'mobx-react';
 
 @inject('routerStore')
 class BaseLink extends Component {
@@ -7,27 +7,29 @@ class BaseLink extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.routerStore = props.routerStore;
+    this.routerStore = props.routerStore || null;
 
+    if (this.routerStore) {
+      this.router = this.routerStore.router || null;
+    }
     // get the router instance from the props (when explicitly passed) or from routerStore
-    this.router = this.props.router || this.routerStore.router || null;
+    else {
+      this.router = this.props.router || null;
+    }
 
     if (!this.router) {
-      console.error('[react-router5][BaseLink] missing router instance props');
+      console.error('[mobx-router5-react][BaseLink] missing router instance props');
     }
 
     if (!this.router.hasPlugin('BROWSER_PLUGIN')) {
-      console.error('[react-router5][BaseLink] missing browser plugin, href might be build incorrectly');
+      console.error('[mobx-router5-react][BaseLink] missing browser plugin, href might be build incorrectly');
     }
 
     this.isActive = this.isActive.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
 
-    this.state = {
-      active: this.isActive(),
-      route: this.routerStore.route,
-      previousRoute: this.routerStore.previousRoute
-    };
+    // Why?
+    this.state = { active: this.isActive() };
   }
 
   buildUrl(routeName, routeParams) {
@@ -40,7 +42,7 @@ class BaseLink extends Component {
   }
 
   isActive() {
-    return this.routerStore.isActive(this.props.routeName, this.props.routeParams, this.props.activeStrict);
+    return this.router.isActive(this.props.routeName, this.props.routeParams, this.props.activeStrict);
   }
 
   clickHandler(evt) {
@@ -70,19 +72,28 @@ class BaseLink extends Component {
 
     const onClick = this.clickHandler;
 
-    return React.createElement('a', {href, className: linkclassName, onClick}, children);
+    return React.createElement('a', { href: href, className: linkclassName, onClick: onClick }, children);
   }
 }
 
 
-// BaseLink.propTypes = {
-//     routeName:       React.PropTypes.string.isRequired,
+BaseLink.propTypes = {
+  routeName: React.PropTypes.string.isRequired,
+  // routerStore: React.PropTypes.object.isRequired
+};
+
+BaseLink.wrappedComponent.contextTypes = {
+  routerStore: React.PropTypes.object
+};
+
+
 //     routeParams:     React.PropTypes.object,
 //     routeOptions:    React.PropTypes.object,
 //     activeClassName: React.PropTypes.string,
 //     activeStrict:    React.PropTypes.bool,
 //     onClick:         React.PropTypes.func
 // };
+
 
 BaseLink.defaultProps = {
   activeClassName: 'active',
