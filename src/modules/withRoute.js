@@ -1,56 +1,57 @@
-import React, { Component, createElement } from 'react';
-import { ifNot, getDisplayName } from './utils';
+import React, {Component, createElement} from 'react';
+import {ifNot, getDisplayName} from './utils';
+import { autorun } from 'mobx';
+import { inject} from 'mobx-react';
 
-function withRoute(BaseComponent) {
-    class ComponentWithRoute extends Component {
-        constructor(props, context) {
-            super(props, context);
-            this.router = context.router;
-            this.state = {
-                previousRoute: null,
-                route: this.router.getState()
-            };
-            this.listener = this.listener.bind(this);
-        }
+function withRoute(BaseComponent, storeName='routerStore') {
 
-        componentDidMount() {
-            ifNot(
-              this.router.hasPlugin('MOBX_PLUGIN'),
-              '[react-router5][withRoute] missing mobx plugin'
-            );
-
-            this.listener = (toState, fromState) => this.setState({ previousRoute: fromState, route: toState });
-            this.router.addListener(this.listener);
-        }
-
-        componentWillUnmount() {
-            this.router.removeListener(this.listener);
-        }
-
-        listener(toState, fromState) {
-            this.setState({
-                previousRoute: fromState,
-                route: toState
-            });
-        }
-
-        render() {
-            ifNot(
-                !this.props.router && !this.props.route && !this.props.previousRoute,
-                '[react-router5] prop names `router`, `route` and `previousRoute` are reserved.'
-            );
-
-            return createElement(BaseComponent, { ...this.props, ...this.state, router: this.router });
-        }
+  @inject(storeName)
+  class ComponentWithRoute extends Component {
+    constructor(props, context) {
+      super(props, context);
+      this.router = this.props[storeName].router;
+      this.state = {
+        route: props[storeName].route,
+        previousRoute: props[storeName].previousRoute
+      };
     }
 
-    ComponentWithRoute.contextTypes = {
-        router: React.PropTypes.object.isRequired
-    };
+    componentDidMount() {
+      ifNot(
+        this.router.hasPlugin('MOBX_PLUGIN'),
+        '[react-router5][withRoute] missing mobx plugin'
+      );
 
-    ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
+      // This will trigger a re-rendering for any route change
+      this.autorunDisposer = autorun(() => {
+        this.setState({
+          route: this.props[storeName].route,
+          previousRoute: this.props[storeName].previousRoute
+        });
+      });
+    }
 
-    return ComponentWithRoute;
+    componentWillUnmount() {
+      this.autorunDisposer();
+    }
+
+    render() {
+      ifNot(
+        !this.props.router && !this.props.route && !this.props.previousRoute,
+        '[react-mobx-router5] prop names `router`, `route` and `previousRoute` are reserved.'
+      );
+
+      return createElement(BaseComponent, {...this.props, ...this.state, router: this.router});
+    }
+  }
+
+  // ComponentWithRoute.contextTypes = {
+  //   router: React.PropTypes.object.isRequired
+  // };
+
+  ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
+
+  return ComponentWithRoute;
 }
 
 export default withRoute;

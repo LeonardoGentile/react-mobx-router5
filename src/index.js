@@ -8,7 +8,7 @@ import { getComponentFromRoutes } from './modules/utils.js';
 export {
   // BaseLink,
   routeNode,
-  // withRoute,
+  withRoute,
   // Link,
   getComponentFromRoutes
 };

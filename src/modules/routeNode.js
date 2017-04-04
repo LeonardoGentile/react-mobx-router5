@@ -35,6 +35,7 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
       componentWillUnmount() {
         this.autorunDisposer();
       }
+
       // Re-render the route-node (wrapped component) only if
       // it is the correct "transition node"
       shouldComponentUpdate (newProps, newState) {
@@ -42,13 +43,7 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
       }
 
       render() {
-        const { props } = this;
-        const component = createElement(
-          RouteSegment,
-          { ...props }
-        );
-
-        return component;
+        return createElement(RouteSegment, { ...this.props });
       }
     }
 
