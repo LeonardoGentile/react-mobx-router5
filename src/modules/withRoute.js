@@ -1,38 +1,31 @@
 import React, {Component, createElement} from 'react';
 import {ifNot, getDisplayName} from './utils';
 import { autorun } from 'mobx';
-import { inject} from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 
-function withRoute(BaseComponent, storeName='routerStore') {
+function withRoute(BaseComponent, activateClass=false, storeName='routerStore') {
 
   @inject(storeName)
+  @observer
   class ComponentWithRoute extends Component {
     constructor(props, context) {
       super(props, context);
-      this.router = this.props[storeName].router;
-      this.state = {
-        route: props[storeName].route,
-        previousRoute: props[storeName].previousRoute
-      };
+
+      this.routerStore = props[storeName];
+      this.router = this.routerStore.router;
+
+      this.isActive = this.isActive.bind(this);
     }
 
     componentDidMount() {
       ifNot(
         this.router.hasPlugin('MOBX_PLUGIN'),
-        '[react-router5][withRoute] missing mobx plugin'
+        '[mobx-router5-react][withRoute] missing mobx plugin'
       );
-
-      // This will trigger a re-rendering for any route change
-      this.autorunDisposer = autorun(() => {
-        this.setState({
-          route: this.props[storeName].route,
-          previousRoute: this.props[storeName].previousRoute
-        });
-      });
     }
 
-    componentWillUnmount() {
-      this.autorunDisposer();
+    isActive(routeName, routeParams, activeStrict) {
+      return this.router.isActive(routeName, routeParams, activeStrict);
     }
 
     render() {
@@ -41,12 +34,29 @@ function withRoute(BaseComponent, storeName='routerStore') {
         '[react-mobx-router5] prop names `router`, `route` and `previousRoute` are reserved.'
       );
 
-      return createElement(BaseComponent, {...this.props, ...this.state, router: this.router});
+      // stupid trick to force re-rendering when decorating with @observer
+      if (this.routerStore) {
+        const route = this.routerStore.route;
+      }
+
+      let linkClassName = '';
+
+      // Apply activeClassName for a specific route to the wrapped component
+      if (activateClass && this.props.to ) {
+        let {to , routeParams, className, activeClassName, activeStrict } = this.props;
+        routeParams = routeParams || {};
+        activeStrict = activeStrict || false;
+        activeClassName = activeClassName || 'active';
+
+        const active = this.isActive(to, routeParams, activeStrict);
+        linkClassName = (className ? className.split(' ') : [])
+        .concat(active ? [activeClassName] : []).join(' ');
+
+      }
+
+      return createElement(BaseComponent, { ...this.props, className: linkClassName}, this.props.children);
     }
   }
-
-  // ComponentWithRoute.wrappedComponent.contextTypes = {};
-  // ComponentWithRoute.wrappedComponent.contextTypes[storeName] =  React.PropTypes.object.isRequired;
 
   ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
 

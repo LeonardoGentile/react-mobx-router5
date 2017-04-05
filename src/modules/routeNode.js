@@ -1,9 +1,9 @@
 import React, { Component, createElement } from 'react';
 import { getDisplayName, ifNot} from './utils';
 import { autorun } from 'mobx';
-import { inject} from 'mobx-react';
+import { inject } from 'mobx-react';
 
-//TODO: create another wrapper function to pass a custom store name
+
 function routeNode(nodeName, storeName='routerStore') { // route node Name, routerStore name
   return function routeNodeWrapper(RouteSegment) { // component Name
 
@@ -22,8 +22,9 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
       componentDidMount() {
         ifNot(
           this.router.hasPlugin('MOBX_PLUGIN'),
-          '[react-router5][roteNode] missing mobx plugin'
+          '[mobx-router5-react][roteNode] missing mobx plugin'
         );
+
         this.autorunDisposer = autorun(() => {
           this.setState({
             route: this.props[storeName].route,
