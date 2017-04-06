@@ -1,22 +1,35 @@
 import React, { Component } from 'react';
-import { inject } from 'mobx-react';
 
+/**
+ * Basic link component: it generates an anchor tag with href computed from props.routeName.
+ * This component won't re-render on route change
+ *
+ * The props.router is required (when using navigation). If the component will be decorated with @inject('routerStore') then it is optional.
+ * If props.onClick is passed then the navigation won't happen and the callback will be executed instead.
+ *
+ * Usage:
+ * `<BaseLink
+ *    router={router5Instance}        // optional/required: when we don't inject the routerStore then we need to pass the router explicitly. If we don't use navigation then not required.
+ *    routeName="home"                // optional/required: route to navigate to. When onClick is passed we don't need it
+ *    routeParams={routeParamsObj}    // optional, default {}
+ *    routeOptions={routeOptionsObj}  // optional, default {}
+ *    activeClassName="activeClass"   // optional, default "active"
+ *    activeStrict={false}            // optional, default false
+ *    onClick={onClickCB}             // optional, when passe the navigation will be prevented and the onClickCB will be executed instead
+ */
 class BaseLink extends Component {
 
   constructor(props, context) {
     super(props, context);
 
-
-    this.routerStore = props.routerStore;
-
     // Get the router instance from the props (when explicitly passed) or from routerStore
     // It is passed to props for example when using withRoute wrapper
+    this.routerStore = props.routerStore;
     if (this.routerStore) {
       this.router = this.routerStore.router || null;
     }
-    // get the router instance from the props (when explicitly passed) or from routerStore
     else {
-      this.router = this.props.router || null;
+      this.router = props.router || null;
     }
 
     if (!this.router) {
@@ -27,9 +40,7 @@ class BaseLink extends Component {
       console.error('[mobx-router5-react][BaseLink] missing browser plugin, href might be build incorrectly');
     }
 
-    this.isActive = this.isActive.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
-
   }
 
   buildUrl(routeName, routeParams) {
@@ -41,13 +52,9 @@ class BaseLink extends Component {
     return this.router.buildPath(routeName, routeParams);
   }
 
-  isActive(routeName, routeParams, activeStrict) {
-    return this.router.isActive(routeName, routeParams, activeStrict);
-  }
-
   clickHandler(evt) {
-    // If this.onClick is passed
-    // it will be executed instead of navigating to the route
+    // If props onClick is passed it will be executed
+    // instead of navigating to the route
     if (this.props.onClick) {
       this.props.onClick(evt);
 
@@ -60,36 +67,28 @@ class BaseLink extends Component {
 
     if (evt.button === 0 && !comboKey) {
       evt.preventDefault();
-      this.router.navigate(this.props.to, this.props.routeParams, this.props.routeOptions);
+      this.router.navigate(this.props.routeName, this.props.routeParams, this.props.routeOptions);
     }
   }
 
   render() {
-    // stupid trick to force re-rendering when decorating with @observer
-    if (this.routerStore) {
-      const route = this.routerStore.route
-    }
-    const {to, routeParams, className, activeClassName, children, activeStrict} = this.props;
-    const active = this.isActive(to, routeParams, activeStrict);
-    const href = this.buildUrl(to, routeParams);
-    const linkClassName = (className ? className.split(' ') : [])
-    .concat(active ? [activeClassName] : []).join(' ');
 
+    const {routeName, routeParams, activeStrict, className, activeClassName, children } = this.props;
+
+    const href = this.buildUrl(routeName, routeParams);
     const onClick = this.clickHandler;
-
-    return React.createElement('a', { href: href, className: linkClassName, onClick: onClick }, children);
+    return React.createElement('a', { href: href, className: className, onClick: onClick}, children);
   }
 }
 
-
 BaseLink.propTypes = {
-  to:               React.PropTypes.string, // not required because of onClick  could be passed instead
   router:           React.PropTypes.object, // when we don't inject the routerStore then we need the router
+  routeName:        React.PropTypes.string, // not required because of onClick  could be passed instead
   routeParams:      React.PropTypes.object,
   routeOptions:     React.PropTypes.object,
   activeClassName:  React.PropTypes.string,
   activeStrict:     React.PropTypes.bool,
-  onClick:          React.PropTypes.func
+  onClick:          React.PropTypes.func,
 };
 
 
