@@ -1,12 +1,12 @@
 {
   "private": true,
-  "name": "mobx-router5-react",
+  "name": "react-mobx-router5",
   "version": "0.0.0",
   "description": "Router5 integration with mobX and react",
-  "homepage": "https://github.com/LeonardoGentile/mobx-router5-react",
+  "homepage": "https://github.com/LeonardoGentile/react-mobx-router5",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LeonardoGentile/mobx-router5-react.git"
+    "url": "https://github.com/LeonardoGentile/react-mobx-router5.git"
   },
   "author": "Leonardo Gentile",
   "contributors": [],
@@ -20,11 +20,12 @@
     "routing"
   ],
   "bugs": {
-    "url": "https://github.com/LeonardoGentile/mobx-router5-react/issues"
+    "url": "https://github.com/LeonardoGentile/react-mobx-router5/issues"
   },
   "main": "dist/index.js",
   "jsnext:main": "dist/index.es.js",
   "babel": {
+    "comments": false,
     "presets": [
       "react",
       "latest",
@@ -52,17 +53,27 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.16.3",
-    "chai": "^4.0.0-canary.1",
+    "chai": "3.5.0",
+    "chai-enzyme": "^0.6.1",
     "coveralls": "^2.11.14",
     "del": "^2.2.2",
+    "enzyme": "^2.8.0",
     "eslint": "^3.8.0",
     "eslint-config-airbnb-base": "^10.0.1",
     "eslint-plugin-import": "^2.2.0",
     "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^3.1.2",
+    "mobx": "^3.1.9",
+    "mobx-react": "^4.0.0",
+    "mobx-router5": "^0.0.0",
+    "mocha": "^3.2.0",
+    "react": "~15.4.2",
+    "react-addons-test-utils": "~15.4.2",
+    "react-dom": "~15.4.2",
     "rollup": "^0.36.3",
     "rollup-plugin-babel": "^2.6.1",
-    "sinon": "^2.0.0-pre.3"
+    "router5": "~4.5.1",
+    "sinon": "^2.0.0-pre.3",
+    "sinon-chai": "^2.9.0"
   },
   "peerDependencies": {
     "react": "^15.0.0",
