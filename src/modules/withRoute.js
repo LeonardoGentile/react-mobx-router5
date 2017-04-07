@@ -40,7 +40,7 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
     componentDidMount() {
       ifNot(
         this.router.hasPlugin('MOBX_PLUGIN'),
-        '[mobx-router5-react][withRoute] missing mobx plugin'
+        '[react-mobx-router5][withRoute] missing mobx plugin'
       );
     }
 
@@ -97,7 +97,7 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
   ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
 
   ComponentWithRoute.propTypes = {
-    routeName:        React.PropTypes.string, 
+    routeName:        React.PropTypes.string,
     routeParams:      React.PropTypes.object,
     routeOptions:     React.PropTypes.object,
     activeClassName:  React.PropTypes.string,

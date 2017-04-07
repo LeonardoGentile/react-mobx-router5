@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Component } from 'react';
 
 /**
  * Basic link component: it generates an anchor tag with href computed from props.routeName.
@@ -33,11 +34,11 @@ class BaseLink extends Component {
     }
 
     if (!this.router) {
-      console.error('[mobx-router5-react][BaseLink] missing router instance props');
+      console.error('[react-mobx-router5][BaseLink] missing router instance props');
     }
 
     if (!this.router.hasPlugin('BROWSER_PLUGIN')) {
-      console.error('[mobx-router5-react][BaseLink] missing browser plugin, href might be build incorrectly');
+      console.error('[react-mobx-router5][BaseLink] missing browser plugin, href might be build incorrectly');
     }
 
     this.clickHandler = this.clickHandler.bind(this);

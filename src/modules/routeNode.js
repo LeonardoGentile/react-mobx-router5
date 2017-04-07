@@ -22,7 +22,7 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
       componentDidMount() {
         ifNot(
           this.router.hasPlugin('MOBX_PLUGIN'),
-          '[mobx-router5-react][roteNode] missing mobx plugin'
+          '[react-mobx-router5][roteNode] missing mobx plugin'
         );
 
         this.autorunDisposer = autorun(() => {
