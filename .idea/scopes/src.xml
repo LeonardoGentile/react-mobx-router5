@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="src" pattern="file[mobx-react-router5]:src//*" />
+</component>

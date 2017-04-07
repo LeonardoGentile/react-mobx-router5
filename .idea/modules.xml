@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/mobx-react-router5.iml" filepath="$PROJECT_DIR$/.idea/mobx-react-router5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/react-mobx-router5.iml" filepath="$PROJECT_DIR$/.idea/react-mobx-router5.iml" />
     </modules>
   </component>
 </project>
