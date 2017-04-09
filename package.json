@@ -62,6 +62,7 @@
     "eslint-config-airbnb-base": "^10.0.1",
     "eslint-plugin-import": "^2.2.0",
     "istanbul": "^1.1.0-alpha.1",
+    "jsdom": "^9.12.0",
     "mobx": "^3.1.9",
     "mobx-react": "^4.0.0",
     "mobx-router5": "^0.0.0",
@@ -84,6 +85,7 @@
   "scripts": {
     "lint": "eslint src test tools",
     "test": "mocha --compilers js:babel-register --recursive --require ./test/test-setup.js 'test/main.js'",
+    "testDebug": "node $NODE_DEBUG_OPTION ./node_modules/mocha/bin/mocha --compilers js:babel-register --recursive --require ./test/test-setup.js 'test/main.js'",
     "test:watch": "mocha --compilers js:babel-register --reporter min --watch",
     "test:cover": "babel-node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
