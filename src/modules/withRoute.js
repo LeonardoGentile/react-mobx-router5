@@ -39,7 +39,7 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
 
     componentDidMount() {
       ifNot(
-        this.router.hasPlugin('MOBX_PLUGIN'),
+        !this.router || this.router.hasPlugin('MOBX_PLUGIN'),
         '[react-mobx-router5][withRoute] missing mobx plugin'
       );
     }

@@ -11,6 +11,7 @@ import { mobxPlugin, RouterStore } from 'mobx-router5';
 // import { createRenderer } from 'react-test-renderer/shallow';
 
 const routerStore = new RouterStore();
+export { routerStore };
 
 @inject('routerStore')
 class Child extends Component {
@@ -25,18 +26,18 @@ Child.wrappedComponent.propTypes = {
 
 export { Child };
 
-
 export const FnChild = (props) => <div />;
+
 
 export const createTestRouter = () => {
   return createRouter()
-    .usePlugin(browserPlugin())
-    .usePlugin(mobxPlugin(routerStore));
+    .usePlugin(browserPlugin());
+  // .usePlugin(mobxPlugin(routerStore));
 };
 
 
-export const renderWithRouter = router => BaseComponent => renderIntoDocument(
-  <MobXProvider ciao="hello" routerStore={routerStore}>
+export const renderWithRouterStore = (routerStore) => (BaseComponent) => renderIntoDocument(
+  <MobXProvider routerStore={routerStore}>
     <BaseComponent />
   </MobXProvider>
 );

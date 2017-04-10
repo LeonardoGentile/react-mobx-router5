@@ -9,9 +9,9 @@ import { getComponentFromRoutes } from './modules/utils.js';
 export {
   BaseLink,
   Link,
-  withRoute,
-  withLink,
+  NavLink,
   routeNode,
   getComponentFromRoutes,
-
+  withLink,
+  withRoute
 };
