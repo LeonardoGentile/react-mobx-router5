@@ -43,10 +43,7 @@ describe('withRoute hoc', () => {
     const BaseComp = () => <div />;
     const BaseCompWithRoute = withRoute(BaseComp);
     const renderTree = () => renderWithRouterStore(routerStore)(BaseCompWithRoute);
-    // const child = findRenderedComponentWithType(renderTree, BaseCompWithRoute);
-    // console.log(renderTree);
-    // expect(renderTree).to.throw('[react-mobx-router5][withRoute] missing mobx plugin');
-    expect(renderTree).to.throw();
+    expect(renderTree).to.throw(/^\[react-mobx-router5\]\[withRoute\] missing mobx plugin$/);
   });
 
   // it('should inject the router in the wrapped component props', () => {

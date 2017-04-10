@@ -1,7 +1,8 @@
 import React, {Component, createElement} from 'react';
-import {ifNot, getDisplayName} from './utils';
+import { ifNot, getDisplayName} from './utils';
 import { autorun } from 'mobx';
 import { inject, observer } from 'mobx-react';
+
 
 /**
  * HOC withRoute
@@ -38,8 +39,9 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
     }
 
     componentDidMount() {
+      // TODO: here or in constructor?
       ifNot(
-        !this.router || this.router.hasPlugin('MOBX_PLUGIN'),
+        this.router && this.router.hasPlugin('MOBX_PLUGIN'),
         '[react-mobx-router5][withRoute] missing mobx plugin'
       );
     }
