@@ -67,20 +67,20 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
       }
       const {routeName, routeParams, activeStrict, className, activeClassName } = this.props;
 
-      let currentClassName = className;
+      let currentClassName = className || '';
       if (activateClass && this.props.routeName ) {
         const active = this.isActive(routeName, routeParams, activeStrict);
         currentClassName = this.computeClassName(className, activeClassName, active);
       }
 
-      const {children} = this.props;
+      // const {children} = this.props;
 
       if (LinkComponent) {
         const props = {...this.props, className: this.props.linkClassName };
         return (
           <BaseComponent className={currentClassName} >
             <LinkComponent { ...props } >
-              {children}
+              {this.props.children}
             </LinkComponent>
           </BaseComponent>
         )
@@ -89,7 +89,7 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
       else {
         return (
           <BaseComponent {...this.props} className={currentClassName} >
-              {children}
+            {this.props.children}
           </BaseComponent>
         )
       }
@@ -111,8 +111,8 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
   ComponentWithRoute.defaultProps = {
     activeClassName: 'active',
     activeStrict: false,
-    routeParams: {},
-    routeOptions: {}
+    routeOptions: {},
+    routeParams: {}
   };
 
   return ComponentWithRoute;
