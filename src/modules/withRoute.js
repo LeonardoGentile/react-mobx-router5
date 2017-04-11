@@ -10,20 +10,19 @@ import { inject, observer } from 'mobx-react';
  * Any route changes will trigger a re-rendering of the wrapper and so of its wrapped component and children.
  * The returned component ComponentWithRoute accepts all the props also accepted by the BaseLink component.
  *
- * If activateClass=true when creating the HOC and if we pass props.routeName (and optionally other router options)
- *  to ComponentWithRoute then an activeClass will be applied for the wrapped component (any type) for that route.
+ * If we pass prop `routeName` (and optionally other router options) to the component returned by the HOC
+ * then an activeClass will be applied for the wrapped component (any type) if the `activeRoute` == `props.routeName`
  *
  * If LinkComponent is not null when  creating the HOC then it will be passed as the first child of the wrapped component and all props passed to it.
  *  In this case the activeClass will be applied to the BaseComponent and not LinkComponent.
  *  This is particularly useful when we want to create a wrapper around a BaseLink/Link component, see `withLink`
  *
  * @param BaseComponent - the component to be wrapped
- * @param activateClass - if true then apply an "active" class to the wrapped component when props.routeName is active
  * @param storeName - the mobx-router5 instance name. default 'routerStore'
  * @param LinkComponent - component to be passed as first child of the wrapped component (see withLink) and pass all the props to it.
  * @returns {ComponentWithRoute}
  */
-function withRoute(BaseComponent, activateClass=false, storeName='routerStore', LinkComponent=null) {
+function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
 
   @inject(storeName)
   @observer
@@ -57,38 +56,37 @@ function withRoute(BaseComponent, activateClass=false, storeName='routerStore', 
 
     render() {
       ifNot(
-        !this.props.router && !this.props.route && !this.props.previousRoute,
-        '[react-mobx-router5][withRoute] prop names `router`, `route` and `previousRoute` are reserved.'
+        !this.props.activeRoute,
+        '[react-mobx-router5][withRoute] prop names `activeRoute` is reserved.'
       );
 
       // stupid trick to force re-rendering when decorating with @observer
+      let activeRoute = null;
       if (this.routerStore) {
-        const route = this.routerStore.route;
+        activeRoute = this.routerStore.route;
       }
       const {routeName, routeParams, activeStrict, className, activeClassName } = this.props;
 
       let currentClassName = className || '';
-      if (activateClass && this.props.routeName ) {
+      if (this.props.routeName) {
         const active = this.isActive(routeName, routeParams, activeStrict);
         currentClassName = this.computeClassName(className, activeClassName, active);
       }
 
-      // const {children} = this.props;
-
+      // Special case used for generating component similar to NavLink (see withLink)
       if (LinkComponent) {
         const props = {...this.props, className: this.props.linkClassName };
         return (
-          <BaseComponent className={currentClassName} >
+          <BaseComponent className={currentClassName} activeRoute={activeRoute}>
             <LinkComponent { ...props } >
               {this.props.children}
             </LinkComponent>
           </BaseComponent>
         )
       }
-
       else {
         return (
-          <BaseComponent {...this.props} className={currentClassName} >
+          <BaseComponent {...this.props} className={currentClassName} activeRoute={activeRoute}>
             {this.props.children}
           </BaseComponent>
         )

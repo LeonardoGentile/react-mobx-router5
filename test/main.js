@@ -1,5 +1,6 @@
 import React from 'react';
 import {renderIntoDocument, findRenderedComponentWithType} from 'react-addons-test-utils';
+import { Provider as MobXProvider, inject } from 'mobx-react';
 import {RouterStore, mobxPlugin} from 'mobx-router5';
 import chai, {expect} from 'chai';
 import {spy} from 'sinon';
@@ -66,36 +67,75 @@ describe('withRoute hoc', () => {
     routerStore = new RouterStore();
   });
 
-  it('should throw an error if mobx-router5/mobxPlugin is not used', () => {
-    const CompWithRoute = withRoute(SimpleComp);
-    const renderTree = () => renderWithRouterStore(routerStore)(CompWithRoute);
-    expect(renderTree).to.throw(/^\[react-mobx-router5\]\[withRoute\] missing mobx plugin$/);
+  afterEach(() => {
+    router = null;
+    routerStore = null;
   });
 
-  it('should inject the routerStore in the ComponentWithRoute wrapper props', () => {
+  // it('should throw an error if mobx-router5/mobxPlugin is not used', () => {
+  //   const CompWithRoute = withRoute(SimpleComp);
+  //   const renderTree = () => renderWithRouterStore(routerStore)(CompWithRoute);
+  //   expect(renderTree).to.throw(/^\[react-mobx-router5\]\[withRoute\] missing mobx plugin$/);
+  // });
+  //
+  // it('should inject the routerStore in the ComponentWithRoute wrapper props', () => {
+  //   router.usePlugin(mobxPlugin(routerStore));
+  //   const CompWithRoute = withRoute(FnChild);
+  //   const tree = renderWithRouterStore(routerStore)(CompWithRoute);
+  //   const child = findRenderedComponentWithType(tree, CompWithRoute);
+  //   expect(child.wrappedInstance.props.routerStore).to.equal(routerStore);
+  // });
+  //
+  // it('should add the router instance to the injected routerStore prop in the ComponentWithRoute wrapper', () => {
+  //   router.usePlugin(mobxPlugin(routerStore));
+  //   const CompWithRoute = withRoute(FnChild);
+  //   const tree = renderWithRouterStore(routerStore)(CompWithRoute);
+  //   const child = findRenderedComponentWithType(tree, CompWithRoute);
+  //   expect(child.wrappedInstance.props.routerStore.router).to.equal(router);
+  // });
+  //
+  // it("should inject the routerStore + ComponentWithRoute's defaultPros into the wrapped component props", () => {
+  //   // FnChild is actually the BaseComponent into the ComponentWithRoute render.
+  //   // All props passed to it from there
+  //   const ChildSpy = spy(FnChild);
+  //   router.usePlugin(mobxPlugin(routerStore));
+  //   const tree = renderWithRouterStore(routerStore)(withRoute(ChildSpy));
+  //   expect(ChildSpy).to.have.been.calledWith({routerStore, ...withRouteWrapperDefaultProps, className: '', children: undefined});
+  // });
+
+  it("should add an `active` class to the wrapped component if associated route is active", () => {
     router.usePlugin(mobxPlugin(routerStore));
-    const CompWithRoute = withRoute(FnChild);
-    const tree = renderWithRouterStore(routerStore)(CompWithRoute);
-    const child = findRenderedComponentWithType(tree, CompWithRoute);
-    expect(child.wrappedInstance.props.routerStore).to.equal(routerStore);
+    const ChildWithRoute = withRoute(FnChild);
+
+    router.addNode('home', '/home');
+    router.setOption('defaultRoute', 'home');
+    router.start();
+
+    const output = mount(
+      <MobXProvider routerStore={routerStore}>
+        <ChildWithRoute routeName='home' />
+      </MobXProvider>
+    );
+
+    expect(output.find('#fn-child')).to.have.className('active');
   });
 
-  it('should add the router instance to the injected routerStore prop in the ComponentWithRoute wrapper', () => {
+  it("should not have an `active` class to the wrapped component if associated route is not active", () => {
     router.usePlugin(mobxPlugin(routerStore));
-    const CompWithRoute = withRoute(FnChild);
-    const tree = renderWithRouterStore(routerStore)(CompWithRoute);
-    const child = findRenderedComponentWithType(tree, CompWithRoute);
-    expect(child.wrappedInstance.props.routerStore.router).to.equal(router);
-  });
+    const ChildWithRoute = withRoute(FnChild);
 
-  it("should inject the routerStore + ComponentWithRoute's defaultPros into the wrapped component props", () => {
-    // FnChild is actually the BaseComponent into the withRouter render.
-    // All props passed to it from there
-    const ChildSpy = spy(FnChild);
-    router.usePlugin(mobxPlugin(routerStore));
+    router.addNode('home', '/home');
+    router.addNode('section', '/section');
+    router.setOption('defaultRoute', 'section');
+    router.start();
 
-    const tree = renderWithRouterStore(routerStore)(withRoute(ChildSpy));
-    expect(ChildSpy).to.have.been.calledWith({routerStore, ...withRouteWrapperDefaultProps, className: '', children: undefined});
+    const output = mount(
+      <MobXProvider routerStore={routerStore}>
+        <ChildWithRoute routeName='home' />
+      </MobXProvider>
+    );
+
+    expect(output.find('#fn-child')).to.not.have.className('active');
   });
 });
 
