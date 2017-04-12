@@ -84,7 +84,7 @@
   },
   "scripts": {
     "lint": "eslint src test tools",
-    "test": "mocha --compilers js:babel-register --recursive --require ./test/test-setup.js 'test/main.js'",
+    "test": "mocha --compilers js:babel-register --recursive --require ./test/utils/test-setup.js 'test/*.js'",
     "testDebug": "node $NODE_DEBUG_OPTION ./node_modules/mocha/bin/mocha --compilers js:babel-register --recursive --require ./test/test-setup.js 'test/main.js'",
     "test:watch": "mocha --compilers js:babel-register --reporter min --watch",
     "test:cover": "babel-node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha",

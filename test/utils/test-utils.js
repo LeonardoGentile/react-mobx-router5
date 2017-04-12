@@ -9,22 +9,13 @@ import { Provider as MobXProvider, inject } from 'mobx-react';
 // Also the shallow renderer has been moved to react-test-renderer/shallow.
 // import { createRenderer } from 'react-test-renderer/shallow';
 
-export const FnChild = (props) => {
-  return <div id="fn-child" className={props.className}/>;
-};
+export const FnChild = (props) => <div id="child-fn" />;
 
 export class Child extends Component {
   render() {
-    return (<div id="comp-child" className={this.props.className} />);
+    return (<div id="child-comp" />);
   }
 };
-
-
-const ChildWithInjectedStore = inject("routerStore")(Child);
-ChildWithInjectedStore.wrappedComponent.propTypes = {
-  routerStore: PropTypes.object.isRequired
-};
-export { ChildWithInjectedStore };
 
 
 export const createTestRouter = () => {

@@ -6,9 +6,10 @@
     <pass-parent-env>true</pass-parent-env>
     <envs />
     <ui>bdd</ui>
-    <extra-mocha-options>--compilers js:babel-register --recursive --require ./test/test-setup.js</extra-mocha-options>
-    <test-kind>PATTERN</test-kind>
-    <test-pattern>./test/main.js</test-pattern>
+    <extra-mocha-options>--compilers js:babel-register --recursive --require ./test/utils/test-setup.js</extra-mocha-options>
+    <test-kind>DIRECTORY</test-kind>
+    <test-directory>$PROJECT_DIR$/test</test-directory>
+    <recursive>false</recursive>
     <method />
   </configuration>
 </component>
