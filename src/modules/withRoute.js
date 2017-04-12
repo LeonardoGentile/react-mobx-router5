@@ -1,9 +1,3 @@
-import React, {Component, createElement} from 'react';
-import { ifNot, getDisplayName} from './utils';
-import { autorun } from 'mobx';
-import { inject, observer } from 'mobx-react';
-
-
 /**
  * HOC withRoute
  * It creates a new wrapper component injecting the mobx routerStore and decorating it with @observer
@@ -22,7 +16,20 @@ import { inject, observer } from 'mobx-react';
  * @param LinkComponent - component to be passed as first child of the wrapped component (see withLink) and pass all the props to it.
  * @returns {ComponentWithRoute}
  */
+import React, {Component, createElement} from 'react';
+import {ifNot, getDisplayName, isReactComponent} from './utils';
+import { autorun } from 'mobx';
+import { inject, observer } from 'mobx-react';
+
+
 function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
+
+  // if (LinkComponent) {
+  //   ifNot(
+  //     typeof LinkComponent === 'function' && LinkComponent.prototype.isReactComponent,
+  //     '[react-mobx-router5][withRoute] LinkComponent argument should be a valid React Component.'
+  //   );
+  // }
 
   @inject(storeName)
   @observer
@@ -73,9 +80,14 @@ function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
         currentClassName = this.computeClassName(className, activeClassName, active);
       }
 
+      let props;
       // Special case used for generating component similar to NavLink (see withLink)
       if (LinkComponent) {
-        const props = {...this.props, className: this.props.linkClassName };
+        ifNot(
+          isReactComponent(LinkComponent),
+          '[react-mobx-router5][withRoute] LinkComponent argument should be a valid React Component.'
+        );
+        props = {...this.props, className: this.props.linkClassName };
         return (
           <BaseComponent className={currentClassName} activeRoute={activeRoute}>
             <LinkComponent { ...props } >
@@ -85,8 +97,9 @@ function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
         )
       }
       else {
+        props = {...this.props, className: currentClassName, activeRoute:activeRoute};
         return (
-          <BaseComponent {...this.props} className={currentClassName} activeRoute={activeRoute}>
+          <BaseComponent {...props} >
             {this.props.children}
           </BaseComponent>
         )
