@@ -127,28 +127,12 @@ describe('withRoute HOC', () => {
       });
     });
 
-    it("should throw an error when LinkComponent is not a React component", () => {
-      const LiElement = React.createElement('li', {className:''});
-      const ChildSpy = spy(FnChild);
-      const ChildWithRoute = withRoute(ChildSpy, 'routerStore', LiElement);
-
-      const renderTree = () => renderWithRouterStore(routerStore)(ChildWithRoute);
-      expect(renderTree).to.throw(/^\[react-mobx-router5\]\[withRoute\] LinkComponent argument should be a valid React Component\.$/);
-    });
-
-    it("should not throw an error when LinkComponent a React component", () => {
-      const ChildSpy = spy(FnChild);
-      const ChildWithRoute = withRoute(ChildSpy, 'routerStore', Child);
-
-      const renderTree = () => renderWithRouterStore(routerStore)(ChildWithRoute);
-      expect(renderTree).not.throw();
-    });
 
     it("should add the LinkComponent as child of BaseComponent", () => {
       const ChildWithRoute = withRoute(Child, 'routerStore', FnChild);
       const output = mount(
         <MobXProvider routerStore={routerStore}>
-          <ChildWithRoute></ChildWithRoute>
+          <ChildWithRoute />
         </MobXProvider>
       );
       expect(output.find('Child').children('FnChild')).to.have.length(1);

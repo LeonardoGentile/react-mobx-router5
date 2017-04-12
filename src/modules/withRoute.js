@@ -24,13 +24,6 @@ import { inject, observer } from 'mobx-react';
 
 function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
 
-  // if (LinkComponent) {
-  //   ifNot(
-  //     typeof LinkComponent === 'function' && LinkComponent.prototype.isReactComponent,
-  //     '[react-mobx-router5][withRoute] LinkComponent argument should be a valid React Component.'
-  //   );
-  // }
-
   @inject(storeName)
   @observer
   class ComponentWithRoute extends Component {
@@ -82,28 +75,24 @@ function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
 
       let props;
       // Special case used for generating component similar to NavLink (see withLink)
-      if (LinkComponent) {
-        ifNot(
-          isReactComponent(LinkComponent),
-          '[react-mobx-router5][withRoute] LinkComponent argument should be a valid React Component.'
-        );
-        props = {...this.props, className: this.props.linkClassName };
-        return (
-          <BaseComponent className={currentClassName} activeRoute={activeRoute}>
-            <LinkComponent { ...props } >
-              {this.props.children}
-            </LinkComponent>
-          </BaseComponent>
-        )
-      }
-      else {
+      // if (LinkComponent) {
+      //   props = {...this.props, className: this.props.linkClassName };
+      //   return (
+      //     <BaseComponent className={currentClassName} activeRoute={activeRoute}>
+      //       <LinkComponent { ...props } >
+      //         {this.props.children}
+      //       </LinkComponent>
+      //     </BaseComponent>
+      //   )
+      // }
+      // else {
         props = {...this.props, className: currentClassName, activeRoute:activeRoute};
         return (
           <BaseComponent {...props} >
             {this.props.children}
           </BaseComponent>
         )
-      }
+      // }
     }
   }
 
