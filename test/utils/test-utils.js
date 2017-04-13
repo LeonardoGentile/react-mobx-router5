@@ -3,6 +3,7 @@ import { renderIntoDocument } from 'react-addons-test-utils';
 import createRouter from 'router5';
 import browserPlugin from 'router5/plugins/browser';
 import { Provider as MobXProvider, inject } from 'mobx-react';
+import {mount} from "enzyme";
 
 // TODO: After (15.5)
 // import TestUtils from 'react-dom/test-utils';
@@ -27,7 +28,17 @@ export const createTestRouter = () => {
 };
 
 
-export const renderWithRouterStore = (routerStore) => (ChildComponent) => renderIntoDocument(
+// export const renderWithRouterStore = (routerStore) => (ChildComponent) => renderIntoDocument(
+//   <MobXProvider routerStore={routerStore}>
+//     <ChildComponent />
+//   </MobXProvider>
+// );
+
+export const renderWithRouterStore = (routerStore) => (Component) => mount(
+  <Component routerStore={routerStore}/>
+);
+
+export const renderWithProvider = (routerStore) => (ChildComponent) => renderIntoDocument(
   <MobXProvider routerStore={routerStore}>
     <ChildComponent />
   </MobXProvider>

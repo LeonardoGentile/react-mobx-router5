@@ -51,9 +51,9 @@ function withRoute(BaseComponent, storeName='routerStore') {
       routeName:        React.PropTypes.string
     };
 
-    static computeClassName(className, activeClassName, active) {
+    static computeClassName(className, activeClassName, isActive) {
       return (className ? className.split(' ') : [])
-        .concat(active ? [activeClassName] : []).join(' ');
+        .concat(isActive ? [activeClassName] : []).join(' ');
     }
 
     constructor(props, context) {
