@@ -1,3 +1,10 @@
+
+export const getDisplayName = component => component.displayName || component.name || 'Component';
+
+export const ifNot = (condition, errorMessage) => {
+  if (!condition) throw new Error(errorMessage);
+};
+
 /**
  * Return a component to be rendered by a routeNode for the current route
  * extracted from the custom (nested) routes definition (with 'component' field)
@@ -6,13 +13,6 @@
  * @param {string} routeNode - the name of the route for the React component from where to re-render (transition node)
  * @returns {React.Component} - the component to be rendered
  */
-import * as React from "react";
-export const getDisplayName = component => component.displayName || component.name || 'Component';
-
-export const ifNot = (condition, errorMessage) => {
-  if (!condition) throw new Error(errorMessage);
-};
-
 export function getComponentFromRoutes(routes, routerStore, routeNode) {
   let level = 0;
   let currentLevel = 0;
@@ -42,33 +42,4 @@ export function getComponentFromRoutes(routes, routerStore, routeNode) {
   }
 
   return getComponent(routes);
-}
-
-
-export function isClassComponent(component) {
-  return (
-    typeof component === 'function' && !!component.prototype.isReactComponent
-  )
-}
-
-export function isFunctionComponent(component) {
-  return (
-    typeof component === 'function' && String(component).includes('.createElement')
-  );
-}
-
-export function isReactComponent(component) {
-  return !!(isClassComponent(component) || isFunctionComponent(component))
-}
-
-export function isElement(element) {
-  return React.isValidElement(element);
-}
-
-export function isDOMTypeElement(element) {
-  return isElement(element) && typeof element.type === 'string';
-}
-
-export function isCompositeTypeElement(element) {
-  return isElement(element) && typeof element.type === 'function';
 }

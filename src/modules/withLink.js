@@ -1,6 +1,6 @@
+import React from "react";
 import BaseLink from './BaseLink';
 import withRoute from './withRoute';
-import React from "react";
 
 function withLink(BaseComponent, storeName='routerStore') {
 
@@ -8,7 +8,7 @@ function withLink(BaseComponent, storeName='routerStore') {
     return (
       <BaseComponent className={props.className} >
         <BaseLink { ...props } className={props.linkClassName} activeRoute={props.activeRoute}>
-          {this.props.children}
+          {props.children}
         </BaseLink>
       </BaseComponent>
     )
@@ -21,7 +21,8 @@ function withLink(BaseComponent, storeName='routerStore') {
     activeClassName:  React.PropTypes.string,
     linkClassName:    React.PropTypes.string,
     activeStrict:     React.PropTypes.bool,
-    onClick:          React.PropTypes.func
+    onClick:          React.PropTypes.func,
+    activeRoute:      React.PropTypes.object
   };
 
   return withRoute(BaseComponentWrapper, storeName);

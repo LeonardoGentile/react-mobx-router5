@@ -24,8 +24,7 @@ describe('routerStore passed with mobx-react Provider/Inject', () => {
     expect(child.props.routerStore).to.be.undefined;
   });
 
-
-  it('should inject the routerStore in the @inject decorated component`s props', () => {
+  it('should inject the routerStore to the @inject decorated component`s props', () => {
     ChildWithInjectedStore.wrappedComponent.propTypes = {
       routerStore: PropTypes.object.isRequired
     };
@@ -33,7 +32,6 @@ describe('routerStore passed with mobx-react Provider/Inject', () => {
     const child = findRenderedComponentWithType(tree, ChildWithInjectedStore);
     expect(child.wrappedInstance.props.routerStore).to.equal(routerStore);
   });
-
 
   it('should not add the router instance to the injected routerStore prop when mobXPlugin is not used', () => {
     ChildWithInjectedStore.wrappedComponent.propTypes = {
@@ -43,7 +41,6 @@ describe('routerStore passed with mobx-react Provider/Inject', () => {
     const child = findRenderedComponentWithType(tree, ChildWithInjectedStore);
     expect(child.wrappedInstance.props.routerStore.router).to.be.null;
   });
-
 
   it('should add the router instance to the injected routerStore prop when mobxPlugin is used', () => {
     ChildWithInjectedStore.wrappedComponent.propTypes = {

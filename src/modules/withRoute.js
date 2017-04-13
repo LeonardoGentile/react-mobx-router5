@@ -1,32 +1,61 @@
-/**
- * HOC withRoute
- * It creates a new wrapper component injecting the mobx routerStore and decorating it with @observer
- * Any route changes will trigger a re-rendering of the wrapper and so of its wrapped component and children.
- * The returned component ComponentWithRoute accepts all the props also accepted by the BaseLink component.
- *
- * If we pass prop `routeName` (and optionally other router options) to the component returned by the HOC
- * then an activeClass will be applied for the wrapped component (any type) if the `activeRoute` == `props.routeName`
- *
- * If LinkComponent is not null when  creating the HOC then it will be passed as the first child of the wrapped component and all props passed to it.
- *  In this case the activeClass will be applied to the BaseComponent and not LinkComponent.
- *  This is particularly useful when we want to create a wrapper around a BaseLink/Link component, see `withLink`
- *
- * @param BaseComponent - the component to be wrapped
- * @param storeName - the mobx-router5 instance name. default 'routerStore'
- * @param LinkComponent - component to be passed as first child of the wrapped component (see withLink) and pass all the props to it.
- * @returns {ComponentWithRoute}
- */
-import React, {Component, createElement} from 'react';
-import {ifNot, getDisplayName, isReactComponent} from './utils';
-import { autorun } from 'mobx';
+import React, {Component} from 'react';
+import {ifNot, getDisplayName} from './utils';
 import { inject, observer } from 'mobx-react';
 
+/**
+ * HOC that creates a new wrapper ComponentWithRoute around BaseComponent
+ *
+ * @param BaseComponent - the component to be wrapped
+ * @param storeName - the mobx-router5 instance name. Default 'routerStore'
+ * @returns {ComponentWithRoute}
+ */
+function withRoute(BaseComponent, storeName='routerStore') {
 
-function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
-
+ /**
+  * Wrapper ComponentWithRoute around the BaseComponent
+  *
+  * The wrapper is injected with the mobx routerStore and decorated with @observer
+  * Notice that @inject will also create another wrapper around the ComponentWithRoute
+  *
+  * Any route changes will trigger a re-rendering of ComponentWithRoute and so of its wrapped BaseComponent and children.
+  * The component accepts all the props also accepted by the BaseLink component and will pass them down to the wrapped component.
+  * If a linkClassName is passed then it will be passed down and used by the children only when the BaseComponent is created with `withLink` HOC.
+  *
+  * It will pass two extra props to the wrapped BaseComponent:
+  *   activeRoute: alias of the mobx observable routerStore.route, used to trigger a re-rendering of the BaseComponent when the route changes
+  *   className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className to the original className when routeName==activeRoute
+  *
+  */
   @inject(storeName)
   @observer
   class ComponentWithRoute extends Component {
+
+    static displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
+
+    static defaultProps = {
+      activeClassName: 'active',
+      activeStrict: false,
+      routeOptions: {},
+      routeParams: {}
+    };
+
+    static propTypes = {
+      // Defaults
+      activeClassName:  React.PropTypes.string,
+      activeStrict:     React.PropTypes.bool,
+      routeOptions:     React.PropTypes.object,
+      routeParams:      React.PropTypes.object,
+      // Optional
+      linkClassName:    React.PropTypes.string,
+      onClick:          React.PropTypes.func,
+      routeName:        React.PropTypes.string
+    };
+
+    static computeClassName(className, activeClassName, active) {
+      return (className ? className.split(' ') : [])
+        .concat(active ? [activeClassName] : []).join(' ');
+    }
+
     constructor(props, context) {
       super(props, context);
 
@@ -34,11 +63,9 @@ function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
       this.router = this.routerStore.router;
 
       this.isActive = this.isActive.bind(this);
-      this.computeClassName = this.computeClassName.bind(this);
     }
 
     componentDidMount() {
-      // TODO: here or in constructor?
       ifNot(
         this.router && this.router.hasPlugin('MOBX_PLUGIN'),
         '[react-mobx-router5][withRoute] missing mobx plugin'
@@ -47,11 +74,6 @@ function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
 
     isActive(routeName, routeParams, activeStrict) {
       return this.router.isActive(routeName, routeParams, activeStrict);
-    }
-
-    computeClassName(className, activeClassName, active) {
-      return (className ? className.split(' ') : [])
-        .concat(active ? [activeClassName] : []).join(' ');
     }
 
     render() {
@@ -68,52 +90,18 @@ function withRoute(BaseComponent, storeName='routerStore', LinkComponent=null) {
       const {routeName, routeParams, activeStrict, className, activeClassName } = this.props;
 
       let currentClassName = className || '';
-      if (this.props.routeName) {
-        const active = this.isActive(routeName, routeParams, activeStrict);
-        currentClassName = this.computeClassName(className, activeClassName, active);
+      if (routeName) {
+        const isActive = this.isActive(routeName, routeParams, activeStrict);
+        currentClassName = ComponentWithRoute.computeClassName(className, activeClassName, isActive);
       }
-
-      let props;
-      // Special case used for generating component similar to NavLink (see withLink)
-      // if (LinkComponent) {
-      //   props = {...this.props, className: this.props.linkClassName };
-      //   return (
-      //     <BaseComponent className={currentClassName} activeRoute={activeRoute}>
-      //       <LinkComponent { ...props } >
-      //         {this.props.children}
-      //       </LinkComponent>
-      //     </BaseComponent>
-      //   )
-      // }
-      // else {
-        props = {...this.props, className: currentClassName, activeRoute:activeRoute};
-        return (
-          <BaseComponent {...props} >
-            {this.props.children}
-          </BaseComponent>
-        )
-      // }
+      const newProps = {...this.props, className: currentClassName, activeRoute:activeRoute};
+      return (
+        <BaseComponent {...newProps} >
+          {this.props.children}
+        </BaseComponent>
+      )
     }
   }
-
-  ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
-
-  ComponentWithRoute.propTypes = {
-    routeName:        React.PropTypes.string,
-    routeParams:      React.PropTypes.object,
-    routeOptions:     React.PropTypes.object,
-    activeClassName:  React.PropTypes.string,
-    linkClassName:    React.PropTypes.string,
-    activeStrict:     React.PropTypes.bool,
-    onClick:          React.PropTypes.func
-  };
-
-  ComponentWithRoute.defaultProps = {
-    activeClassName: 'active',
-    activeStrict: false,
-    routeOptions: {},
-    routeParams: {}
-  };
 
   return ComponentWithRoute;
 }

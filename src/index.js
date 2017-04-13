@@ -7,11 +7,11 @@ import withLink from './modules/withLink';
 import { getComponentFromRoutes } from './modules/utils.js';
 
 export {
+  withRoute,
+  withLink,
   BaseLink,
   Link,
   NavLink,
   routeNode,
-  getComponentFromRoutes,
-  withLink,
-  withRoute
+  getComponentFromRoutes
 };

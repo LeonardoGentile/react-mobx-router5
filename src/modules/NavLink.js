@@ -1,5 +1,5 @@
 import withLink from './withLink';
 
-const NavLink = withLink('li', true);
+const NavLink = withLink('li');
 
 export default NavLink;

@@ -28,10 +28,6 @@ describe('withRoute HOC', () => {
     router.usePlugin(mobxPlugin(routerStore));
   });
 
-  // afterEach(() => {
-  //   router = null;
-  //   routerStore = null;
-  // });
 
   context('without mobxPlugin', function() {
     it('should throw an error if mobx-router5/mobxPlugin is not used', () => {
@@ -42,7 +38,12 @@ describe('withRoute HOC', () => {
     });
   });
 
+
   context('with mobxPlugin', function() {
+
+    // FnChild is actually the BaseComponent into the ComponentWithRoute render.
+    // All props passed to it from there
+
     it('should inject the routerStore in the ComponentWithRoute wrapper props', () => {
       const CompWithRoute = withRoute(FnChild);
       const tree = renderWithRouterStore(routerStore)(CompWithRoute);
@@ -50,14 +51,12 @@ describe('withRoute HOC', () => {
       expect(child.wrappedInstance.props.routerStore).to.equal(routerStore);
     });
 
-
     it('should add the router instance into the injected routerStore prop in the ComponentWithRoute Wrapper', () => {
       const CompWithRoute = withRoute(FnChild);
       const tree = renderWithRouterStore(routerStore)(CompWithRoute);
       const child = findRenderedComponentWithType(tree, CompWithRoute);
       expect(child.wrappedInstance.props.routerStore.router).to.equal(router);
     });
-
 
     it("should throw an error if a prop `activeRoute` is passed to the wrapped component", () => {
       const ChildWithRoute = withRoute(FnChild);
@@ -69,9 +68,6 @@ describe('withRoute HOC', () => {
       expect(renderTree).to.throw(/^\[react-mobx-router5\]\[withRoute\] prop names `activeRoute` is reserved\.$/);
     });
 
-
-    // FnChild is actually the BaseComponent into the ComponentWithRoute render.
-    // All props passed to it from there
     it("should pass the routerStore + defaultProps into the wrapped component props", () => {
       const ChildSpy = spy(FnChild);
       const ChildSpyWithRoute = withRoute(ChildSpy);
@@ -79,8 +75,7 @@ describe('withRoute HOC', () => {
       expect(ChildSpy).to.have.been.calledWithMatch({routerStore: routerStore, ...withRouteWrapperDefaultProps });
     });
 
-
-    it("should add pass an `activeRoute` prop to the wrapped component to force re-rendering on route change", () => {
+    it("should pass an extra `activeRoute` prop to the wrapped component to force re-rendering on route change", () => {
       const ChildSpy = spy(FnChild);
       const ChildWithRoute = withRoute(ChildSpy);
 
@@ -92,8 +87,7 @@ describe('withRoute HOC', () => {
       });
     });
 
-
-    it("should pass an `active` className prop to the wrapped component if associated route is active", () => {
+    it("should add an `active` className to props passed to the wrapped component if associated route is active", () => {
       const ChildSpy = spy(FnChild);
       const ChildWithRoute = withRoute(ChildSpy);
 
@@ -110,7 +104,7 @@ describe('withRoute HOC', () => {
     });
 
 
-    it("should not pass an `active` className prop to the wrapped component if associated route is not active", () => {
+    it("should not add an `active` className to props passed to the wrapped component if associated route is not active", () => {
       const ChildSpy = spy(FnChild);
       const ChildWithRoute = withRoute(ChildSpy);
 
@@ -128,15 +122,15 @@ describe('withRoute HOC', () => {
     });
 
 
-    it("should add the LinkComponent as child of BaseComponent", () => {
-      const ChildWithRoute = withRoute(Child, 'routerStore', FnChild);
-      const output = mount(
-        <MobXProvider routerStore={routerStore}>
-          <ChildWithRoute />
-        </MobXProvider>
-      );
-      expect(output.find('Child').children('FnChild')).to.have.length(1);
-    });
+    // it("should add the LinkComponent as child of BaseComponent", () => {
+    //   const ChildWithRoute = withRoute(Child, 'routerStore', FnChild);
+    //   const output = mount(
+    //     <MobXProvider routerStore={routerStore}>
+    //       <ChildWithRoute />
+    //     </MobXProvider>
+    //   );
+    //   expect(output.find('Child').children('FnChild')).to.have.length(1);
+    // });
 
   });
 

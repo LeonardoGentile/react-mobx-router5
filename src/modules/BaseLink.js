@@ -1,5 +1,4 @@
-import React from 'react';
-import { Component } from 'react';
+import React, {Component} from "react";
 
 /**
  * Basic link component: it generates an anchor tag with href computed from props.routeName.
