@@ -7,7 +7,7 @@ import {createTestRouter, renderWithProvider} from "./utils/test-utils";
 import {mount, shallow} from "enzyme";
 import Link from "../src/modules/Link";
 
-describe('BaseLink component', () => {
+describe('Link component', () => {
   let router;
   let routerStore;
 
