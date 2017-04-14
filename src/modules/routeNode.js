@@ -10,8 +10,8 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
     @inject(storeName)
     class RouteNode extends Component {
 
-      constructor(props, context) {
-        super(props, context);
+      constructor(props) {
+        super(props);
         this.router = this.props[storeName].router;
         this.state = {
           route: props[storeName].route,

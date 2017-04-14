@@ -18,7 +18,6 @@ describe('withLink', () => {
     router.usePlugin(mobxPlugin(routerStore));
   });
 
-
   context('BaseComponentWrapper', function() {
 
     it("should creates a `li` element around the the BaseLink", () => {
