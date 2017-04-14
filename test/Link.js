@@ -1,6 +1,7 @@
 import React from "react";
 import {findRenderedComponentWithType} from "react-addons-test-utils";
 import {expect} from "chai";
+import {spy} from "sinon";
 import {mobxPlugin, RouterStore} from "mobx-router5";
 import {createTestRouter, renderWithProvider} from "./utils/test-utils";
 import {mount, shallow} from "enzyme";
@@ -29,7 +30,7 @@ describe('BaseLink component', () => {
     expect(renderTreeFn).to.throw();
   });
 
-  it('should render an hyperlink element', () => {
+  it('should render an hyperlink element with href', () => {
     router.addNode('home', '/home');
     router.setOption('defaultRoute', 'home');
     router.start();
@@ -41,8 +42,9 @@ describe('BaseLink component', () => {
 
   it('should add an active className to the hyperlink', () => {
     router.addNode('home', '/home');
+    router.addNode('section', '/section');
     router.setOption('defaultRoute', 'home');
-    router.start();
+    router.start('home');
     const output = mount(
       <Link routerStore={routerStore} routeName={'home'} className="just-a-class-name" />
     );
@@ -58,6 +60,44 @@ describe('BaseLink component', () => {
       <Link routerStore={routerStore} routeName={'home'} className="just-a-class-name" />
     );
     expect(output.find('a')).to.have.className('just-a-class-name');
+  });
+
+  it('should call the onClick cb when the hyperlink is clicked', () => {
+    router.start();
+    const onClickSpy = spy();
+    const output = mount(
+      <Link routerStore={routerStore} onClick={onClickSpy} />
+    );
+    output.find('a').simulate('click');
+    expect(onClickSpy).to.have.been.calledOnce;
+  });
+
+  it('should call the onClick cb instead of navigation when routeName is also passed', () => {
+    router.addNode('home', '/home');
+    router.start();
+    const onClickSpy = spy();
+    const navigateSpy = spy(router, 'navigate');
+    const output = mount(
+      <Link routerStore={routerStore} onClick={onClickSpy} routeName={'home'}/>
+    );
+    output.find('a').simulate('click');
+    expect(onClickSpy).to.have.been.calledOnce;
+    expect(navigateSpy).to.have.not.been.called;
+  });
+
+  it('should call router `navigate` when routeName is also passed and hyperlink clicked', () => {
+    router.addNode('home', '/home');
+    router.addNode('section', '/section');
+    router.start();
+    const onClickSpy = spy();
+    const navigateSpy = spy(router, 'navigate');
+    const output = mount(
+      <Link routerStore={routerStore} routeName={'section'}/>
+    );
+    output.find('a').simulate('click', {button:0});
+    expect(onClickSpy).to.have.not.been.called;
+    expect(navigateSpy).to.have.been.calledOnce;
+    expect(navigateSpy).to.have.been.calledWith('section', {}, {});
   });
 
 });
