@@ -1,17 +1,10 @@
 import React from "react";
-import {findRenderedComponentWithType, renderIntoDocument} from "react-addons-test-utils";
 import {expect} from "chai";
-import {spy, stub} from "sinon";
-import {Provider as MobXProvider} from "mobx-react";
 import {mobxPlugin, RouterStore} from "mobx-router5";
-import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from "./utils/test-utils";
-import {withRoute} from "../src/index";
-import {mount, shallow} from "enzyme";
+import {createTestRouter} from "./utils/test-utils";
+import {shallow} from "enzyme";
 import {createRouter} from "router5";
 import BaseLink from "../src/modules/BaseLink";
-
-// TOFIX: type-detect bug
-// I've manually modified type-detect: https://github.com/chaijs/type-detect/pull/91/files
 
 describe('BaseLink component', () => {
   let router;
@@ -82,6 +75,16 @@ describe('BaseLink component', () => {
         <BaseLink router={router} routeName={'home'}/>
       );
       expect(output.find('a')).to.have.attr('href', '/home');
+    });
+
+    it('should not have an active className', () => {
+      router.addNode('home', '/home');
+      router.setOption('defaultRoute', 'home');
+      router.start();
+      const output = shallow(
+        <BaseLink router={router} routeName={'home'} className="just-a-class-name" />
+      );
+      expect(output.find('a')).to.have.attr('class', 'just-a-class-name');
     });
   });
 
