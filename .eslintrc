@@ -10,8 +10,16 @@
         "destructuring": true,
         "modules": true,
         "objectLiteralComputedProperties": true,
-        "templateStrings": true
+        "templateStrings": true,
+        "jsx": true
     },
+    "plugins": [
+      "react"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
     "rules": {
         // Possible Errors
         "no-dupe-args": 2,
