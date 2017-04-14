@@ -1,12 +1,11 @@
 import React from "react";
-import {findRenderedComponentWithType, renderIntoDocument} from "react-addons-test-utils";
+import {findRenderedComponentWithType} from "react-addons-test-utils";
 import {expect} from "chai";
-import {spy, stub} from "sinon";
-import {Provider as MobXProvider} from "mobx-react";
+import {spy} from "sinon";
+import {mount} from "enzyme";
 import {mobxPlugin, RouterStore} from "mobx-router5";
 import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from "./utils/test-utils";
 import {withRoute} from "../src/index";
-import {mount, shallow} from "enzyme";
 
 // TOFIX: type-detect bug
 // I've manually modified type-detect: https://github.com/chaijs/type-detect/pull/91/files

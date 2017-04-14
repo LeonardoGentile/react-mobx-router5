@@ -48,7 +48,7 @@ class BaseLink extends Component {
   }
 
   buildUrl(routeName, routeParams) {
-    if (this.router) {
+    if (routeName && this.router) {
       // If browser plugin is active
       if (this.router.buildUrl) {
         return this.router.buildUrl(routeName, routeParams);
