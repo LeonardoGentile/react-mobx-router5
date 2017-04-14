@@ -35,12 +35,16 @@ function withRoute(BaseComponent, storeName='routerStore') {
         .concat(isActive ? [activeClassName] : []).join(' ');
     }
 
-    constructor(props, context) {
-      super(props, context);
+    constructor(props) {
+      super(props);
+
+      ifNot(
+        props[storeName],
+        '[react-mobx-router5][withRoute] missing routerStore'
+      );
 
       this.routerStore = props[storeName];
-      this.router = this.routerStore.router;
-
+      this.router = this.routerStore.router || null;
       this.isActive = this.isActive.bind(this);
     }
 
@@ -62,10 +66,8 @@ function withRoute(BaseComponent, storeName='routerStore') {
       );
 
       // stupid trick to force re-rendering when decorating with @observer
-      let activeRoute = null;
-      if (this.routerStore) {
-        activeRoute = this.routerStore.route;
-      }
+      let  activeRoute = this.routerStore.route;
+
       const {routeName, routeParams, activeStrict, className, activeClassName } = this.props;
 
       let currentClassName = className || '';
@@ -100,8 +102,12 @@ function withRoute(BaseComponent, storeName='routerStore') {
     // Optional
     linkClassName:    React.PropTypes.string,
     onClick:          React.PropTypes.func,
-    routeName:        React.PropTypes.string
+    routeName:        React.PropTypes.string,
   };
+
+  // Because @inject creates an extra HOC
+  ComponentWithRoute.wrappedComponent.propTypes = {};
+  ComponentWithRoute.wrappedComponent.propTypes[storeName] = React.PropTypes.object.isRequired;
 
   return ComponentWithRoute;
 }

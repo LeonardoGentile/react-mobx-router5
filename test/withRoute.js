@@ -47,6 +47,11 @@ describe('withRoute HOC', () => {
   context('Wrapper component (ComponentWithRoute) ', function() {
 
     context('Exceptions', function() {
+      it('should throw an error if routerStore is not passed', () => {
+        const renderTreeFn = () => renderWithStore()(CompWithRoute);
+        expect(renderTreeFn).to.throw(/^\[react-mobx-router5\]\[withRoute\] missing routerStore$/);
+      });
+
       it('should throw an error if mobx-router5/mobxPlugin is not used', () => {
         routerStore = new RouterStore();
         const renderTreeFn = () => renderWithStore(routerStore)(CompWithRoute);
