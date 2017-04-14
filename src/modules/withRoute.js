@@ -30,27 +30,6 @@ function withRoute(BaseComponent, storeName='routerStore') {
   @observer
   class ComponentWithRoute extends Component {
 
-    static displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
-
-    static defaultProps = {
-      activeClassName: 'active',
-      activeStrict: false,
-      routeOptions: {},
-      routeParams: {}
-    };
-
-    static propTypes = {
-      // Defaults
-      activeClassName:  React.PropTypes.string,
-      activeStrict:     React.PropTypes.bool,
-      routeOptions:     React.PropTypes.object,
-      routeParams:      React.PropTypes.object,
-      // Optional
-      linkClassName:    React.PropTypes.string,
-      onClick:          React.PropTypes.func,
-      routeName:        React.PropTypes.string
-    };
-
     static computeClassName(className, activeClassName, isActive) {
       return (className ? className.split(' ') : [])
         .concat(isActive ? [activeClassName] : []).join(' ');
@@ -102,6 +81,27 @@ function withRoute(BaseComponent, storeName='routerStore') {
       )
     }
   }
+
+  ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
+
+  ComponentWithRoute.defaultProps = {
+    activeClassName: 'active',
+    activeStrict: false,
+    routeOptions: {},
+    routeParams: {}
+  };
+
+  ComponentWithRoute.propTypes = {
+    // Defaults
+    activeClassName:  React.PropTypes.string,
+    activeStrict:     React.PropTypes.bool,
+    routeOptions:     React.PropTypes.object,
+    routeParams:      React.PropTypes.object,
+    // Optional
+    linkClassName:    React.PropTypes.string,
+    onClick:          React.PropTypes.func,
+    routeName:        React.PropTypes.string
+  };
 
   return ComponentWithRoute;
 }

@@ -10,9 +10,10 @@ import {mount} from "enzyme";
 // Also the shallow renderer has been moved to react-test-renderer/shallow.
 // import { createRenderer } from 'react-test-renderer/shallow';
 
-const FnChild = (props) => (<div id="child-fn">{props.children}</div>);
-FnChild.displayName = 'FnChild';
-export {FnChild}
+const FnComp = (props) => <div id="fn-child" />;
+FnComp.displayName = 'FnChild';
+export {FnComp}
+
 
 class Child extends Component {
   render() {
@@ -22,24 +23,20 @@ class Child extends Component {
 Child.displayName = 'Child';
 export {Child}
 
+
 export const createTestRouter = () => {
   return createRouter()
     .usePlugin(browserPlugin());
 };
 
 
-// export const renderWithRouterStore = (routerStore) => (ChildComponent) => renderIntoDocument(
-//   <MobXProvider routerStore={routerStore}>
-//     <ChildComponent />
-//   </MobXProvider>
-// );
-
-export const renderWithRouterStore = (routerStore) => (Component) => mount(
-  <Component routerStore={routerStore}/>
-);
-
 export const renderWithProvider = (routerStore) => (ChildComponent) => renderIntoDocument(
   <MobXProvider routerStore={routerStore}>
     <ChildComponent />
   </MobXProvider>
+);
+
+
+export const renderWithStore = (routerStore) => (Component) => mount(
+  <Component routerStore={routerStore}/>
 );
