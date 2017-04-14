@@ -1,5 +1,3 @@
-import React, {Component} from "react";
-
 /**
  * Basic link component: it generates an anchor tag with href computed from props.routeName.
  * This component won't re-render on route change
@@ -17,10 +15,13 @@ import React, {Component} from "react";
  *    activeStrict={false}            // optional, default false
  *    onClick={onClickCB}             // optional, when passe the navigation will be prevented and the onClickCB will be executed instead
  */
+import React, {Component} from "react";
+import {ifNot} from "./utils";
+
 class BaseLink extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     // Get the router instance from the props (when explicitly passed) or from routerStore
     // It is passed to props for example when using withRoute wrapper
@@ -32,24 +33,29 @@ class BaseLink extends Component {
       this.router = props.router || null;
     }
 
-    if (!this.router) {
-      console.error('[react-mobx-router5][BaseLink] missing router instance props');
-    }
+    ifNot(
+      !props.routeName || this.router,
+      '[react-mobx-router5][BaseLink] missing router instance'
+    );
 
-    if (!this.router.hasPlugin('BROWSER_PLUGIN')) {
-      console.error('[react-mobx-router5][BaseLink] missing browser plugin, href might be build incorrectly');
-    }
+    ifNot(
+      !this.router || this.router.hasPlugin('BROWSER_PLUGIN'),
+      '[react-mobx-router5][BaseLink] missing browser plugin, href might be build incorrectly'
+    );
 
+    // Bindings
     this.clickHandler = this.clickHandler.bind(this);
   }
 
   buildUrl(routeName, routeParams) {
-    // If browser plugin is active
-    if (this.router.buildUrl) {
-      return this.router.buildUrl(routeName, routeParams);
+    if (this.router) {
+      // If browser plugin is active
+      if (this.router.buildUrl) {
+        return this.router.buildUrl(routeName, routeParams);
+      }
+      return this.router.buildPath(routeName, routeParams);
     }
-
-    return this.router.buildPath(routeName, routeParams);
+    return null;
   }
 
   clickHandler(evt) {
@@ -72,31 +78,33 @@ class BaseLink extends Component {
   }
 
   render() {
-
-    const {routeName, routeParams, activeStrict, className, activeClassName, children } = this.props;
+    const {routeName, routeParams, className } = this.props;
 
     const href = this.buildUrl(routeName, routeParams);
     const onClick = this.clickHandler;
-    return React.createElement('a', { href: href, className: className, onClick: onClick}, children);
+    return React.createElement('a', { href: href, className: className, onClick: onClick}, this.props.children);
   }
 }
 
-BaseLink.propTypes = {
-  router:           React.PropTypes.object, // when we don't inject the routerStore then we need the router
-  routeName:        React.PropTypes.string, // not required because of onClick  could be passed instead
-  routeParams:      React.PropTypes.object,
-  routeOptions:     React.PropTypes.object,
-  activeClassName:  React.PropTypes.string,
-  activeStrict:     React.PropTypes.bool,
-  onClick:          React.PropTypes.func,
-};
-
+BaseLink.displayName = 'BaseLink';
 
 BaseLink.defaultProps = {
   activeClassName: 'active',
-  activeStrict: false,
   routeParams: {},
   routeOptions: {}
+};
+
+BaseLink.propTypes = {
+  // Defaults
+  routeOptions:     React.PropTypes.object,
+  routeParams:      React.PropTypes.object,
+  // Optional
+  router:           React.PropTypes.object, // when we don't pass/inject the routerStore then we need the router
+  // TODO: this could a different name
+  // TODO: use the wrappedComponent.propTypes when using @inject
+  // routerStore:      React.PropTypes.object,
+  routeName:        React.PropTypes.string, // not required because of onClick  could be passed instead
+  onClick:          React.PropTypes.func,
 };
 
 export default BaseLink;

@@ -37,22 +37,19 @@ function withRoute(BaseComponent, storeName='routerStore') {
 
     constructor(props) {
       super(props);
-
+      this.routerStore = props[storeName];
       ifNot(
-        props[storeName],
+        this.routerStore,
         '[react-mobx-router5][withRoute] missing routerStore'
       );
-
-      this.routerStore = props[storeName];
       this.router = this.routerStore.router || null;
-      this.isActive = this.isActive.bind(this);
-    }
-
-    componentDidMount() {
       ifNot(
         this.router && this.router.hasPlugin('MOBX_PLUGIN'),
         '[react-mobx-router5][withRoute] missing mobx plugin'
       );
+
+      // Bindings
+      this.isActive = this.isActive.bind(this);
     }
 
     isActive(routeName, routeParams, activeStrict) {
