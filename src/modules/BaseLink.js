@@ -2,12 +2,14 @@
  * Basic link component: it generates an anchor tag with href computed from props.routeName.
  * This component won't re-render on route change
  *
- * The props.router is required (when using navigation). If the component will be decorated with @inject('routerStore') then it is optional.
- * If props.onClick is passed then the navigation won't happen and the callback will be executed instead.
+ * The props `router` or `routerStore` (if decorated with @inject) are required only if props `routeName` is also passed.
+ * If props `onClick` is passed then the navigation won't happen and the callback will be executed instead.
  *
  * Usage:
  * `<BaseLink
- *    router={router5Instance}        // optional/required: when we don't inject the routerStore then we need to pass the router explicitly. If we don't use navigation then not required.
+ *    router={routerInstance}         // optional/required: when we don't inject the routerStore then we need to pass the router explicitly.
+ *                                    // If we don't use navigation then it's not required.
+ *    router={routerInstance}         // optional/required: as above but could be @inject-ed or passed as prop
  *    routeName="home"                // optional/required: route to navigate to. When onClick is passed we don't need it
  *    routeParams={routeParamsObj}    // optional, default {}
  *    routeOptions={routeOptionsObj}  // optional, default {}
@@ -100,8 +102,7 @@ BaseLink.propTypes = {
   routeParams:      React.PropTypes.object,
   // Optional
   router:           React.PropTypes.object, // when we don't pass/inject the routerStore then we need the router
-  // TODO: this could a different name
-  // TODO: use the wrappedComponent.propTypes when using @inject
+  // NOTE: use the wrappedComponent.propTypes when using @inject
   // routerStore:      React.PropTypes.object,
   routeName:        React.PropTypes.string, // not required because of onClick  could be passed instead
   onClick:          React.PropTypes.func,

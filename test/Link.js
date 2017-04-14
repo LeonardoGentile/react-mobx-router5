@@ -30,7 +30,7 @@ describe('BaseLink component', () => {
     expect(renderTreeFn).to.throw();
   });
 
-  it('should render an hyperlink element with href', () => {
+   it('should render an hyperlink element with href', () => {
     router.addNode('home', '/home');
     router.setOption('defaultRoute', 'home');
     router.start();
