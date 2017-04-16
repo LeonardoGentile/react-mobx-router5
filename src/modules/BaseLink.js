@@ -42,7 +42,7 @@ class BaseLink extends Component {
 
     ifNot(
       !this.router || this.router.hasPlugin('BROWSER_PLUGIN'),
-      '[react-mobx-router5][BaseLink] missing browser plugin, href might be build incorrectly'
+      '[react-mobx-router5][BaseLink] missing browser plugin, href might build incorrectly'
     );
 
     // Bindings

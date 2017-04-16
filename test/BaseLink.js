@@ -32,7 +32,7 @@ describe('BaseLink component', () => {
       const renderTreeFn = () => shallow(
         <BaseLink routeName={'home'}/>
       );
-      expect(renderTreeFn).to.throw(/^\[react-mobx-router5\]\[BaseLink\] missing router instance$/);
+      expect(renderTreeFn).to.throw('[react-mobx-router5][BaseLink] missing router instance');
     });
 
     it('should not throw an error if props `routeName` and `router` are passed', () => {
@@ -61,7 +61,7 @@ describe('BaseLink component', () => {
       const renderTreeFn = () => shallow(
         <BaseLink router={router} />
       );
-      expect(renderTreeFn).to.throw(/^\[react-mobx-router5\]\[BaseLink\] missing browser plugin, href might be build incorrectly$/);
+      expect(renderTreeFn).to.throw('[react-mobx-router5][BaseLink] missing browser plugin, href might build incorrectly');
     });
 
   });

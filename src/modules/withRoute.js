@@ -21,9 +21,10 @@ function withRoute(BaseComponent, storeName='routerStore') {
   * The component accepts all the props also accepted by the BaseLink component and will pass them down to the wrapped component.
   * If a linkClassName is passed then it will be passed down and used by the children only when the BaseComponent is created with `withLink` HOC.
   *
-  * It will pass two extra props to the wrapped BaseComponent:
-  *   activeRoute: alias of the mobx observable routerStore.route, used to trigger a re-rendering of the BaseComponent when the route changes
-  *   className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className to the original className when routeName==activeRoute
+  * It will pass 3 extra props to the wrapped BaseComponent:
+  *   route: the mobx observable routerStore.route, used to trigger a re-rendering of the BaseComponent when the route changes
+  *   previousRoute: the mobx observable routerStore.previousRoute, same as above
+  *   className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className to the original className when routeName==routerStore.route
   *
   */
   @inject(storeName)
@@ -58,13 +59,12 @@ function withRoute(BaseComponent, storeName='routerStore') {
 
     render() {
       ifNot(
-        !this.props.activeRoute,
-        '[react-mobx-router5][withRoute] prop names `activeRoute` is reserved.'
+        !this.props.route && !this.props.previousRoute,
+        '[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.'
       );
 
-      // stupid trick to force re-rendering when decorating with @observer
-      let  activeRoute = this.routerStore.route;
-
+      // De-referencing a mobx-observable will trigger a re-rendering (because of the @observer)
+      const {route, previousRoute}  = this.routerStore;
       const {routeName, routeParams, activeStrict, className, activeClassName } = this.props;
 
       let currentClassName = className || '';
@@ -72,7 +72,7 @@ function withRoute(BaseComponent, storeName='routerStore') {
         const isActive = this.isActive(routeName, routeParams, activeStrict);
         currentClassName = ComponentWithRoute.computeClassName(className, activeClassName, isActive);
       }
-      const newProps = {...this.props, className: currentClassName, activeRoute:activeRoute};
+      const newProps = {...this.props, route, previousRoute, className: currentClassName};
       return (
         <BaseComponent {...newProps} >
           {this.props.children}

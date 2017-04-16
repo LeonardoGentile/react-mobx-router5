@@ -30,7 +30,7 @@ function withLink(BaseComponent, storeName='routerStore') {
   function BaseComponentWrapper(props) {
     return (
       <BaseComponent className={props.className} >
-        <BaseLink { ...props } className={props.linkClassName} activeRoute={props.activeRoute}>
+        <BaseLink { ...props } className={props.linkClassName} >
           {props.children}
         </BaseLink>
       </BaseComponent>
@@ -47,9 +47,12 @@ function withLink(BaseComponent, storeName='routerStore') {
     linkClassName:    React.PropTypes.string,
     onClick:          React.PropTypes.func,
     routeName:        React.PropTypes.string,
-    // passed to it from ComponentWithRoute
-    activeRoute:      React.PropTypes.object
+    // passed to it from ComponentWithRoute (Both could be null or object)
+    route:            React.PropTypes.object,
+    previousRoute:    React.PropTypes.object
   };
+  // passed to it from ComponentWithRoute
+  BaseComponentWrapper.propTypes[storeName] = React.PropTypes.object.isRequired;
 
   return withRoute(BaseComponentWrapper, storeName);
 }

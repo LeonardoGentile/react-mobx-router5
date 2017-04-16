@@ -12,23 +12,27 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
 
       constructor(props) {
         super(props);
-        this.router = this.props[storeName].router;
+        this.routerStore = props[storeName];
+        ifNot(
+          this.routerStore,
+          '[react-mobx-router5][routeNode] missing routerStore'
+        );
+        this.router = this.routerStore.router || null;
         this.state = {
-          route: props[storeName].route,
-          intersectionNode: props[storeName].intersectionNode,
+          route: this.routerStore.route,
+          intersectionNode: this.routerStore.intersectionNode,
         };
       }
 
       componentDidMount() {
         ifNot(
-          this.router.hasPlugin('MOBX_PLUGIN'),
-          '[react-mobx-router5][roteNode] missing mobx plugin'
+          this.router && this.router.hasPlugin('MOBX_PLUGIN'),
+          '[react-mobx-router5][routeNode] missing mobx plugin'
         );
-
         this.autorunDisposer = autorun(() => {
           this.setState({
-            route: this.props[storeName].route,
-            intersectionNode: this.props[storeName].intersectionNode
+            route: this.routerStore.route,
+            intersectionNode: this.routerStore.intersectionNode
           });
         });
       }
@@ -37,8 +41,8 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
         this.autorunDisposer();
       }
 
-      // Re-render the route-node (wrapped component) only if
-      // it is the correct "transition node"
+      // re-render this component and so the route-node (wrapped component)
+      // only if it is the correct "transition node"
       shouldComponentUpdate (newProps, newState) {
         return (newState.intersectionNode === nodeName);
       }
@@ -49,6 +53,10 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
     }
 
     RouteNode.displayName = 'RouteNode[' + getDisplayName(RouteSegment) + ']';
+
+    // Because @inject creates an extra HOC
+    RouteNode.wrappedComponent.propTypes = {};
+    RouteNode.wrappedComponent.propTypes[storeName] = React.PropTypes.object.isRequired;
 
     return RouteNode;
   };

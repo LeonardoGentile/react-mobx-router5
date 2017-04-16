@@ -7,9 +7,6 @@ import {mobxPlugin, RouterStore} from "mobx-router5";
 import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from "./utils/test-utils";
 import {withRoute} from "../src/index";
 
-// TOFIX: type-detect bug
-// I've manually modified type-detect: https://github.com/chaijs/type-detect/pull/91/files
-
 describe('withRoute HOC', () => {
   let router;
   let routerStore;
@@ -48,20 +45,27 @@ describe('withRoute HOC', () => {
     context('Exceptions', function() {
       it('should throw an error if routerStore is not passed', () => {
         const renderTreeFn = () => renderWithStore()(CompWithRoute);
-        expect(renderTreeFn).to.throw(/^\[react-mobx-router5\]\[withRoute\] missing routerStore$/);
+        expect(renderTreeFn).to.throw('[react-mobx-router5][withRoute] missing routerStore');
       });
 
       it('should throw an error if mobx-router5/mobxPlugin is not used', () => {
         routerStore = new RouterStore();
         const renderTreeFn = () => renderWithStore(routerStore)(CompWithRoute);
-        expect(renderTreeFn).to.throw(/^\[react-mobx-router5\]\[withRoute\] missing mobx plugin$/);
+        expect(renderTreeFn).to.throw('[react-mobx-router5][withRoute] missing mobx plugin');
       });
 
-      it("should throw an error if it receives an `activeRoute` prop", () => {
+      it("should throw an error if it receives `route` prop ", () => {
         const renderCompFn = () =>  mount(
-          <CompWithRoute routerStore={routerStore} activeRoute="home" />
+          <CompWithRoute routerStore={routerStore} route="home" />
         );
-        expect(renderCompFn).to.throw(/^\[react-mobx-router5\]\[withRoute\] prop names `activeRoute` is reserved\.$/);
+        expect(renderCompFn).to.throw('[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.');
+      });
+
+      it("should throw an error if it receives `previousRoute` prop", () => {
+        const renderCompFn = () =>  mount(
+          <CompWithRoute routerStore={routerStore} previousRoute="home" />
+        );
+        expect(renderCompFn).to.throw('[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.');
       });
     });
 
@@ -111,7 +115,7 @@ describe('withRoute HOC', () => {
       expect(WrappedCompSpy).to.have.been.calledWithMatch({routerStore: routerStore, ...ComponentWithRouteDefaultProps});
     });
 
-    it("should receive an `activeRoute` prop on any route change (to force re-rendering)", () => {
+    it("should receive props `routerStore` and  also `route` and `previousRoute` on any route change (to force re-rendering)", () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
 
@@ -119,7 +123,7 @@ describe('withRoute HOC', () => {
       router.setOption('defaultRoute', 'home');
       router.start();
       const output = renderWithStore(routerStore)(CompWithRoute);
-      expect(WrappedCompSpy).to.have.been.calledWithMatch({activeRoute: router.getState()});
+      expect(WrappedCompSpy).to.have.been.calledWithMatch({route: router.getState(), previousRoute: null, routerStore: routerStore});
     });
 
     it("should receive an extra className value `active` prop when the associated route is active", () => {

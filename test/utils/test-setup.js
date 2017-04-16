@@ -6,8 +6,6 @@ import chaiEnzyme from 'chai-enzyme';
 chai.use(sinonChai);
 chai.use(chaiEnzyme());
 
-// Initialize should
-// chai.should();
 
 // Setup for enzyme: http://airbnb.io/enzyme/docs/guides/jsdom.html
 const doc = jsdom.jsdom('<!doctype html><html><body></body></html>', {
@@ -21,8 +19,9 @@ const win = doc.defaultView;
 global.document = doc;
 global.window = win;
 
+// Temp fix for https://github.com/chaijs/type-detect/issues/98
+global.HTMLElement = win.HTMLElement;
 
-// global.navigator = win.navigator;
 global.navigator = {
   userAgent: 'node.js'
 };

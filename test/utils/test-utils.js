@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
-import { renderIntoDocument } from 'react-addons-test-utils';
-import createRouter from 'router5';
-import browserPlugin from 'router5/plugins/browser';
-import { Provider as MobXProvider, inject } from 'mobx-react';
+import React, {Component} from "react";
+import {renderIntoDocument} from "react-addons-test-utils";
+import createRouter from "router5";
+import browserPlugin from "router5/plugins/browser";
+import {Provider as MobXProvider} from "mobx-react";
 import {mount} from "enzyme";
 
 // TODO: After (15.5)
