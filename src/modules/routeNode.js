@@ -1,4 +1,4 @@
-import React, { Component, createElement } from 'react';
+import React, { Component, createElement, PropTypes } from 'react';
 import { getDisplayName, ifNot} from './utils';
 import { autorun } from 'mobx';
 import { inject } from 'mobx-react';
@@ -20,6 +20,7 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
         this.router = this.routerStore.router || null;
         this.state = {
           route: this.routerStore.route,
+          previousRoute: this.routerStore.previousRoute,
           intersectionNode: this.routerStore.intersectionNode,
         };
       }
@@ -32,6 +33,7 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
         this.autorunDisposer = autorun(() => {
           this.setState({
             route: this.routerStore.route,
+            previousRoute: this.routerStore.previousRoute,
             intersectionNode: this.routerStore.intersectionNode
           });
         });
@@ -48,7 +50,8 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
       }
 
       render() {
-        return createElement(RouteSegment, { ...this.props });
+        const { previousRoute, route } = this.state;
+        return createElement(RouteSegment, { ...this.props, route, previousRoute });
       }
     }
 
@@ -56,7 +59,7 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
 
     // Because @inject creates an extra HOC
     RouteNode.wrappedComponent.propTypes = {};
-    RouteNode.wrappedComponent.propTypes[storeName] = React.PropTypes.object.isRequired;
+    RouteNode.wrappedComponent.propTypes[storeName] = PropTypes.object.isRequired;
 
     return RouteNode;
   };

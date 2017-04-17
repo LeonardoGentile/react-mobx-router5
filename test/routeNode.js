@@ -58,14 +58,32 @@ describe('routeNode hoc', () => {
 
   context('Wrapped component (RouteSegment)', function () {
 
-    it('should receive the routerStore prop', () => {
+    it('should receive props: `routerStore`, `route`, `previousRoute` ', () => {
       const SegmentCompSpy= spy(FnComp);
       NodeComp = routeNode('')(SegmentCompSpy);
+      router.addNode('home', '/home');
+      router.addNode('section', '/section');
+      router.setOption('defaultRoute', 'home');
+      router.start('home', function () {
+        const previousRoute = router.getState();
+        navigateToSection(previousRoute);
+      });
 
-      const output = mount(
-        <NodeComp routerStore={routerStore} />
-      );
-      expect(SegmentCompSpy).to.have.been.calledWithMatch({routerStore: routerStore});
+      function navigateToSection(previousRoute) {
+        router.navigate('section', {}, {}, function () {
+          const output = mount(
+            <NodeComp routerStore={routerStore} />
+          );
+          expect(SegmentCompSpy).to.have.been.calledWithMatch(
+            {
+              routerStore: routerStore,
+              route: router.getState(),
+              previousRoute: previousRoute
+            }
+          );
+        });
+      }
+
     });
   });
 

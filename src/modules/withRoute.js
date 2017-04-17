@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {ifNot, getDisplayName} from './utils';
 import { inject, observer } from 'mobx-react';
 
@@ -92,19 +92,19 @@ function withRoute(BaseComponent, storeName='routerStore') {
 
   ComponentWithRoute.propTypes = {
     // Defaults
-    activeClassName:  React.PropTypes.string,
-    activeStrict:     React.PropTypes.bool,
-    routeOptions:     React.PropTypes.object,
-    routeParams:      React.PropTypes.object,
+    activeClassName:  PropTypes.string,
+    activeStrict:     PropTypes.bool,
+    routeOptions:     PropTypes.object,
+    routeParams:      PropTypes.object,
     // Optional
-    linkClassName:    React.PropTypes.string,
-    onClick:          React.PropTypes.func,
-    routeName:        React.PropTypes.string,
+    linkClassName:    PropTypes.string,
+    onClick:          PropTypes.func,
+    routeName:        PropTypes.string,
   };
 
   // Because @inject creates an extra HOC
   ComponentWithRoute.wrappedComponent.propTypes = {};
-  ComponentWithRoute.wrappedComponent.propTypes[storeName] = React.PropTypes.object.isRequired;
+  ComponentWithRoute.wrappedComponent.propTypes[storeName] = PropTypes.object.isRequired;
 
   return ComponentWithRoute;
 }

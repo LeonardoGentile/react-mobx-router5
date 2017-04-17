@@ -17,7 +17,7 @@
  *    activeStrict={false}            // optional, default false
  *    onClick={onClickCB}             // optional, when passe the navigation will be prevented and the onClickCB will be executed instead
  */
-import React, {Component} from "react";
+import React, {Component, PropTypes} from "react";
 import {ifNot} from "./utils";
 
 class BaseLink extends Component {
@@ -98,14 +98,12 @@ BaseLink.defaultProps = {
 
 BaseLink.propTypes = {
   // Defaults
-  routeOptions:     React.PropTypes.object,
-  routeParams:      React.PropTypes.object,
+  routeOptions:   PropTypes.object,
+  routeParams:    PropTypes.object,
   // Optional
-  router:           React.PropTypes.object, // when we don't pass/inject the routerStore then we need the router
-  // NOTE: use the wrappedComponent.propTypes when using @inject
-  // routerStore:      React.PropTypes.object,
-  routeName:        React.PropTypes.string, // not required because of onClick  could be passed instead
-  onClick:          React.PropTypes.func,
+  router:         PropTypes.object, // when we don't pass/inject the routerStore then we need the router
+  routeName:      PropTypes.string, // not required because of onClick  could be passed instead
+  onClick:        PropTypes.func,
 };
 
 export default BaseLink;

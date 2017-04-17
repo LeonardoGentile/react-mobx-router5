@@ -1,4 +1,4 @@
-import React from "react";
+import React, {PropTypes} from "react";
 import BaseLink from './BaseLink';
 import withRoute from './withRoute';
 
@@ -39,20 +39,20 @@ function withLink(BaseComponent, storeName='routerStore') {
 
   BaseComponentWrapper.propTypes = {
     // Defaults
-    activeClassName:  React.PropTypes.string,
-    activeStrict:     React.PropTypes.bool,
-    routeOptions:     React.PropTypes.object,
-    routeParams:      React.PropTypes.object,
+    activeClassName:  PropTypes.string,
+    activeStrict:     PropTypes.bool,
+    routeOptions:     PropTypes.object,
+    routeParams:      PropTypes.object,
     // Optional
-    linkClassName:    React.PropTypes.string,
-    onClick:          React.PropTypes.func,
-    routeName:        React.PropTypes.string,
+    linkClassName:    PropTypes.string,
+    onClick:          PropTypes.func,
+    routeName:        PropTypes.string,
     // passed to it from ComponentWithRoute (Both could be null or object)
-    route:            React.PropTypes.object,
-    previousRoute:    React.PropTypes.object
+    route:            PropTypes.object,
+    previousRoute:    PropTypes.object
   };
   // passed to it from ComponentWithRoute
-  BaseComponentWrapper.propTypes[storeName] = React.PropTypes.object.isRequired;
+  BaseComponentWrapper.propTypes[storeName] = PropTypes.object.isRequired;
 
   return withRoute(BaseComponentWrapper, storeName);
 }

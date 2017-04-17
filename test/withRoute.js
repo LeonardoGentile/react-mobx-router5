@@ -43,6 +43,7 @@ describe('withRoute HOC', () => {
   context('Wrapper component (ComponentWithRoute) ', function() {
 
     context('Exceptions', function() {
+      // NOTE: This will also invalidates propTypes
       it('should throw an error if routerStore is not passed', () => {
         const renderTreeFn = () => renderWithStore()(CompWithRoute);
         expect(renderTreeFn).to.throw('[react-mobx-router5][withRoute] missing routerStore');
@@ -115,15 +116,31 @@ describe('withRoute HOC', () => {
       expect(WrappedCompSpy).to.have.been.calledWithMatch({routerStore: routerStore, ...ComponentWithRouteDefaultProps});
     });
 
-    it("should receive props `routerStore` and  also `route` and `previousRoute` on any route change (to force re-rendering)", () => {
+    it('should receive props: `routerStore`, `route`, `previousRoute` on any route change (to force re-rendering)', () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
 
       router.addNode('home', '/home');
+      router.addNode('section', '/section');
       router.setOption('defaultRoute', 'home');
-      router.start();
-      const output = renderWithStore(routerStore)(CompWithRoute);
-      expect(WrappedCompSpy).to.have.been.calledWithMatch({route: router.getState(), previousRoute: null, routerStore: routerStore});
+      router.start('home', function () {
+        const previousRoute = router.getState();
+        navigateToSection(previousRoute);
+      });
+
+      function navigateToSection(previousRoute) {
+        router.navigate('section', {}, {}, function () {
+          const output = renderWithStore(routerStore)(CompWithRoute);
+
+          expect(WrappedCompSpy).to.have.been.calledWithMatch(
+            {
+              routerStore: routerStore,
+              route: router.getState(),
+              previousRoute: previousRoute
+            }
+          );
+        });
+      }
     });
 
     it("should receive an extra className value `active` prop when the associated route is active", () => {
