@@ -1,9 +1,19 @@
 
-# mobx-router5
+# react-mobx-router5
+
 
 ## Warning
 This is an early work-in-progress.
 This is not published on npm yet.
+
+## TODO: 
+After React v15.5.0:  
+```
+import PropTypes from 'prop-types';  
+import TestUtils from 'react-dom/test-utils';  
+// Shallow renderer
+import { createRenderer } from 'react-test-renderer/shallow';  
+```
 
 ## Usage
 
