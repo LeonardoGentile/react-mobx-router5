@@ -5,7 +5,7 @@ import {spy} from "sinon";
 import {mount} from "enzyme";
 import {mobxPlugin, RouterStore} from "mobx-router5";
 import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from "./utils/test-utils";
-import {withRoute} from "../src/index";
+import withRoute from "../src/modules/withRoute";
 
 describe('withRoute HOC', () => {
   let router;
@@ -50,19 +50,20 @@ describe('withRoute HOC', () => {
       });
 
       it('should throw an error if mobx-router5/mobxPlugin is not used', () => {
+        router = createTestRouter();
         routerStore = new RouterStore();
         const renderTreeFn = () => renderWithStore(routerStore)(CompWithRoute);
         expect(renderTreeFn).to.throw('[react-mobx-router5][withRoute] missing mobx plugin');
       });
 
-      it("should throw an error if it receives `route` prop ", () => {
+      it("should throw an error if it receives a `route` prop ", () => {
         const renderCompFn = () =>  mount(
           <CompWithRoute routerStore={routerStore} route="home" />
         );
         expect(renderCompFn).to.throw('[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.');
       });
 
-      it("should throw an error if it receives `previousRoute` prop", () => {
+      it("should throw an error if it receives a `previousRoute` prop", () => {
         const renderCompFn = () =>  mount(
           <CompWithRoute routerStore={routerStore} previousRoute="home" />
         );
@@ -109,14 +110,15 @@ describe('withRoute HOC', () => {
 
   context('Wrapped component (BaseComponent)', function() {
 
-    it("should receive the routerStore + default routing props", () => {
+    it("should receive default routing props", () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
       const output = renderWithStore(routerStore)(CompWithRoute);
-      expect(WrappedCompSpy).to.have.been.calledWithMatch({routerStore: routerStore, ...ComponentWithRouteDefaultProps});
+      expect(WrappedCompSpy).to.have.been.calledWithMatch({routeOptions: {}, routeParams:{} });
     });
 
-    it('should receive props: `routerStore`, `route`, `previousRoute` on any route change (to force re-rendering)', () => {
+
+    it('should receive props: `routerStore`, `route`, `previousRoute` on any route change (to ensure re-rendering)', () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
 

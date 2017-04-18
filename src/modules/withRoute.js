@@ -1,12 +1,13 @@
 import React, {Component, PropTypes} from 'react';
-import {ifNot, getDisplayName} from './utils';
 import { inject, observer } from 'mobx-react';
+import {ifNot, getDisplayName} from './utils';
+
 
 /**
  * HOC that creates a new wrapper ComponentWithRoute around BaseComponent
  *
  * @param BaseComponent - the component to be wrapped
- * @param storeName - the mobx-router5 instance name. Default 'routerStore'
+ * @param storeName - the mobx-router5 store instance name. Default 'routerStore'
  * @returns {ComponentWithRoute}
  */
 function withRoute(BaseComponent, storeName='routerStore') {
@@ -17,14 +18,15 @@ function withRoute(BaseComponent, storeName='routerStore') {
   * The wrapper is injected with the mobx routerStore and decorated with @observer
   * Notice that @inject will also create another wrapper around the ComponentWithRoute
   *
-  * Any route changes will trigger a re-rendering of ComponentWithRoute and so of its wrapped BaseComponent and children.
-  * The component accepts all the props also accepted by the BaseLink component and will pass them down to the wrapped component.
+  * The component accepts all the props normally accepted by the BaseLink component and will forward them down to the wrapped component.
   * If a linkClassName is passed then it will be passed down and used by the children only when the BaseComponent is created with `withLink` HOC.
+  * NOTE: the routerStore will be injected into the ComponentWithRoute.props, so it will also forwarded down to the wrapped component
   *
-  * It will pass 3 extra props to the wrapped BaseComponent:
-  *   route: the mobx observable routerStore.route, used to trigger a re-rendering of the BaseComponent when the route changes
-  *   previousRoute: the mobx observable routerStore.previousRoute, same as above
-  *   className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className to the original className when routeName==routerStore.route
+  * Any route changes will trigger a rendering of ComponentWithRoute.
+  * Also the wrapped BaseComponent and children will re-render because passing 3 extra changing props to it (apart from this.props):
+  *   - route: the mobx observable routerStore.route, used to trigger a re-rendering of the BaseComponent when the route changes
+  *   - previousRoute: the mobx observable routerStore.previousRoute, same as above
+  *   - className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className to the original className when routeName==routerStore.route
   *
   */
   @inject(storeName)
@@ -63,16 +65,32 @@ function withRoute(BaseComponent, storeName='routerStore') {
         '[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.'
       );
 
-      // De-referencing a mobx-observable will trigger a re-rendering (because of the @observer)
-      const {route, previousRoute}  = this.routerStore;
-      const {routeName, routeParams, activeStrict, className, activeClassName } = this.props;
+      const {activeClassName, activeStrict, routeOptions, routeParams, linkClassName, onClick, routeName, className } = this.props;
 
       let currentClassName = className || '';
       if (routeName) {
         const isActive = this.isActive(routeName, routeParams, activeStrict);
         currentClassName = ComponentWithRoute.computeClassName(className, activeClassName, isActive);
       }
-      const newProps = {...this.props, route, previousRoute, className: currentClassName};
+
+      // De-referencing a mobx-observable will trigger a re-rendering (because of the @observer)
+      const {route, previousRoute}  = this.routerStore;
+      const newProps = {
+        // Props Extra injected
+        routerStore: this.routerStore,
+        route,
+        previousRoute,
+        // Props Default forwarded
+        routeOptions,
+        routeParams,
+        // Props optional forwarded
+        linkClassName,
+        onClick,
+        routeName,
+        // Props computed injected
+        className: currentClassName
+      };
+
       return (
         <BaseComponent {...newProps} >
           {this.props.children}
@@ -100,6 +118,7 @@ function withRoute(BaseComponent, storeName='routerStore') {
     linkClassName:    PropTypes.string,
     onClick:          PropTypes.func,
     routeName:        PropTypes.string,
+    className:        PropTypes.string
   };
 
   // Because @inject creates an extra HOC

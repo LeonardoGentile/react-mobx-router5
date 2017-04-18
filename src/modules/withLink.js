@@ -3,9 +3,8 @@ import BaseLink from './BaseLink';
 import withRoute from './withRoute';
 
 /**
- * HOC that creates a new wrapper BaseComponentWrapper around BaseComponent
+ * HOC that creates a new wrapper BaseComponentWrapper around BaseComponent, then passing it to withRoute HOC
  *
- * It will then call withRoute
  * This is very similar to Link component.
  * It exists and differs from it only to change the structure of the wrapped elements
  * Useful for creating any sort of wrapper around a BaseLink component that will
@@ -37,22 +36,24 @@ function withLink(BaseComponent, storeName='routerStore') {
     )
   }
 
+  // All props passed from ComponentWithRoute
   BaseComponentWrapper.propTypes = {
-    // Defaults
-    activeClassName:  PropTypes.string,
-    activeStrict:     PropTypes.bool,
+    // Extra (for re-rendering) injected to it
+    route:            PropTypes.object,
+    previousRoute:    PropTypes.object,
+    // Defaults or defined forwarded to it
     routeOptions:     PropTypes.object,
     routeParams:      PropTypes.object,
-    // Optional
+    // Optional forwarded to it
     linkClassName:    PropTypes.string,
     onClick:          PropTypes.func,
     routeName:        PropTypes.string,
-    // passed to it from ComponentWithRoute (Both could be null or object)
-    route:            PropTypes.object,
-    previousRoute:    PropTypes.object
+    // Computed, injected to it
+    className:        PropTypes.string
   };
   // passed to it from ComponentWithRoute
   BaseComponentWrapper.propTypes[storeName] = PropTypes.object.isRequired;
+
 
   return withRoute(BaseComponentWrapper, storeName);
 }
