@@ -40,7 +40,7 @@ export function getComponent(route, routeNodeName, routesConfig) {
   }
 
   // Recurse until it gets the relevant portion of the routes obj or the component itself
-  function getComponent(routesConfig) {
+  function findComponent(routesConfig) {
     // going deeper every recursion
     const currentSegment = routeSegments[currentLevel];
 
@@ -57,7 +57,7 @@ export function getComponent(route, routeNodeName, routesConfig) {
         else {
           if (currentRoute.children) {
             currentLevel += 1;
-            return getComponent(currentRoute.children)
+            return findComponent(currentRoute.children)
           }
           throw new Error('route doen not have children');
         }
@@ -65,5 +65,5 @@ export function getComponent(route, routeNodeName, routesConfig) {
     }
     throw new Error('could not find route');
   }
-  return getComponent(routesConfig);
+  return findComponent(routesConfig);
 }
