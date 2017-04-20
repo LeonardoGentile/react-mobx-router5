@@ -59,11 +59,11 @@ export function getComponent(route, routeNodeName, routesConfig) {
             currentLevel += 1;
             return findComponent(currentRoute.children)
           }
-          throw new Error('route doen not have children');
+          break;
         }
       }
     }
-    throw new Error('could not find route');
+    throw new Error('could not find route or component');
   }
   return findComponent(routesConfig);
 }
