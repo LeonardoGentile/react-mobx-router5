@@ -1,5 +1,6 @@
 import React from "react";
 import {expect} from "chai";
+import {stub} from 'sinon';
 import {mount} from "enzyme";
 import {mobxPlugin, RouterStore} from "mobx-router5";
 import {createTestRouter, FnComp} from "./utils/test-utils";
@@ -11,6 +12,19 @@ describe('routeNode hoc', () => {
   let router;
   let routerStore;
   let NodeComp;
+
+  // To avoid print ugly things when prop types fails
+  // before(stub(console, 'error').callsFake((warning) => {
+  //   if (warning && warning.indexOf('Warning: Failed prop type:') > -1) {
+  //     process.nextTick(() => {
+  //       throw new Error(warning);
+  //     });
+  //   }
+  // }));
+  //
+  // // Restore console afterwards
+  // after(() => { console.error.restore() });
+
 
   beforeEach(() => {
     router = createTestRouter();

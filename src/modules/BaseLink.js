@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from "react";
+import React, {Component} from "react";
+import PropTypes from 'prop-types';
 import {ifNot} from "./utils";
 
 // TODO
@@ -117,6 +118,5 @@ BaseLink.propTypes[storeName] = PropTypes.object;
 // Extra (for re-rendering) injected to it
 BaseLink.propTypes['route'] = PropTypes.object;
 BaseLink.propTypes['previousRoute'] = PropTypes.object;
-
 
 export default BaseLink;

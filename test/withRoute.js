@@ -1,7 +1,7 @@
 import React from "react";
 import {findRenderedComponentWithType} from "react-addons-test-utils";
 import {expect} from "chai";
-import {spy} from "sinon";
+import {spy, stub} from "sinon";
 import {mount} from "enzyme";
 import {mobxPlugin, RouterStore} from "mobx-router5";
 import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from "./utils/test-utils";
@@ -12,12 +12,17 @@ describe('withRoute HOC', () => {
   let routerStore;
   let CompWithRoute;
 
-  const ComponentWithRouteDefaultProps = {
-    activeClassName: "active",
-    activeStrict: false,
-    routeOptions: {},
-    routeParams: {},
-  };
+  // To avoid print ugly things when prop types fails
+  // before(stub(console, 'error').callsFake((warning) => {
+  //   if (warning && warning.indexOf('Warning: Failed prop type:') > -1) {
+  //     process.nextTick(() => {
+  //       throw new Error(warning);
+  //     });
+  //   }
+  // }));
+  //
+  // // Restore console afterwards
+  // after(() => { console.error.restore() });
 
   beforeEach(() => {
     routerStore = new RouterStore();
@@ -43,6 +48,7 @@ describe('withRoute HOC', () => {
   context('Wrapper component (ComponentWithRoute) ', function() {
 
     context('Exceptions', function() {
+
       // NOTE: This will also invalidates propTypes
       it('should throw an error if routerStore is not passed', () => {
         const renderTreeFn = () => renderWithStore()(CompWithRoute);

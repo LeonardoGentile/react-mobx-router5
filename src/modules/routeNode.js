@@ -1,4 +1,5 @@
-import React, { Component, createElement, PropTypes } from 'react';
+import React, { Component, createElement} from 'react';
+import PropTypes from 'prop-types';
 import { getDisplayName, ifNot} from './utils';
 import { autorun } from 'mobx';
 import { inject } from 'mobx-react';
