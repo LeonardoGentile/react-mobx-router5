@@ -1,11 +1,24 @@
 sudo: false
 language: node_js
+cache:
+  directories:
+    - node_modules
+branches:
+  only:
+    - master
+notifications:
+  email: false
 node_js:
+  - '7'
   - '6'
-  - '5'
   - '4'
+before_script:
+  - npm prune
 script:
   - npm run lint
   - npm run test:cover
+  - npm run build
 after_success:
   - npm run coveralls
+  - npm run semantic-release
+

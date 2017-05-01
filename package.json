@@ -1,12 +1,15 @@
 {
   "private": true,
   "name": "react-mobx-router5",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "description": "Router5 integration with mobX and react",
   "homepage": "https://github.com/LeonardoGentile/react-mobx-router5",
   "repository": {
     "type": "git",
     "url": "https://github.com/LeonardoGentile/react-mobx-router5.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LeonardoGentile/react-mobx-router5/issues"
   },
   "author": "Leonardo Gentile",
   "contributors": [],
@@ -17,13 +20,21 @@
     "react",
     "router5",
     "functional",
-    "routing"
+    "routing",
+    "observable",
+    "reactive",
+    "observer"
   ],
-  "bugs": {
-    "url": "https://github.com/LeonardoGentile/react-mobx-router5/issues"
-  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE.txt"
+  ],
   "main": "dist/index.js",
-  "jsnext:main": "dist/index.es.js",
+  "module": "dist/index.es.js",
   "babel": {
     "comments": false,
     "presets": [
@@ -35,10 +46,6 @@
       "transform-runtime",
       "transform-decorators-legacy"
     ]
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "extends": "airbnb-base"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6"
@@ -54,11 +61,13 @@
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.16.3",
     "chai": "3.5.0",
+    "commitizen": "2.9.6",
     "chai-enzyme": "^0.6.1",
     "coveralls": "^2.11.14",
+    "cz-conventional-changelog": "2.0.0",
     "del": "^2.2.2",
     "enzyme": "^2.8.0",
-    "eslint": "^3.8.0",
+    "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^10.0.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-react": "^6.10.3",
@@ -72,8 +81,8 @@
     "react": "~15.4.2",
     "react-addons-test-utils": "~15.4.2",
     "react-dom": "~15.4.2",
-    "rollup": "^0.36.3",
-    "rollup-plugin-babel": "^2.6.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-babel": "^2.7.1",
     "router5": "~4.5.2",
     "sinon": "^2.0.0-pre.3",
     "sinon-chai": "^2.9.0"

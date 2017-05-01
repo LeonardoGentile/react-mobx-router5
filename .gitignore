@@ -6,4 +6,3 @@ dist
 docs/dist
 node_modules
 npm-debug.log
-!/src/modules/BaseLink.js
