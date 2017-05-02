@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "react-mobx-router5",
   "version": "0.0.0-development",
   "description": "Router5 integration with mobX and react",
@@ -61,8 +60,8 @@
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.16.3",
     "chai": "3.5.0",
-    "commitizen": "2.9.6",
     "chai-enzyme": "^0.6.1",
+    "commitizen": "2.9.6",
     "coveralls": "^2.11.14",
     "cz-conventional-changelog": "2.0.0",
     "del": "^2.2.2",
@@ -84,6 +83,8 @@
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "router5": "~4.5.2",
+    "semantic-release": "^6.3.2",
+    "semantic-release-conventional-commits": "1.0.2",
     "sinon": "^2.0.0-pre.3",
     "sinon-chai": "^2.9.0"
   },
@@ -94,14 +95,42 @@
     "mobx-react": "^4.0.0"
   },
   "scripts": {
+    "commit": "git-cz",
     "lint": "eslint src test tools",
     "test": "mocha --compilers js:babel-register --require ./test/utils/test-setup.js 'test/*.js'",
     "test:watch": "mocha --compilers js:babel-register --require ./test/utils/test-setup.js --reporter min --watch 'test/*.js'",
     "test:cover": "babel-node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --require ./test/utils/test-setup.js 'test/*.js'",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "build": "node tools/build",
-    "prepublish": "npm run build",
-    "publish:docs": "easystatic deploy docs --repo kriasoft/babel-starter-kit",
-    "start": "easystatic start docs"
+    "publish:docs": "easystatic deploy docs --repo LeonardoGentile/react-mobx-router5",
+    "start": "easystatic start docs",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "config": {
+      "commitizen": {
+        "path": "./node_modules/cz-conventional-changelog"
+      }
+    },
+    "release": {
+      "analyzeCommits": {
+        "path": "semantic-release-conventional-commits",
+        "minorTypes": [
+          "feat",
+          "minor"
+        ],
+        "patchTypes": [
+          "fix",
+          "patch",
+          "docs",
+          "refactor",
+          "style",
+          "perf"
+        ]
+      }
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
