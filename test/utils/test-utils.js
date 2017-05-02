@@ -1,9 +1,9 @@
-import React, {Component} from "react";
-import {renderIntoDocument} from "react-addons-test-utils";
-import createRouter from "router5";
-import browserPlugin from "router5/plugins/browser";
-import {Provider as MobXProvider} from "mobx-react";
-import {mount} from "enzyme";
+import React, {Component} from 'react';
+import {renderIntoDocument} from 'react-addons-test-utils';
+import {createRouter} from 'router5';
+import browserPlugin from 'router5/plugins/browser';
+import {Provider as MobXProvider} from 'mobx-react';
+import {mount} from 'enzyme';
 
 // TODO: After (15.5)
 // import TestUtils from 'react-dom/test-utils';
@@ -12,16 +12,16 @@ import {mount} from "enzyme";
 
 const FnComp = (props) => <div id="fn-child" />;
 FnComp.displayName = 'FnChild';
-export {FnComp}
+export {FnComp};
 
 
 class Child extends Component {
   render() {
     return (<div id="child-comp">{this.props.children}</div>);
   }
-};
+}
 Child.displayName = 'Child';
-export {Child}
+export {Child};
 
 
 export const createTestRouter = () => {

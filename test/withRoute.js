@@ -1,28 +1,16 @@
-import React from "react";
-import {findRenderedComponentWithType} from "react-addons-test-utils";
-import {expect} from "chai";
-import {spy, stub} from "sinon";
-import {mount} from "enzyme";
-import {mobxPlugin, RouterStore} from "mobx-router5";
-import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from "./utils/test-utils";
-import withRoute from "../src/modules/withRoute";
+import React from 'react';
+import {findRenderedComponentWithType} from 'react-addons-test-utils';
+import {expect} from 'chai';
+import {spy} from 'sinon';
+import {mount} from 'enzyme';
+import {mobxPlugin, RouterStore} from 'mobx-router5';
+import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from './utils/test-utils';
+import withRoute from '../src/modules/withRoute';
 
 describe('withRoute HOC', () => {
   let router;
   let routerStore;
   let CompWithRoute;
-
-  // To avoid print ugly things when prop types fails
-  // before(stub(console, 'error').callsFake((warning) => {
-  //   if (warning && warning.indexOf('Warning: Failed prop type:') > -1) {
-  //     process.nextTick(() => {
-  //       throw new Error(warning);
-  //     });
-  //   }
-  // }));
-  //
-  // // Restore console afterwards
-  // after(() => { console.error.restore() });
 
   beforeEach(() => {
     routerStore = new RouterStore();
@@ -62,14 +50,14 @@ describe('withRoute HOC', () => {
         expect(renderTreeFn).to.throw('[react-mobx-router5][withRoute] missing mobx plugin');
       });
 
-      it("should throw an error if it receives a `route` prop ", () => {
+      it('should throw an error if it receives a `route` prop ', () => {
         const renderCompFn = () =>  mount(
           <CompWithRoute routerStore={routerStore} route="home" />
         );
         expect(renderCompFn).to.throw('[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.');
       });
 
-      it("should throw an error if it receives a `previousRoute` prop", () => {
+      it('should throw an error if it receives a `previousRoute` prop', () => {
         const renderCompFn = () =>  mount(
           <CompWithRoute routerStore={routerStore} previousRoute="home" />
         );
@@ -116,10 +104,10 @@ describe('withRoute HOC', () => {
 
   context('Wrapped component (BaseComponent)', function() {
 
-    it("should receive default routing props", () => {
+    it('should receive default routing props', () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
-      const output = renderWithStore(routerStore)(CompWithRoute);
+      renderWithStore(routerStore)(CompWithRoute);
       expect(WrappedCompSpy).to.have.been.calledWithMatch({routeOptions: {}, routeParams:{} });
     });
 
@@ -138,7 +126,7 @@ describe('withRoute HOC', () => {
 
       function navigateToSection(previousRoute) {
         router.navigate('section', {}, {}, function () {
-          const output = renderWithStore(routerStore)(CompWithRoute);
+          renderWithStore(routerStore)(CompWithRoute);
 
           expect(WrappedCompSpy).to.have.been.calledWithMatch(
             {
@@ -151,20 +139,20 @@ describe('withRoute HOC', () => {
       }
     });
 
-    it("should receive an extra className value `active` prop when the associated route is active", () => {
+    it('should receive an extra className value `active` prop when the associated route is active', () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
 
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');
       router.start();
-      const output = mount(
+      mount(
         <CompWithRoute routerStore={routerStore} routeName='home' className="just-a-class-name"/>
       );
       expect(WrappedCompSpy).to.have.been.calledWithMatch({className: 'just-a-class-name active'});
     });
 
-    it("should not receive an extra className value prop when the associated route is not active", () => {
+    it('should not receive an extra className value prop when the associated route is not active', () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
 
@@ -172,7 +160,7 @@ describe('withRoute HOC', () => {
       router.addNode('section', '/section');
       router.setOption('defaultRoute', 'home');
       router.start();
-      const output = mount(
+      mount(
         <CompWithRoute routerStore={routerStore} routeName='section' className="just-a-class-name"/>
       );
       expect(WrappedCompSpy).to.have.been.calledWithMatch({className: 'just-a-class-name'});

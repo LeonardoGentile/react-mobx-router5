@@ -1,9 +1,9 @@
-import React, {PropTypes} from "react";
-import {findRenderedComponentWithType} from "react-addons-test-utils";
-import {expect} from "chai";
-import {mobxPlugin, RouterStore} from "mobx-router5";
-import {inject} from "mobx-react";
-import {Child, createTestRouter, renderWithProvider} from "./utils/test-utils";
+import { PropTypes } from 'react';
+import { findRenderedComponentWithType } from 'react-addons-test-utils';
+import { expect } from 'chai';
+import { mobxPlugin, RouterStore } from 'mobx-router5';
+import { inject } from 'mobx-react';
+import { Child, createTestRouter, renderWithProvider } from './utils/test-utils';
 
 
 describe('Mobx-react Provider/Inject-ing routerStore', () => {
@@ -14,7 +14,7 @@ describe('Mobx-react Provider/Inject-ing routerStore', () => {
   beforeEach(function () {
     router = createTestRouter();
     routerStore = new RouterStore();
-    ChildWithInjectedStore = inject("routerStore")(Child);
+    ChildWithInjectedStore = inject('routerStore')(Child);
   });
 
 

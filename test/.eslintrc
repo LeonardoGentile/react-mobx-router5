@@ -2,12 +2,14 @@
   "env": {
     "mocha": true
   },
+  "plugins": ["import"],
   "rules": {
     "import/no-extraneous-dependencies": [
       "error",
       {
         "optionalDependencies": false,
-        "peerDependencies": false
+        "peerDependencies": true,
+        "devDependencies": true
       }
     ],
     "no-unused-expressions": "off",

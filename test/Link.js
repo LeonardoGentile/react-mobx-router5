@@ -1,11 +1,11 @@
-import React from "react";
-import {findRenderedComponentWithType} from "react-addons-test-utils";
-import {expect} from "chai";
-import {spy} from "sinon";
-import {mobxPlugin, RouterStore} from "mobx-router5";
-import {createTestRouter, renderWithProvider} from "./utils/test-utils";
-import {mount, shallow} from "enzyme";
-import Link from "../src/modules/Link";
+import React from 'react';
+import {findRenderedComponentWithType} from 'react-addons-test-utils';
+import {expect} from 'chai';
+import {spy} from 'sinon';
+import {mobxPlugin, RouterStore} from 'mobx-router5';
+import {createTestRouter, renderWithProvider} from './utils/test-utils';
+import {mount, shallow} from 'enzyme';
+import Link from '../src/modules/Link';
 
 describe('Link component', () => {
   let router;

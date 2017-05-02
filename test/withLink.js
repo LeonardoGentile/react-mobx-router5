@@ -1,11 +1,11 @@
-import React from "react";
-import {expect} from "chai";
-import {spy} from "sinon";
-import {mount} from "enzyme";
-import {mobxPlugin, RouterStore} from "mobx-router5";
-import {createTestRouter} from "./utils/test-utils";
-import withLink from "../src/modules/withLink";
-import NavLink from "../src/modules/NavLink";
+import React from 'react';
+import {expect} from 'chai';
+import {spy} from 'sinon';
+import {mount} from 'enzyme';
+import {mobxPlugin, RouterStore} from 'mobx-router5';
+import {createTestRouter} from './utils/test-utils';
+import withLink from '../src/modules/withLink';
+import NavLink from '../src/modules/NavLink';
 
 
 describe('withLink', () => {
@@ -20,7 +20,7 @@ describe('withLink', () => {
 
   context('BaseComponentWrapper', function() {
 
-    it("should creates a `li` element around the the BaseLink", () => {
+    it('should creates a `li` element around the the BaseLink', () => {
       const MyNavLink = withLink('li');
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');

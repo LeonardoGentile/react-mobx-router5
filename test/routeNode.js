@@ -1,30 +1,16 @@
-import React from "react";
-import {expect} from "chai";
-import {stub} from 'sinon';
-import {mount} from "enzyme";
-import {mobxPlugin, RouterStore} from "mobx-router5";
-import {createTestRouter, FnComp} from "./utils/test-utils";
-import routeNode from "../src/modules/routeNode";
-import {spy} from "sinon";
+import React from 'react';
+import {expect} from 'chai';
+import {mount} from 'enzyme';
+import {mobxPlugin, RouterStore} from 'mobx-router5';
+import {createTestRouter, FnComp} from './utils/test-utils';
+import routeNode from '../src/modules/routeNode';
+import {spy} from 'sinon';
 
 
 describe('routeNode hoc', () => {
   let router;
   let routerStore;
   let NodeComp;
-
-  // To avoid print ugly things when prop types fails
-  // before(stub(console, 'error').callsFake((warning) => {
-  //   if (warning && warning.indexOf('Warning: Failed prop type:') > -1) {
-  //     process.nextTick(() => {
-  //       throw new Error(warning);
-  //     });
-  //   }
-  // }));
-  //
-  // // Restore console afterwards
-  // after(() => { console.error.restore() });
-
 
   beforeEach(() => {
     router = createTestRouter();
@@ -85,7 +71,7 @@ describe('routeNode hoc', () => {
 
       function navigateToSection(previousRoute) {
         router.navigate('section', {}, {}, function () {
-          const output = mount(
+          mount(
             <NodeComp routerStore={routerStore} />
           );
           expect(SegmentCompSpy).to.have.been.calledWithMatch(

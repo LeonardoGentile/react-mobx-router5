@@ -1,5 +1,5 @@
-import {getComponent} from '../src/modules/utils'
-import {expect} from "chai";
+import {getComponent} from '../src/modules/utils';
+import {expect} from 'chai';
 
 describe('getComponent for current route and node', () => {
   let routes;
@@ -12,7 +12,7 @@ describe('getComponent for current route and node', () => {
       F = {name: 'f'},
       G = {name: 'g'},
       H = {name: 'h'},
-      I = {name: 'i'},
+      // I = {name: 'i'},
       L = {name: 'l'},
       M = {name: 'm'};
 
@@ -46,12 +46,12 @@ describe('getComponent for current route and node', () => {
 
     it("should throw for node: 'd' ", () => {
       const getComp = () => getComponent('a', 'd', routes);
-      expect(getComp).to.throw('could not find route or component')
+      expect(getComp).to.throw('could not find route or component');
     });
 
     it("should throw for node: 'd.h' ", () => {
       const getComp = () => getComponent('b', 'd.h', routes);
-      expect(getComp).to.throw('could not find route or component')
+      expect(getComp).to.throw('could not find route or component');
     });
   });
 
@@ -68,7 +68,7 @@ describe('getComponent for current route and node', () => {
 
     it("should get the component for node: 'd.h' ", () => {
       const getComp = () => getComponent('d.f', 'd.h', routes);
-      expect(getComp).to.throw('could not find route or component')
+      expect(getComp).to.throw('could not find route or component');
     });
 
   });
@@ -105,7 +105,7 @@ describe('getComponent for current route and node', () => {
 
     it("should get the component for node: 'd.h' ", () => {
       const getComp = () => getComponent('d.h.i', 'd.h', routes);
-      expect(getComp).to.throw('route segment does not have a component field')
+      expect(getComp).to.throw('route segment does not have a component field');
     });
   });
 

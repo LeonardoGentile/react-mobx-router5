@@ -1,10 +1,10 @@
-import React from "react";
-import {expect} from "chai";
-import {mobxPlugin, RouterStore} from "mobx-router5";
-import {createTestRouter} from "./utils/test-utils";
-import {shallow} from "enzyme";
-import {createRouter} from "router5";
-import BaseLink from "../src/modules/BaseLink";
+import React from 'react';
+import {expect} from 'chai';
+import {mobxPlugin, RouterStore} from 'mobx-router5';
+import {createTestRouter} from './utils/test-utils';
+import {shallow} from 'enzyme';
+import {createRouter} from 'router5';
+import BaseLink from '../src/modules/BaseLink';
 
 describe('BaseLink component', () => {
   let router;
