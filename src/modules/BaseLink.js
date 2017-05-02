@@ -1,9 +1,9 @@
-import React, {Component} from "react";
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {ifNot} from "./utils";
+import { ifNot } from './utils';
 
 // TODO
-const storeName='routerStore';
+const storeName = 'routerStore';
 
 /**
  * BaseLink component: it generates an anchor tag with href computed from props.routeName.
@@ -33,7 +33,7 @@ class BaseLink extends Component {
 
     // Get the router instance from the props (when explicitly passed) or from routerStore
     // It is passed to props for example when using withRoute wrapper
-    this.routerStore = props.routerStore;
+    this.routerStore = props[storeName];
     if (this.routerStore) {
       this.router = this.routerStore.router || null;
     }
@@ -86,11 +86,11 @@ class BaseLink extends Component {
   }
 
   render() {
-    const {routeName, routeParams, className } = this.props;
+    const {routeName, routeParams, className} = this.props;
 
     const href = this.buildUrl(routeName, routeParams);
     const onClick = this.clickHandler;
-    return React.createElement('a', { href: href, className: className, onClick: onClick}, this.props.children);
+    return React.createElement('a', {href: href, className: className, onClick: onClick}, this.props.children);
   }
 }
 
@@ -103,13 +103,14 @@ BaseLink.defaultProps = {
 
 BaseLink.propTypes = {
   // Defaults
-  routeOptions:     PropTypes.object,
-  routeParams:      PropTypes.object,
+  routeOptions: PropTypes.object,
+  routeParams: PropTypes.object,
   // Optional
-  router:           PropTypes.object, // when we don't pass/inject the routerStore then we need the router
-  routeName:        PropTypes.string, // not required because of onClick  could be passed instead
-  onClick:          PropTypes.func,
-  className:        PropTypes.string  // could be passed directly or forwarded (computed) from withRoute/withLink
+  router: PropTypes.object, // when we don't pass/inject the routerStore then we need the router
+  routeName: PropTypes.string, // not required because of onClick  could be passed instead
+  onClick: PropTypes.func,
+  className: PropTypes.string,  // could be passed directly or forwarded (computed) from withRoute/withLink
+  children: PropTypes.node
 };
 
 // If used withRoute or withLink (Optional)

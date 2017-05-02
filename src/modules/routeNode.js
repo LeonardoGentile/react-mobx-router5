@@ -1,11 +1,11 @@
-import React, { Component, createElement} from 'react';
+import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
-import { getDisplayName, ifNot} from './utils';
+import { getDisplayName, ifNot } from './utils';
 import { autorun } from 'mobx';
 import { inject } from 'mobx-react';
 
 
-function routeNode(nodeName, storeName='routerStore') { // route node Name, routerStore name
+function routeNode(nodeName, storeName = 'routerStore') { // route node Name, routerStore name
   return function routeNodeWrapper(RouteSegment) { // component Name
 
     @inject(storeName)
@@ -46,7 +46,7 @@ function routeNode(nodeName, storeName='routerStore') { // route node Name, rout
 
       // re-render this component and so the route-node (wrapped component)
       // only if it is the correct "transition node"
-      shouldComponentUpdate (newProps, newState) {
+      shouldComponentUpdate(newProps, newState) {
         return (newState.intersectionNode === nodeName);
       }
 

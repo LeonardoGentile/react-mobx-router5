@@ -29,6 +29,7 @@
     "plugin:import/warnings"
   ],
   "rules": {
+    "react/prop-types": [2, { "ignore": ["children", "route", "previousRoute"] }],
     // Possible Errors
     "no-dupe-args": 2,
     "no-dupe-keys": 2,
@@ -50,7 +51,7 @@
     "no-unused-vars": [2, { "args": "none" }],
     "no-use-before-define": 0,
     // Style
-    "brace-style": [2, "1tbs"],
+    "brace-style": [1, "stroustrup"],
     "comma-spacing": [2, {"before": false, "after": true}],
     "comma-style": [2, "last"],
     "consistent-this":  [2, "that"],
@@ -64,6 +65,6 @@
     // ES6
     "no-var": 2,
     "no-this-before-super": 2,
-    "object-shorthand": 2
+    "object-shorthand": 0
   }
 }

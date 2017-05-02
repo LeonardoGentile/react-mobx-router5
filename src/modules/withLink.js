@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
 import BaseLink from './BaseLink';
 import withRoute from './withRoute';
@@ -34,7 +34,7 @@ function withLink(BaseComponent, storeName='routerStore') {
           {props.children}
         </BaseLink>
       </BaseComponent>
-    )
+    );
   }
 
   // All props passed from ComponentWithRoute
@@ -49,6 +49,7 @@ function withLink(BaseComponent, storeName='routerStore') {
     linkClassName:    PropTypes.string,
     onClick:          PropTypes.func,
     routeName:        PropTypes.string,
+    children: PropTypes.node,
     // Computed, injected to it
     className:        PropTypes.string
   };
