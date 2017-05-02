@@ -1,4 +1,10 @@
 {
+  "env": {
+    "node": true,
+    "browser": false
+  },
+  "globals": {"Promise": true},
+  "plugins": ["import"],
   "rules": {
     "import/no-extraneous-dependencies": [
       "error",
