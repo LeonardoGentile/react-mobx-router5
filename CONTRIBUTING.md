@@ -1,7 +1,4 @@
-## Contributing to Babel Starter Kit
-
-♥ [Babel Starter Kit](https://www.kriasoft.com/babel-starter-kit) and want to get involved? Thanks!
-There are plenty of ways you can help!
+## Contributing to react-mobx-router5
 
 Please take a moment to review this document in order to make the contribution process easy and
 effective for everyone involved.
@@ -13,14 +10,12 @@ addressing your issue or assessing patches and features.
 
 ### Using the issue tracker
 
-The [issue tracker](https://github.com/kriasoft/babel-starter-kit/issues) is the preferred channel
+The [issue tracker](https://github.com/LeonardoGentile/react-mobx-router5/issues) is the preferred channel
 for [bug reports](#bugs), [features requests](#features) and [submitting pull requests](#pull-requests),
 but please respect the following restrictions:
 
 * Please **do not** use the issue tracker for personal support requests.
-  [Stack Overflow](https://stackoverflow.com/questions/tagged/babel-starter-kit),
-  [Gitter](https://gitter.im/kriasoft/babel-starter-kit) or
-  [Codementor](https://www.codementor.io/koistya) are better places to get help.
+  [Stack Overflow](https://stackoverflow.com/) is a better places to get help.
 
 * Please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of
   others.
@@ -50,7 +45,7 @@ Example:
 
 > Short and descriptive example bug report title
 >
-> A summary of the issue and the browser/OS environment in which it occurs. If suitable, include the
+> A summary of the issue and the environment (browser/OS, npm, node, rollup, webpack...with relative versions) in which it occurs. If suitable, include the
 > steps required to reproduce the bug.
 >
 > 1. This is the first step
@@ -92,11 +87,13 @@ Adhering to the following process is the best way to get your work included in t
 
    ```bash
    # Clone your fork of the repo into the current directory
-   git clone https://github.com/<your-username>/babel-starter-kit.git
+   git clone https://github.com/<your-username>/react-mobx-router5.git
    # Navigate to the newly cloned directory
-   cd babel-starter-kit
+   cd react-mobx-router5
    # Assign the original repo to a remote called "upstream"
-   git remote add upstream https://github.com/kriasoft/babel-starter-kit.git
+   git remote add upstream https://github.com/LeonardoGentile/react-mobx-router5.git
+   # install deps
+   npm install
    ```
 
 2. If you cloned a while ago, get the latest changes from upstream:
@@ -113,8 +110,25 @@ Adhering to the following process is the best way to get your work included in t
    git checkout -b <topic-branch-name>
    ```
 
-4. Commit your changes in logical chunks. Please adhere to these [git commit message guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-   or your code is unlikely be merged into the main project. Use Git's [interactive rebase](https://help.github.com/articles/about-git-rebase/)
+4. Commit your changes in logical chunks. Please adhere to these [git commit message guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines)
+   or your code is unlikely be merged into the main project. 
+     
+   This repo uses [semantic-release](https://github.com/semantic-release/semantic-release) to automatically 
+   bump npm version based on standard commit messages, so it is very important to follow the guidelines.
+   To help writing standard commit messages this repo uses [commitizen](http://commitizen.github.io/cz-cli/).  
+   In order to make this work please __do not use__ `git commit` for committing your changes but: 
+   
+   ```bash
+   git add .
+   npm run commit
+   ```
+   This will run the npm script `commit` from `packages.json` that will prompt you questions about your 
+   changes, please follow the prompted instructions.  
+   
+   If you don' want to run the npm script you can install _commitizen_ globally with `npm install -g commitizen` 
+   and the equivalent command `git cz`. 
+   
+   Use Git's [interactive rebase](https://help.github.com/articles/about-git-rebase/)
    feature to tidy up your commits before making them public.
 
 5. Locally merge (or rebase) the upstream development branch into your topic branch:
