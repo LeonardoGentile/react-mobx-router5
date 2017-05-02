@@ -91,8 +91,9 @@
   "peerDependencies": {
     "react": "^15.0.0",
     "mobx": "^3.1.0",
+    "mobx-react": "^4.0.0",
     "mobx-router5": "^1.0.0",
-    "mobx-react": "^4.0.0"
+    "router5": "^4.0.0"
   },
   "scripts": {
     "commit": "git-cz",
