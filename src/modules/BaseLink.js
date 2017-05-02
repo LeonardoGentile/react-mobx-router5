@@ -18,13 +18,10 @@ const storeName = 'routerStore';
  *    router={routerInstance}         // optional/required: when we don't inject the routerStore then we need to pass the router explicitly.
  *                                    // If we don't use navigation then it's not required.
  *    routerStore={routerStore}       // optional/required: as above but could be @inject-ed or passed as prop
+ *    onClick={onClickCB}             // optional, when passed the navigation will be prevented and the onClickCB will be executed instead
  *    routeName="home"                // optional/required: route to navigate to. When onClick is passed we don't need it
  *    routeParams={routeParamsObj}    // optional, default {}
  *    routeOptions={routeOptionsObj}  // optional, default {}
- *    // NOT USED
- *    // activeClassName="activeClass"   // optional, default "active"
- *    activeStrict={false}            // optional, default false
- *    onClick={onClickCB}             // optional, when passed the navigation will be prevented and the onClickCB will be executed instead
  */
 class BaseLink extends Component {
 
@@ -116,7 +113,7 @@ BaseLink.propTypes = {
 // If used withRoute or withLink (Optional)
 //============================================
 BaseLink.propTypes[storeName] = PropTypes.object;
-// Extra (for re-rendering) injected to it
+// Extra (for re-rendering) injected to it, not used.
 BaseLink.propTypes['route'] = PropTypes.object;
 BaseLink.propTypes['previousRoute'] = PropTypes.object;
 
