@@ -38,12 +38,18 @@
     "comments": false,
     "presets": [
       "react",
-      "latest",
-      "stage-0"
+      "stage-0",
+      [
+        "es2015", { "modules": false }
+      ]
     ],
     "plugins": [
-      "transform-runtime",
-      "transform-decorators-legacy"
+      ["transform-react-remove-prop-types", {
+         "mode": "remove",
+         "removeImport": true
+       }],
+      "transform-decorators-legacy",
+      "transform-runtime"
     ]
   },
   "dependencies": {
@@ -54,8 +60,9 @@
     "babel-core": "^6.17.0",
     "babel-eslint": "^7.0.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-react-remove-prop-types": "0.4.4",
     "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-latest": "^6.16.0",
+    "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.16.3",
