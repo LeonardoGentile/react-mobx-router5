@@ -103,8 +103,8 @@ BaseLink.propTypes = {
   routeOptions: PropTypes.object,
   routeParams: PropTypes.object,
   // Optional
-  router: PropTypes.object, // when we don't pass/inject the routerStore then we need the router
-  routeName: PropTypes.string, // not required because of onClick  could be passed instead
+  router: PropTypes.object,     // when we don't pass/inject the routerStore then we need the router
+  routeName: PropTypes.string,  // not required because of onClick could be passed instead
   onClick: PropTypes.func,
   className: PropTypes.string,  // could be passed directly or forwarded (computed) from withRoute/withLink
   children: PropTypes.node

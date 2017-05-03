@@ -39,23 +39,22 @@ function withLink(BaseComponent, storeName='routerStore') {
 
   // All props passed from ComponentWithRoute
   BaseComponentWrapper.propTypes = {
-    // Extra (for re-rendering) injected to it
-    route:            PropTypes.object,
-    previousRoute:    PropTypes.object,
-    // Defaults or defined forwarded to it
+    // forwarded
     routeOptions:     PropTypes.object,
     routeParams:      PropTypes.object,
-    // Optional forwarded to it
-    linkClassName:    PropTypes.string,
-    onClick:          PropTypes.func,
     routeName:        PropTypes.string,
-    children: PropTypes.node,
-    // Computed, injected to it
-    className:        PropTypes.string
+    onClick:          PropTypes.func,
+    children:         PropTypes.node,
+    // computed/injected
+    route:            PropTypes.object,
+    previousRoute:    PropTypes.object,
+    className:        PropTypes.string,
+    isActive:         PropTypes.bool,
+    // special
+    linkClassName:    PropTypes.string,
   };
-  // passed to it from ComponentWithRoute
+  // injected by ComponentWithRoute
   BaseComponentWrapper.propTypes[storeName] = PropTypes.object.isRequired;
-
 
   return withRoute(BaseComponentWrapper, storeName);
 }
