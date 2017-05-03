@@ -303,36 +303,26 @@ __withRoute(BaseComponent, storeName = 'routerStore')__: higher-order component 
 - `BaseComponent` the component to be wrapped
 - `storeName` __optional__ the mobx-router5 store instance name. Default 'routerStore'
 
-It create and **returns** a new `ComponentWithRoute` component that wraps the BaseComponent. 
+It create and **returns** a new `ComponentWithRoute` that wraps a `BaseComponent`. 
 
 Any component wrapped by this HOC:
 
-  - is injected with these extra props: `routerStore`, `route`, `previousRoute`
+  - is injected with these extra props: `routerStore`, `route`, `previousRoute`, `isActive`
   - re-renders on any route change
-  - receives a newly computed "active" `className` depending if the current route == props.routeName 
+  - receives all the props passed to the wrapper
 
-#### ComponentWithRoute
+#### `isActive` and 'active' `className`
 
-It accepts the following props:
+Some special props passed to the wrapper are used to compute if the current wrapped element should be considered 
+"active" or not:
 
-  - forwarded to BaseComponent to allow it to behave like a `BaseLink`
-    - `routeOptions` **default**: {} 
-    - `routeParams` **default**: {}
-    - `routeName` (string) if passed it will be used to compute the `activeClassName`
-    - `onClick`: (function) callback 
-  - always forwarded for any BaseComponent:
-    - `className`: (string) class name to simply forward or optionally use to compute a new className (active)
-    - `children`: the components originally wrapped by the `BaseComponent` 
-  - used for computing the className to forward:
-    - `activeClassName` **default**: 'active'. 
-    - `activeStrict` **default**: false 
-  - used only when `withLink` HOC is used (see below):
-    - `linkClassName`: (string) if passed it be will be forwarded down and used by the children 
+  - `routeName` (string): name of the route associated with the component  
+  - `routeParams` (obj) **default** `{}`: the route params  
+  - `activeStrict` (bool) **default** `false`: whether to check if `routeName` is the active route, or part of the active route
 
+The previous props will be used to compute a new prop `isActive` injected into the wrapped `BaseComponent`. 
 
+  - `className` (string) **default** `''`: props forwarded 
+  - `activeClassName` (string) **default** `'active'`: the name of the class to apply when the element is active
 
-##### Check if the component is active:   
-These props are used to check if the component is active: `routeName`, `routeParams`, `activeStrict` on any route change.
-
-##### Active class
-Also on any route change a **new** `className` to pass to the BaseComponent is computed. This depends on the previous check (if component is active or not) and a concatenation of `className` and `activeClassName`. This newly computed prop is forwarded to the BaseComponent.
+When `routeName` is passed an `activeClassName` will be added to the `className` when the component `isActive` and the newly computed `className` will be injected into the wrapped BaseComponent. 
