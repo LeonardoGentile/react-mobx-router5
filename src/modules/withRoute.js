@@ -5,7 +5,7 @@ import { ifNot, getDisplayName } from './utils';
 
 
 /**
- * HOC that creates a new wrapper ComponentWithRoute around BaseComponent
+ * It creates and returns a new wrapper ComponentWithRoute around BaseComponent
  *
  * @param BaseComponent - the component to be wrapped
  * @param storeName - the mobx-router5 store instance name. Default 'routerStore'
@@ -14,21 +14,25 @@ import { ifNot, getDisplayName } from './utils';
 function withRoute(BaseComponent, storeName = 'routerStore') {
 
   /**
-   * Wrapper ComponentWithRoute around the BaseComponent
+   * HOC Wrapper ComponentWithRoute around the BaseComponent
    *
    * The wrapper is injected with the mobx routerStore and decorated with @observer
-   * Notice that @inject will also create another wrapper around the ComponentWithRoute
+   * Note: @inject will also create another wrapper around the ComponentWithRoute
    *
-   * The component accepts all the props normally accepted by the BaseLink component and will forward them down to the wrapped component.
-   * If a linkClassName is passed then it will be passed down and used by the children only when the BaseComponent is created with `withLink` HOC.
-   * NOTE: the routerStore will be injected into the ComponentWithRoute.props, so it will also forwarded down to the wrapped component
-   *
+   * The component accepts any props and forward them to the wrapped component.
    * Any route changes will trigger a rendering of ComponentWithRoute.
-   * Also the wrapped BaseComponent and children will re-render because passing 3 extra changing props to it (apart from this.props):
+   *
+   * Also the wrapped BaseComponent (and children) will re-render because it's injected with:
    *   - route: the mobx observable routerStore.route, used to trigger a re-rendering of the BaseComponent when the route changes
    *   - previousRoute: the mobx observable routerStore.previousRoute, same as above
-   *   - className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className to the original className when routeName==routerStore.route
+   *   - className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className
+   *     to the original className when routeName==routerStore.route
+   *   - isActive: boolean, computed and injected when `routeName` is passed
    *
+   * Some special props passed are used to compute if the current wrapped element should be considered "active" or not:
+   *  - `routeName` (string): name of the route associated with the component
+   *  - `routeParams` (obj) **default** `{}`: the route params
+   *  - `activeStrict` (bool) **default** `false`: whether to check if `routeName` is the active route, or part of the active route
    */
   @inject(storeName)
   @observer
@@ -66,30 +70,24 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
         '[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.'
       );
 
-      const { activeClassName, activeStrict, routeOptions, routeParams, linkClassName, onClick, routeName, className } = this.props;
+      const { routeName, activeStrict, routeParams, activeClassName, className } = this.props;
 
-      let currentClassName = className || '';
+      let currentClassName = className;
+      let isActive = null;
       if (routeName) {
-        const isActive = this.isActive(routeName, routeParams, activeStrict);
+        isActive = this.isActive(routeName, routeParams, activeStrict);
         currentClassName = ComponentWithRoute.computeClassName(className, activeClassName, isActive);
       }
 
       // De-referencing a mobx-observable will trigger a re-rendering (because of the @observer)
       const { route, previousRoute } = this.routerStore;
       const newProps = {
-        // Props Extra injected
+        ...this.props,
+        isActive,
+        className: currentClassName,
         routerStore: this.routerStore,
         route,
-        previousRoute,
-        // Props Default forwarded
-        routeOptions,
-        routeParams,
-        // Props optional forwarded
-        linkClassName,
-        onClick,
-        routeName,
-        // Props computed injected
-        className: currentClassName
+        previousRoute
       };
 
       return (
@@ -103,9 +101,9 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
   ComponentWithRoute.displayName = 'WithRoute[' + getDisplayName(BaseComponent) + ']';
 
   ComponentWithRoute.defaultProps = {
+    className: '',
     activeClassName: 'active',
     activeStrict: false,
-    routeOptions: {},
     routeParams: {}
   };
 
@@ -113,11 +111,8 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
     // Defaults
     activeClassName: PropTypes.string,
     activeStrict: PropTypes.bool,
-    routeOptions: PropTypes.object,
     routeParams: PropTypes.object,
     // Optional
-    linkClassName: PropTypes.string,
-    onClick: PropTypes.func,
     routeName: PropTypes.string,
     className: PropTypes.string,
     children: PropTypes.node

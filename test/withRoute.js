@@ -104,11 +104,16 @@ describe('withRoute HOC', () => {
 
   context('Wrapped component (BaseComponent)', function() {
 
-    it('should receive default routing props', () => {
+    it('should receive default wrapper props', () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
       renderWithStore(routerStore)(CompWithRoute);
-      expect(WrappedCompSpy).to.have.been.calledWithMatch({routeOptions: {}, routeParams:{} });
+      expect(WrappedCompSpy).to.have.been.calledWithMatch({
+        routeParams:{},
+        className: '',
+        activeClassName: 'active',
+        activeStrict: false
+      });
     });
 
 
@@ -128,15 +133,40 @@ describe('withRoute HOC', () => {
         router.navigate('section', {}, {}, function () {
           renderWithStore(routerStore)(CompWithRoute);
 
-          expect(WrappedCompSpy).to.have.been.calledWithMatch(
-            {
-              routerStore: routerStore,
-              route: router.getState(),
-              previousRoute: previousRoute
-            }
-          );
+          expect(WrappedCompSpy).to.have.been.calledWithMatch({
+            routerStore: routerStore,
+            route: router.getState(),
+            previousRoute: previousRoute
+          });
         });
       }
+    });
+
+    it('should receive prop: isActive (true) when the associated route is active', () => {
+      const WrappedCompSpy = spy(FnComp);
+      const CompWithRoute = withRoute(WrappedCompSpy);
+
+      router.addNode('home', '/home');
+      router.setOption('defaultRoute', 'home');
+      router.start();
+      mount(
+        <CompWithRoute routerStore={routerStore} routeName='home' className="just-a-class-name"/>
+      );
+      expect(WrappedCompSpy).to.have.been.calledWithMatch({isActive: true});
+    });
+
+    it('should receive prop: isActive (false) when the associated route is not active', () => {
+      const WrappedCompSpy = spy(FnComp);
+      const CompWithRoute = withRoute(WrappedCompSpy);
+
+      router.addNode('home', '/home');
+      router.addNode('section', '/section');
+      router.setOption('defaultRoute', 'home');
+      router.start();
+      mount(
+        <CompWithRoute routerStore={routerStore} routeName='section' className="just-a-class-name"/>
+      );
+      expect(WrappedCompSpy).to.have.been.calledWithMatch({isActive: false});
     });
 
     it('should receive an extra className value `active` prop when the associated route is active', () => {
