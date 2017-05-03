@@ -44,7 +44,7 @@ class BaseLink extends Component {
     );
 
     ifNot(
-      !this.router || this.router.hasPlugin('BROWSER_PLUGIN'),
+      !this.router || !props.routeName || this.router.hasPlugin('BROWSER_PLUGIN'),
       '[react-mobx-router5][BaseLink] missing browser plugin, href might build incorrectly'
     );
 
@@ -110,11 +110,12 @@ BaseLink.propTypes = {
   children: PropTypes.node
 };
 
-// If used withRoute or withLink (Optional)
-//============================================
+// Optional
+// these are received if component is wrapped with `withRoute` or `withLink` HOCs
+//===============================================================================
 BaseLink.propTypes[storeName] = PropTypes.object;
-// Extra (for re-rendering) injected to it, not used.
 BaseLink.propTypes['route'] = PropTypes.object;
 BaseLink.propTypes['previousRoute'] = PropTypes.object;
+BaseLink.propTypes['isActive'] = PropTypes.bool;
 
 export default BaseLink;

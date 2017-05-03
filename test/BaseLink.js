@@ -24,7 +24,7 @@ describe('BaseLink component', () => {
       expect(renderTreeFn).to.not.throw();
     });
 
-    it('should throw an error if prop `routeName` passed but not props `router` or `routerStore`', () => {
+    it('should throw an error if prop `routeName` passed but not props: `router` or `routerStore`', () => {
       router = createRouter();
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');
@@ -56,10 +56,10 @@ describe('BaseLink component', () => {
       expect(renderTreeFn).to.not.throw();
     });
 
-    it('should throw an error if browserPlugin is not used', () => {
+    it('should throw an error if props passed: `router/routerStore` && `routeName` but `browserPlugin` is not used', () => {
       router = createRouter();
       const renderTreeFn = () => shallow(
-        <BaseLink router={router} />
+        <BaseLink routeName={'home'} router={router} />
       );
       expect(renderTreeFn).to.throw('[react-mobx-router5][BaseLink] missing browser plugin, href might build incorrectly');
     });
