@@ -320,9 +320,95 @@ Some special props passed to the wrapper are used to compute if the current wrap
   - `routeParams` (obj) **default** `{}`: the route params  
   - `activeStrict` (bool) **default** `false`: whether to check if `routeName` is the active route, or part of the active route
 
-The previous props will be used to compute a new prop `isActive` injected into the wrapped `BaseComponent`. 
+The previous props will be used to compute a new prop `isActive` injected into the wrapped `BaseComponent`.  
+ 
+Also these two props have a special meaning:
 
-  - `className` (string) **default** `''`: props forwarded 
+  - `className` (string) **default** `''`: prop forwarded 
   - `activeClassName` (string) **default** `'active'`: the name of the class to apply when the element is active
 
-When `routeName` is passed an `activeClassName` will be added to the `className` when the component `isActive` and the newly computed `className` will be injected into the wrapped BaseComponent. 
+When `routeName` is passed an `activeClassName` will be added to the `className` when the component `isActive` and the newly computed `className` will be injected into the wrapped `BaseComponent`.
+
+ 
+### Link component
+
+__The `Link` component is `BaseLink` and `withRoute` composed together__.  
+This means that `Link` will re-render on any route change and an 'active' class will be applied to it when 
+the current route is == `props.routeName`.
+
+### withLink HOC
+
+__withLink(BaseComponent, storeName='routerStore')__: higher-order component that wraps a `BaseComponent` then passes it to `withRoute` HOC. 
+
+- `BaseComponent` the component to wrap
+- `storeName` __optional__ the mobx-router5 store instance name. Default 'routerStore'
+
+It create and **returns** a new `ComponentWithRoute` that wraps a `BaseComponent`.
+
+This is very similar to `Link` component but it differs from it only to change the structure of the wrapped elements. 
+
+Useful for creating any sort of wrapper around a `BaseLink` component that will be aware of route changes 
+and apply an 'active' `className` on the wrapper (not on the BaseLink).
+
+**Example:**   
+
+```javascript
+const MyLinkWrapper = withLink('div');
+```     
+
+ - This produces a `div` that wraps a `BaseLink` component. Then this result is passed to `withRoute`.  
+ - The `'active'` className will be applied to the `div` not the on `BaseLink` (and so the generated `a`).  
+ - If we pass an `linkClassName` then it will become the `className` of the inner `BaseLink`
+
+See `NavLink`
+
+### NavLink component
+
+__The `NavLink` component is the `li` element and `withLink` composed together__.
+
+```javascript
+const NavLink = withLink('li');
+```
+
+__Example__:
+
+```javascript
+import {NavLink} from 'react-mobx-router5'
+
+function MyComponent(props) {
+  return (
+    <NavLink 
+      className="hello" 
+      linkClassName="goodbye"
+      routeName="home">
+      HOME
+    </NavLink>
+  )
+}
+
+```
+
+Will produce something like this (pseudo-code):
+
+```html
+<li className={props.className} >
+  <BaseLink { ...props } className={props.linkClassName} >
+    {props.children}
+  </BaseLink>
+</li>
+
+```
+That is indeed very similar to what `Link` looks like, except this will apply the 'active' className to the `li` and the 
+`linkClassName` to the internal `BaseLink` (and so to the generated an `a` tag)
+
+
+## Acknowledgments
+
+- The structure and build process of this repo are based on [babel-starter-kit](https://github.com/kriasoft/babel-starter-kit)   
+- I've taken the [react-router5](https://github.com/router5/react-router5) package as example for developing this one
+- Thanks to egghead.io for the nice tips about open source development on their [free course](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github) 
+- Special thanks to [Thomas Roch](https://github.com/troch) for the awesome [router5](https://github.com/router5/router5) ecosystem
+ 
+
+
+
