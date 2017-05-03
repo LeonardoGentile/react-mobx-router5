@@ -24,6 +24,17 @@ describe('BaseLink component', () => {
       expect(renderTreeFn).to.not.throw();
     });
 
+    it('should not throw an error if only `onClick` prop is passed', () => {
+      function cb(e){
+        e.preventDefault();
+        return null;
+      }
+      const renderTreeFn = () => shallow(
+        <BaseLink onClick={cb}/>
+      );
+      expect(renderTreeFn).to.not.throw();
+    });
+
     it('should throw an error if prop `routeName` passed but not props: `router` or `routerStore`', () => {
       router = createRouter();
       router.addNode('home', '/home');
