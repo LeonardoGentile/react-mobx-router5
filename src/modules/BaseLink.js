@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
+// import PropTypes from 'prop-types';
 import { ifNot } from './utils';
 
 // TODO
@@ -113,9 +113,9 @@ BaseLink.propTypes = {
 // Optional
 // these are received if component is wrapped with `withRoute` or `withLink` HOCs
 //===============================================================================
-BaseLink.propTypes[storeName] = PropTypes.object;
-BaseLink.propTypes['route'] = PropTypes.object;
-BaseLink.propTypes['previousRoute'] = PropTypes.object;
-BaseLink.propTypes['isActive'] = PropTypes.bool;
+BaseLink.propTypes[storeName] /* remove-proptypes */ = PropTypes.object;
+BaseLink.propTypes['route'] /* remove-proptypes */ = PropTypes.object;
+BaseLink.propTypes['previousRoute'] /* remove-proptypes */ = PropTypes.object;
+BaseLink.propTypes['isActive'] /* remove-proptypes */ = PropTypes.bool;
 
 export default BaseLink;

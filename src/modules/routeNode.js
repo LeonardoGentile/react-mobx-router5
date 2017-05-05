@@ -1,5 +1,5 @@
-import { Component, createElement } from 'react';
-import PropTypes from 'prop-types';
+import { Component, createElement, PropTypes } from 'react';
+// import PropTypes from 'prop-types';
 import { getDisplayName, ifNot } from './utils';
 import { autorun } from 'mobx';
 import { inject } from 'mobx-react';
@@ -59,8 +59,8 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
     RouteNode.displayName = 'RouteNode[' + getDisplayName(RouteSegment) + ']';
 
     // Because @inject creates an extra HOC
-    RouteNode.wrappedComponent.propTypes = {};
-    RouteNode.wrappedComponent.propTypes[storeName] = PropTypes.object.isRequired;
+    RouteNode.wrappedComponent.propTypes /* remove-proptypes */ = {};
+    RouteNode.wrappedComponent.propTypes[storeName] /* remove-proptypes */ = PropTypes.object.isRequired;
 
     return RouteNode;
   };

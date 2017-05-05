@@ -22,11 +22,7 @@ promise = promise.then(() => del(['dist/*']));
 
 // Compile source code into a distributable format with Babel
 ['es', 'cjs', 'umd'].forEach((format) => {
-  console.log(Object.assign(pkg.babel, {
-    babelrc: false,
-    exclude: 'node_modules/**',
-    runtimeHelpers: true
-  }));
+
   promise = promise.then(() => rollup.rollup({
     entry: 'src/index.js',
     external: Object.keys(pkg.dependencies),
@@ -37,7 +33,8 @@ promise = promise.then(() => del(['dist/*']));
         runtimeHelpers: true, // because we use transform-runtime plugin (avoid repetition)
       }))
     ]
-  }).then(bundle => bundle.write({
+  })
+  .then(bundle => bundle.write({
     dest: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
     format,
     sourceMap: true,
