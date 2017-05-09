@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/LeonardoGentile/react-mobx-router5.svg?branch=master)](https://travis-ci.org/LeonardoGentile/react-mobx-router5)
+[![Coverage Status](https://coveralls.io/repos/github/LeonardoGentile/react-mobx-router5/badge.svg?branch=master)](https://coveralls.io/github/LeonardoGentile/react-mobx-router5?branch=master)
+[![license](https://img.shields.io/github/license/LeonardoGentile/react-mobx-router5.svg)](https://github.com/LeonardoGentile/react-mobx-router5/blob/master/LICENSE.txt)
+[![npm](https://img.shields.io/npm/v/react-mobx-router5.svg)](https://www.npmjs.com/package/react-mobx-router5)
+
 
 # react-mobx-router5
 
