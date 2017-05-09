@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-// import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { ifNot } from './utils';
 
 // TODO
@@ -107,15 +107,13 @@ BaseLink.propTypes = {
   routeName: PropTypes.string,  // not required because of onClick could be passed instead
   onClick: PropTypes.func,
   className: PropTypes.string,  // could be passed directly or forwarded (computed) from withRoute/withLink
-  children: PropTypes.node
+  children: PropTypes.node,
+  // Optional: received when wrapped with `withRoute` or `withLink` HOCs
+  //====================================================================
+  [storeName]: PropTypes.object,
+  route: PropTypes.object,
+  previousRoute: PropTypes.object,
+  isActive: PropTypes.bool
 };
-
-// Optional
-// these are received if component is wrapped with `withRoute` or `withLink` HOCs
-//===============================================================================
-BaseLink.propTypes[storeName] /* remove-proptypes */ = PropTypes.object;
-BaseLink.propTypes['route'] /* remove-proptypes */ = PropTypes.object;
-BaseLink.propTypes['previousRoute'] /* remove-proptypes */ = PropTypes.object;
-BaseLink.propTypes['isActive'] /* remove-proptypes */ = PropTypes.bool;
 
 export default BaseLink;

@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react';
-// import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import BaseLink from './BaseLink';
 import withRoute from './withRoute';
 
@@ -52,9 +52,10 @@ function withLink(BaseComponent, storeName='routerStore') {
     isActive:         PropTypes.bool,
     // special
     linkClassName:    PropTypes.string,
+    // injected by ComponentWithRoute
+    [storeName]:  PropTypes.object.isRequired
   };
-  // injected by ComponentWithRoute
-  BaseComponentWrapper.propTypes[storeName] = PropTypes.object.isRequired;
+
 
   return withRoute(BaseComponentWrapper, storeName);
 }
