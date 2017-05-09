@@ -402,11 +402,38 @@ That is indeed very similar to what `Link` looks like, except this will apply th
 `linkClassName` to the internal `BaseLink` (and so to the generated an `a` tag)
 
 
+## About PropTypes
+The components are shipped with [prop-types](https://github.com/reactjs/prop-types) checks (`prop-types` is dependencies of this package).  
+If you want to remove them from your build you could use [babel-plugin-transform-react-remove-prop-types](https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types). 
+
+You could for example add this to your babel config:
+
+```
+"plugins": [
+  ["transform-react-remove-prop-types", {
+     "mode": "wrap"
+   }]
+]
+```
+or 
+
+```
+"plugins": [
+  ["transform-react-remove-prop-types", {
+     "mode": "remove",
+     "removeImport": true
+   }]
+]
+```
+Check the [doc](https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types#mode) of the plugin for choosing the correct configuration.
+
+
 ## Acknowledgments
 
 - The structure and build process of this repo are based on [babel-starter-kit](https://github.com/kriasoft/babel-starter-kit)   
 - I've taken the [react-router5](https://github.com/router5/react-router5) package as example for developing this one
 - Thanks to egghead.io for the nice tips about open source development on their [free course](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github) 
+- Thanks to [Olivier Tassinari](https://github.com/oliviertassinari) for the [fast fix](https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types/issues/106) and suggestion needed by this package
 - Special thanks to [Thomas Roch](https://github.com/troch) for the awesome [router5](https://github.com/router5/router5) ecosystem
  
 
