@@ -1,0 +1,14 @@
+{
+  // This file is used for transpiling the tests, not the source code
+  "presets": [
+    "react",
+    "stage-0",
+    [
+      "es2015"
+    ]
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-runtime"
+  ]
+}
