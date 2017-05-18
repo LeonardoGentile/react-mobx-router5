@@ -108,12 +108,12 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
 
   ComponentWithRoute.propTypes = {
     // Defaults
+    className: PropTypes.string,
     activeClassName: PropTypes.string,
     activeStrict: PropTypes.bool,
     routeParams: PropTypes.object,
     // Optional
     routeName: PropTypes.string,
-    className: PropTypes.string,
     children: PropTypes.node
   };
 
