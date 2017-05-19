@@ -1,44 +1,46 @@
+/**
+ * HOC that creates custom wrappers around the BaseLink component
+ *
+ * The resulting composed element will passed to withRoute so that it will be aware
+ * of route changes and apply an `active` className on the LinkWrapper (not on the BaseLink).
+ * In practise the final component will be a <Link/> element wrapped with a LinkWrapper
+ *
+ * @param LinkWrapper - the component to be wrapped. This is supposed to be a DOM element: li, div, ectr
+ * @param storeName - the mobx-router5 instance name. Default 'routerStore'
+ * @returns {ComponentWithRoute}
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import BaseLink from './BaseLink';
 import withRoute from './withRoute';
+import { getDisplayName } from "./utils";
 
-/**
- * HOC that creates a new wrapper BaseComponentWrapper around BaseComponent, then passing it to withRoute HOC
- *
- * This is very similar to Link component.
- * It exists and differs from it only to change the structure of the wrapped elements
- * Useful for creating any sort of wrapper around a BaseLink component that will
- * be aware of route changes and apply an `active` className on the wrapper (not on the BaseLink)
- *
- * @param BaseComponent - the component to be wrapped. This is supposed to be a DOM element: li, div, ectr
- * @param storeName - the mobx-router5 instance name. Default 'routerStore'
- * @returns {ComponentWithRoute}
- */
-function withLink(BaseComponent, storeName='routerStore') {
+function withLink(LinkWrapper, storeName='routerStore') {
 
   /***
-   * Wrapper BaseComponentWrapper around the BaseComponent
+   * HOC WithLink that wraps the LinkWrapper
    *
-   * It receives all the props that BaseComponent would receive in ComponentWithRoute
-   * The only difference is that it only passes the className to the original BaseComponent
+   * It receives all the props that LinkWrapper would receive in ComponentWithRoute
+   * The only difference is that it only passes the className to the original LinkWrapper
    * All the other props will be passed to the inner BaseLink
    *
    * If a prop linkClassName is passed then it will be applied to the inner BaseLink
-   * Note: the `active` class will be applied to the BaseComponent, not the BaseLink
+   * Note: the `active` class will be applied to the LinkWrapper, not the BaseLink
    */
-  function BaseComponentWrapper(props) {
+  function WithLink(props) {
     return (
-      <BaseComponent className={props.className} >
+      <LinkWrapper className={props.className} >
         <BaseLink { ...props } className={props.linkClassName} >
           {props.children}
         </BaseLink>
-      </BaseComponent>
+      </LinkWrapper>
     );
   }
 
+  WithLink.displayName = 'WithLink[' + getDisplayName(LinkWrapper) + ']';
+
   // All props passed from ComponentWithRoute
-  BaseComponentWrapper.propTypes = {
+  WithLink.propTypes = {
     // forwarded
     routeOptions:     PropTypes.object,
     routeParams:      PropTypes.object,
@@ -56,8 +58,8 @@ function withLink(BaseComponent, storeName='routerStore') {
     [storeName]:  PropTypes.object.isRequired
   };
 
-
-  return withRoute(BaseComponentWrapper, storeName);
+  // Make the final result similar to a Link component (aware of route changes)
+  return withRoute(WithLink, storeName);
 }
 
 export default withLink;
