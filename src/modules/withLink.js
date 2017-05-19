@@ -13,7 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BaseLink from './BaseLink';
 import withRoute from './withRoute';
-import { getDisplayName } from "./utils";
+import { getDisplayName } from './utils';
 
 function withLink(LinkWrapper, storeName='routerStore') {
 
