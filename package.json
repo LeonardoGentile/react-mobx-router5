@@ -110,33 +110,18 @@
     "build": "node tools/build",
     "publish:docs": "easystatic deploy docs --repo LeonardoGentile/react-mobx-router5",
     "start": "easystatic start docs",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "config": {
-      "commitizen": {
-        "path": "./node_modules/cz-conventional-changelog"
-      }
-    },
-    "release": {
-      "analyzeCommits": {
-        "path": "semantic-release-conventional-commits",
-        "minorTypes": [
-          "feat",
-          "minor"
-        ],
-        "patchTypes": [
-          "fix",
-          "patch",
-          "docs",
-          "refactor",
-          "style",
-          "perf"
-        ]
-      }
-    }
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "analyzeCommits": {
+      "path": "semantic-release-conventional-commits",
+      "minorTypes": ["feat","minor"],
+      "patchTypes": ["fix", "patch", "docs", "refactor", "style", "perf"]
     }
   }
 }
