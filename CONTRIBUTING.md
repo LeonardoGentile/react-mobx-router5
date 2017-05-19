@@ -111,12 +111,18 @@ Adhering to the following process is the best way to get your work included in t
    ```
 
 4. Test you modification before committing and be sure that your changes don't break previously working code.  
-   Everything you need to run the tests should already be installed when you first ran `npm install`.  
+   Everything you need to run the tests should already be installed when you first ran `npm install`. It is also mandatory to lint your code or the automatic build performed by the CI will fail.
  	To run the tests:
  	```
  	npm run test
  	```
+ 	To run the linter:
+ 	```
+	npm run lint
+ 	```
+ 	  
  	Also if you introduce new features or components it is required that you write your unit test for your newly introduced code. Then of course run again `npm run test`. 
+ 	Before requesting a PR be sure that test and lint did not fail.  
 
 5. Commit your changes in logical chunks. Please adhere to these [git commit message guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines)
    or your code is unlikely be merged into the main project. 
