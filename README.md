@@ -135,8 +135,8 @@ The components will always be in sync with the `routerStore` internal observable
 
 **Description**   
 
-Function that generates a higher-order component to wrap a *route node* component.  
-This function should be used to decorate route nodes components, that is those having children routes, see router5 documentation on these concepts if you are not familiar with them. 
+Function that generates an higher-order component to wrap a *route node* component.  
+This function should be used to *decorate* **route nodes** components, that is, those routes having children routes, see [router5 documentation](http://router5.github.io/docs/understanding-router5.html) on these concepts if you are not familiar with them.   
  
 **Signature**  
 
@@ -145,14 +145,14 @@ This function should be used to decorate route nodes components, that is those h
 **Params**  
 
 - `nodeName`: the route name of the component to wrap (`''` if root node)
-- `storeName` (optional, __defult__: `routerStore`): the RouterStore name if it differs from the default
+- `storeName` (optional, __default__: `routerStore`): the RouterStore name if it differs from the default
 
 **Return**  
-It returns a function `routeNodeWrapper(RouteSegment)`. This function in turn returns a `RouteNode` component.
+It returns a function `routeNodeWrapper(RouteSegment)`. This function in turn returns a `RouteNode` component, the actual HOC wrapper.
 
 **Usage**   
 
-Given for example a route name `'users'` associated with a component `UsersComp` having children routes `users.list` and `users.view` then the component `UsersComp` should be considered a *route node* for you application, in other words the one responsible to re-render the components associated with its children routes. 
+Given for example a route name `'users'` associated with a component `UsersComp` having children routes `users.list` and `users.view` then the route `'users'` should be considered a *route node* for you application, and its associated component `UsersComp` should be the one responsible to re-render the components associated with its children routes. 
 
 `const UsersCompNode = routeNode('users')(UsersComp)`;
 
@@ -164,13 +164,13 @@ The newly created `UsersCompNode` HOC is a *wrapper* around `UserComp` and will:
 **Example**
 
 In the following example when navigating from `'users.list'` -> `'users.view'` then `'users'` is the **intersection node**.  
-Wrapping the `UserComp` with `routeNode` ensures that the during this transition the `UserComp` will re-render 
-and so it is able to determine which component to show (associated to its sub-routes).  
+Wrapping the `UserComp` with `RouteNode` ensures that the during this transition the `UserComp` will re-render 
+and so it will be able to determine which component to show (associated to one of its sub-routes).  
   
 **Note**  
   
-The logic on how to select and render the correct sub-component it's up to you, in the example it is used a simple switch.  
-See the [getComponent](#getcomponent---helper-function) below for my personal implementation. 
+The logic on how to select and render the correct sub-component is up to you, in the example it is used a simple switch.  
+See the [getComponent](#getcomponent---helper-function) helper below for my personal implementation. 
   
 ```javascript
 import React from 'react';
@@ -202,31 +202,32 @@ Function that generates an higher-order component to wrap any component that nee
 
 **Signature**  
 
-`withRoute(BaseComponent, storeName = 'routerStore')`
+`withRoute(BaseComponent, storeName='routerStore')`
   
 **Params**
   
-- `BaseComponent` the component to be wrapped
-- `storeName` __optional__ the mobx-router5 store instance name. Default 'routerStore'
+- `BaseComponent`: the component to be wrapped
+- `storeName` (optional, __default__: `routerStore`): the RouterStore name if it differs from the default
+ 
   
 **Return**  
-It returns a `ComponentWithRoute` component that wraps `BaseComponent`.
   
+It returns a `ComponentWithRoute` that wraps `BaseComponent`.
+
+
 **Usage** 
 
-This function should be used for any component that need to trigger a new rendering anytime the route changes.  
-
 `const MyCompWithRoute = withRoute(MyComp);`  
-
-
+  
 Any component wrapped by this HOC:
   
   - receives all the props passed to the wrapper
-  - is injected with these extra props: `routerStore`, `route`, `previousRoute`, `isActive`
+  - is injected with these extra props coming from **mobx-router5**: `routerStore`, `route`, `previousRoute`
+  - is injected with these *computed* extra props: `isActive` and `className` (see below)
   - re-renders on any route change
 
 
-**Injected props** (`isActive` and `className`)
+**Injected computed props** (`isActive` and `className`)
 
 Some special props passed to the wrapper are used to compute other extra props that will be injected in the wrapped component.
 
@@ -236,23 +237,71 @@ The following props are used to compute a **new prop** `isActive` (bool) injecte
   - `routeParams` (obj) **default** `{}`: the route params  
   - `activeStrict` (bool) **default** `false`: whether to check if `routeName` is the active route, or part of the active route
 
-
-<!--Also these two props have a special meaning:-->
-
-Also if a `routeName` prop is passed then an `activeClassName` will be added to the `className` when the component is `isActive` and the **newly computed prop** `className` (string) is injected into the wrapped `BaseComponent`:
+  
+Also if a `routeName` prop is passed then an `activeClassName` (default 'active') will be added to the `className` when the component is `isActive` and the **newly computed prop** `className` (string) is injected into the wrapped `BaseComponent`:
 
   - `className` (string) **default** `''`: prop forwarded 
   - `activeClassName` (string) **default** `'active'`: the name of the class to apply when the element is active
 
+**Example**
 
+In the following example the MyComp used within Container will re-render on any route change.   
+  
+When the current route is `home`:
+  
+- a className `'hello hyperactive'` will be applied
+- the prop `isActive` will be `true` 
+  
+  
+```javascript
+// MyComp.jsx
+import React from 'react';
+import { withRoute } from 'react-mobx-router5';
+
+function MyComp(props) {
+	// these are injected by withRoute
+    const { previousRoute, route, isActive, className } = props;
+	
+	return (
+		<div className={className}>
+			I am {isActive: 'active' ? 'inactive' } <br/>
+			The current route is {route}
+		</div>
+	)	
+
+}
+export default withRoute(MyComp);
+```
+
+```javascript
+// Container.jsx
+import React from 'react';
+import MyComp from './MyComp';
+
+function Container(props) {
+	return (
+		<div>
+			<MyComp
+			  routeName='home'
+			  className='hello'
+			  activeClassName='hyperactive' />
+		</div>
+	)	
+
+}
+export default Container;
+```
+ 
   
 #### BaseLink - Component
 
 **Description**
   
 It generates an anchor `a` tag with `href` computed from `props.routeName`.  
-This component *won't re-render* on route change.
+**Note:** This component *won't re-render* on route change.
 
+**Props**
+  
 In order to work it is **mandatory** to pass at least one of these props to the component:
 
   - `router={routerInstance}` the router5 instance object. 
@@ -292,51 +341,66 @@ export default Menu;
   
     
     
-#### Link - Component (to Complete)
+#### Link - Component
 
-__The `Link` component is `BaseLink` and `withRoute` composed together__.  
+**Description**
+  
+The `Link` component is `BaseLink` and `withRoute` **composed together**.  
 This means that `Link` will re-render on any route change and an 'active' class will be applied to it when 
-the current route is == `props.routeName`.
+the current route is `props.routeName`.
 
 #### withLink - HOC
 
 **Description**   
 
-Function that generates a higher-order component to create custom wrapper around a `<Link/>` component.  
+Function that generates a higher-order component to create custom wrappers around a `<BaseLink/>` component.  
+Useful for creating any sort of wrappers that will be **aware of route changes**, for example for creating navigation menus.  
 
 **Signature**  
 
-`withLink(BaseComponent, storeName='routerStore')`
+`withLink(LinkWrapper, storeName='routerStore')` 
+  
+**Params**
 
+- `LinkWrapper`: the component used to wrap the inner `BaseLink`
+- `storeName` (optional, __default__: `routerStore`): the RouterStore name if it differs from the default
+  
+  
 **Return**  
 
-higher-order component that wraps a `BaseComponent` then passes it to `withRoute` HOC. 
+The function creates a new `WithLink` higher-order component that wraps the passed `LinkWrapper`.  
+The `LinkWrapper` is in turn a wrapper around the `BaseLink`.   
+This composed element is then passed to `withRoute(WithLink)`.   
+The final returned component would then be a `ComponentWithRoute`
 
-- `BaseComponent` the component to wrap
-- `storeName` __optional__ the mobx-router5 store instance name. Default 'routerStore'
+**Props**
+  
+The final composed component accepts all the props accepted by the `WithRoute` component with an extra special  
+`linkClassName` prop.
+  
+All props passed to the composed component (including the one injected by `withRoute`) will be forwarded to the inner `BaseLink` except for `className`.   
+In fact the (computed 'active') `className` will be applied to the `LinkWrapper` while the extra `linkClassName`  (unmodified) will be applied to the inner `BaseLink`.  
 
-It create and **returns** a new `ComponentWithRoute` that wraps a `BaseComponent`.
-
-This is very similar to `Link` component but it differs from it only to change the structure of the wrapped elements. 
-
-Useful for creating any sort of wrapper around a `BaseLink` component that will be aware of route changes 
-and apply an 'active' `className` on the wrapper (not on the BaseLink).
-
-**Example:**   
-
+Also all the `children` of the final composed component will become children of the inner `BaseLink`. 
+  
+    
+**Example**   
+  
 ```javascript
 const MyLinkWrapper = withLink('div');
 ```     
 
  - This produces a `div` that wraps a `BaseLink` component. Then this result is passed to `withRoute`.  
- - The `'active'` className will be applied to the `div` not the on `BaseLink` (and so the generated `a`).  
- - If we pass an `linkClassName` then it will become the `className` of the inner `BaseLink`
+ - The `'active'` className will be applied to the `div` not the on `BaseLink` (so not on the generated `a`).  
+ - If we pass an `linkClassName` then it will become the `className` of the inner `BaseLink` (so of the generated `a`)
 
 See `NavLink`
 
 ### NavLink component
 
-__The `NavLink` component is the `li` element and `withLink` composed together__.
+**Description**
+
+The `NavLink` component is the `li` element and `withLink` composed together.
 
 ```javascript
 const NavLink = withLink('li');
@@ -373,31 +437,37 @@ Will produce something like this (pseudo-code):
 That is indeed very similar to what `Link` looks like, except this will apply the 'active' className to the `li` and the 
 `linkClassName` to the internal `BaseLink` (and so to the generated an `a` tag)
 
-### getComponent - Helper function
+#### getComponent - Helper function
 
-Description: Optional helper function not strictly related to react-mobx-router5.    
+**Description**   
 
-*getComponent(route, routeNodeName, routesConfig)*   
-
-params:
-
-- route: either the `routerStore.route` __object__ or the _route name_ as a **string**. Usually it's the currently active route
-- routeNodeName: the name of the route for the React component from where to re-render (transition node)
-- routesConfig: nested routes configuration array (with an extra `component` field for each route)
-
-
-
-It **returns** a `React.Component`: the component to be rendered for the given route and routeNode extracted from the routes configuration. 
-
+Optional helper function not strictly related to react-mobx-router5.   
 This is an opinionated helper for lazy a**es like me that do not want to use the switch 
 statement inside the routeNode components as shown above.   
 
 Despite the router5's author recommends not to store components's references in the routes configuration 
-I do it anyway because I like to have the whole routes/components configuration in one place. This helper is for retrieving the correct component to render from the routes config for a given routeNode and the current route.
+I do it anyway because I like to have the whole routes/components configuration in one place. This helper is for retrieving the correct component to render from the routes config for a given routeNode and the current route.    
  
-__routes.js__:
+
+**Signature**  
+
+`getComponent(route, routeNodeName, routesConfig)` 
+
+**Params**
+
+- `route`: either the `routerStore.route` __object__ or the _route name_ as a **string**. Usually it's the currently active route
+- `routeNodeName`: the name of the route for the React component from where to re-render (transition node)
+- `routesConfig`: nested routes configuration array (with an extra `component` field for each route)
+    
+**Return**  
+  
+It returns a `React.Component`: the component to be rendered extracted from the routes configuration for the given `route` and `routeNode` .   
+  
+**Example**
+   
 
 ```javascript
+//routes.js
 import {Home} from './components/Home';
 import {Index} from './components/Index';
 import {Login} from './components/Login';
@@ -425,9 +495,9 @@ export default [
 
 ```
 
-__Main.jsx__: the root routeNode ('')
 
 ```javascript
+//Main.jsx: the root routeNode ('')
 import React, {createElement} from "react";
 import {routeNode, getComponent} from "react-mobx-router5";
 import routes from "../../routes";
@@ -446,10 +516,10 @@ class Main extends React.Component {
 // higher-order component to wrap a route node component.
 export default routeNode('')(Main);
 ```
-
-__Section.jsx__: the `section` routeNode
-
+  
+  
 ```javascript
+//Section.jsx: the `section` routeNode
 import React, {createElement} from "react";
 import {routeNode, getComponent} from "react-mobx-router5";
 import routes from "../../routes";
@@ -468,10 +538,10 @@ class Section extends React.Component {
 // higher-order component to wrap a route node component.
 export default routeNode('section')(Section);
 ```
+  
 
 
-
-## About PropTypes
+### About PropTypes
 The components are shipped with [prop-types](https://github.com/reactjs/prop-types) checks (`prop-types` is dependencies of this package).  
 If you want to remove them from your build you could use [babel-plugin-transform-react-remove-prop-types](https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types). 
 
@@ -496,6 +566,9 @@ or
 ```
 Check the [doc](https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types#mode) of the plugin for choosing the correct configuration.
 
+
+## Contributing
+PR, suggestions and help is appreciated, please make sure to read the [CONTRIBUTING.md](./CONTRIBUTING.md) file.
 
 ## Acknowledgments
 

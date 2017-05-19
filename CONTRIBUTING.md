@@ -110,7 +110,15 @@ Adhering to the following process is the best way to get your work included in t
    git checkout -b <topic-branch-name>
    ```
 
-4. Commit your changes in logical chunks. Please adhere to these [git commit message guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines)
+4. Test you modification before committing and be sure that your changes don't break previously working code.  
+   Everything you need to run the tests should already be installed when you first ran `npm install`.  
+ 	To run the tests:
+ 	```
+ 	npm run test
+ 	```
+ 	Also if you introduce new features or components it is required that you write your unit test for your newly introduced code. Then of course run again `npm run test`. 
+
+5. Commit your changes in logical chunks. Please adhere to these [git commit message guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines)
    or your code is unlikely be merged into the main project. 
      
    This repo uses [semantic-release](https://github.com/semantic-release/semantic-release) to automatically 
@@ -131,19 +139,19 @@ Adhering to the following process is the best way to get your work included in t
    Use Git's [interactive rebase](https://help.github.com/articles/about-git-rebase/)
    feature to tidy up your commits before making them public.
 
-5. Locally merge (or rebase) the upstream development branch into your topic branch:
+6. Locally merge (or rebase) the upstream development branch into your topic branch:
 
    ```bash
    git pull [--rebase] upstream master
    ```
 
-6. Push your topic branch up to your fork:
+7. Push your topic branch up to your fork:
 
    ```bash
    git push origin <topic-branch-name>
    ```
 
-7. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/) with a clear title
+8. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/) with a clear title
    and description.
 
 **IMPORTANT**: By submitting a patch, you agree to allow the project owners to license your work
