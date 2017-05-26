@@ -36,7 +36,7 @@ export function getComponent(route, routeNodeName, routesConfig) {
     routeNodeLevel = 0;
   }
   else {
-    routeNodeLevel = routeNodeSegments.length ? routeNodeSegments.length : 1; // if no sub-routes -> level 1
+    routeNodeLevel = routeNodeSegments.length ? routeNodeSegments.length : 1; // if routeNode is composed by only one segment -> level 1
   }
 
   // Recurse until it gets the relevant portion of the routes obj or the component itself

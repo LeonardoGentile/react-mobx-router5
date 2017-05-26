@@ -50,7 +50,7 @@ describe('getComponent for current route and node', () => {
     });
 
     it("should throw for node: 'd.h' ", () => {
-      const getComp = () => getComponent('b', 'd.h', routes);
+      const getComp = () => getComponent('a', 'd.h', routes);
       expect(getComp).to.throw('could not find route or component');
     });
   });
@@ -93,6 +93,7 @@ describe('getComponent for current route and node', () => {
   });
 
   context("Component undefined for route: 'd.h.i' ", function() {
+
     it("should get the component for node: '' ", () => {
       const comp = getComponent('d.h.i', '', routes);
       expect(comp).to.equal(D);
@@ -103,7 +104,7 @@ describe('getComponent for current route and node', () => {
       expect(comp).to.equal(H);
     });
 
-    it("should get the component for node: 'd.h' ", () => {
+    it("should throw for node: 'd.h' ", () => {
       const getComp = () => getComponent('d.h.i', 'd.h', routes);
       expect(getComp).to.throw('route segment does not have a component field');
     });

@@ -1,8 +1,8 @@
-import { Component, createElement } from 'react';
+import {Component, createElement} from 'react';
 import PropTypes from 'prop-types';
-import { getDisplayName, ifNot } from './utils';
-import { autorun } from 'mobx';
-import { inject } from 'mobx-react';
+import {getDisplayName, ifNot} from './utils';
+import {autorun, computed} from 'mobx';
+import {inject} from 'mobx-react';
 
 
 function routeNode(nodeName, storeName = 'routerStore') { // route node Name, routerStore name
@@ -13,17 +13,25 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
 
       constructor(props) {
         super(props);
+        this.nodeName = nodeName;
         this.routerStore = props[storeName];
         ifNot(
           this.routerStore,
           '[react-mobx-router5][routeNode] missing routerStore'
         );
         this.router = this.routerStore.router || null;
+
+        // Set the initial state
         this.state = {
           route: this.routerStore.route,
           previousRoute: this.routerStore.previousRoute,
-          intersectionNode: this.routerStore.intersectionNode,
         };
+      }
+
+
+      // Compute a new observable used by autorun
+      @computed get isIntersection() {
+        return this.routerStore.intersectionNode === this.nodeName;
       }
 
       componentDidMount() {
@@ -32,11 +40,14 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
           '[react-mobx-router5][routeNode] missing mobx plugin'
         );
         this.autorunDisposer = autorun(() => {
-          this.setState({
-            route: this.routerStore.route,
-            previousRoute: this.routerStore.previousRoute,
-            intersectionNode: this.routerStore.intersectionNode
-          });
+          // Change state only if this is the correct "transition node" for the current transition
+          // This will re-render this component and so the wrapped RouteSegment component
+          if (this.isIntersection) {
+            this.setState({
+              route: this.routerStore.route,
+              previousRoute: this.routerStore.previousRoute,
+            });
+          }
         });
       }
 
@@ -44,15 +55,9 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
         this.autorunDisposer();
       }
 
-      // re-render this component and so the route-node (wrapped component)
-      // only if it is the correct "transition node"
-      shouldComponentUpdate(newProps, newState) {
-        return (newState.intersectionNode === nodeName);
-      }
-
       render() {
-        const { previousRoute, route } = this.state;
-        return createElement(RouteSegment, { ...this.props, route, previousRoute });
+        const {route, previousRoute} = this.state;
+        return createElement(RouteSegment, {...this.props, [storeName]: this.props[storeName], route, previousRoute});
       }
     }
 
