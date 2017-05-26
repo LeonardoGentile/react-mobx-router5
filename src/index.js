@@ -4,7 +4,10 @@ import withRoute from './modules/withRoute';
 import Link from './modules/Link';
 import NavLink from './modules/NavLink';
 import withLink from './modules/withLink';
-import { getComponent} from './modules/utils.js';
+import Route from './modules/Route';
+
+import {getComponent} from './modules/utils.js';
+
 
 export {
   withRoute,
@@ -13,5 +16,6 @@ export {
   Link,
   NavLink,
   routeNode,
-  getComponent
+  getComponent,
+  Route
 };
