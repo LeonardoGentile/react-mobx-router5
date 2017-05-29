@@ -69,18 +69,23 @@ describe('routeNode hoc', () => {
 
     it('Find and Render the Component associated with the route d.h.m ', () => {
 
+      const route = {
+        name: 'd.h.m'
+      };
+
       const renderedD = mount(
-        <Route routes={routes} route='d.h.m' routeNodeName=""/>
+        <Route routes={routes} route={route} routeNodeName=""/>
       );
       expect(renderedD.find('div')).to.have.attr('id', 'd-comp');
 
+
       const renderedH = mount(
-        <Route routes={routes} route='d.h.m' routeNodeName="d"/>
+        <Route routes={routes} route={route} routeNodeName="d"/>
       );
       expect(renderedH.find('div')).to.have.attr('id', 'h-comp');
 
       const renderedM = mount(
-        <Route routes={routes} route='d.h.m' routeNodeName="d.h"/>
+        <Route routes={routes} route={route} routeNodeName="d.h"/>
       );
       expect(renderedM.find('div')).to.have.attr('id', 'm-comp');
 

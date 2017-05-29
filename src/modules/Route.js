@@ -7,7 +7,7 @@ import {getComponent} from './utils';
  *
  * It select and render the correct component associated with the current route for the given routeNodeName
  *
- * @return {null}
+ * @return {object|null}
  */
 function Route(props) {
   const {routeNodeName, routes} = props;
@@ -20,7 +20,6 @@ function Route(props) {
     }
     route = props.routerStore.route;
   }
-  route = typeof route === 'object' && route.hasOwnProperty('name') ? route.name : route;
 
   let ComponentToRender = null;
 
@@ -32,7 +31,7 @@ function Route(props) {
   }
 
   // Add ==> {key: route.meta.id}, to props to pass below for a full unmount/mount
-  return ComponentToRender ? createElement(ComponentToRender, {...route.params}) : null;
+  return ComponentToRender ? createElement(ComponentToRender, {route} ) : null;
 }
 
 
@@ -41,11 +40,7 @@ Route.displayName = 'Route';
 Route.propTypes = {
   routes: PropTypes.array.isRequired,
   routeNodeName: PropTypes.string.isRequired,
-  // Either pass the route object or the routerStore
-  route: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object
-  ]),
+  route: PropTypes.object.isRequired,
   routerStore: PropTypes.object
 };
 
