@@ -3,9 +3,7 @@ import {expect} from 'chai';
 import {mount} from 'enzyme';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter} from './utils/test-utils';
-
-import Route from "../src/modules/Route";
-
+import RouteView from "../src/modules/RouteView";
 
 describe('routeNode hoc', () => {
   let router;
@@ -36,15 +34,10 @@ describe('routeNode hoc', () => {
           {name: 'i', path: '/i'},
           {name: 'l', path: '/l'},
           {name: 'm', path: '/m', component: MComp}
-        ]
-        }
-      ]
-      }
+        ]}
+      ]}
     ];
-  });
 
-
-  beforeEach(() => {
     router = createTestRouter();
     routerStore = new RouterStore();
     router.usePlugin(mobxPlugin(routerStore));
@@ -55,7 +48,7 @@ describe('routeNode hoc', () => {
 
     it('should throw when route or routerStore props not passed', () => {
       const RouteComp = (props) => (
-        <Route routes={routes}/>
+        <RouteView routes={routes}/>
       );
 
       const renderComp = () => mount(
@@ -74,18 +67,17 @@ describe('routeNode hoc', () => {
       };
 
       const renderedD = mount(
-        <Route routes={routes} route={route} routeNodeName=""/>
+        <RouteView routes={routes} route={route} routeNodeName=""/>
       );
       expect(renderedD.find('div')).to.have.attr('id', 'd-comp');
 
-
       const renderedH = mount(
-        <Route routes={routes} route={route} routeNodeName="d"/>
+        <RouteView routes={routes} route={route} routeNodeName="d"/>
       );
       expect(renderedH.find('div')).to.have.attr('id', 'h-comp');
 
       const renderedM = mount(
-        <Route routes={routes} route={route} routeNodeName="d.h"/>
+        <RouteView routes={routes} route={route} routeNodeName="d.h"/>
       );
       expect(renderedM.find('div')).to.have.attr('id', 'm-comp');
 

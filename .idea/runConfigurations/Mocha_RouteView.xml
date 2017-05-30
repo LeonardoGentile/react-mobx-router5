@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Mocha Route" type="mocha-javascript-test-runner" factoryName="Mocha" singleton="false">
+  <configuration default="false" name="Mocha RouteView" type="mocha-javascript-test-runner" factoryName="Mocha" singleton="false">
     <node-interpreter>project</node-interpreter>
     <node-options />
     <working-directory>$PROJECT_DIR$</working-directory>
@@ -8,7 +8,7 @@
     <ui>bdd</ui>
     <extra-mocha-options>--compilers js:babel-register --recursive --require ./test/utils/test-setup.js</extra-mocha-options>
     <test-kind>TEST_FILE</test-kind>
-    <test-file>$PROJECT_DIR$/test/Route.js</test-file>
+    <test-file>$PROJECT_DIR$/test/RouteView.js</test-file>
     <method />
   </configuration>
 </component>

@@ -12,12 +12,11 @@
 This package represents a routing alternative to react-router.  
 This is especially useful if you already use [mobx](https://mobx.js.org/) and [mobx-react](https://github.com/mobxjs/mobx-react) in your react project.  
 
-To make this work in your project you should use [router5](https://github.com/router5/router5) as a standalone routing library and 
-the [mobx-router5](https://github.com/LeonardoGentile/mobx-router5) plugin 
-which exposes the router5's state as mobx _observable_ variables.  
+To make this work in your project you should use [router5](https://github.com/router5/router5) as routing library (independent from react) and the [mobx-router5](https://github.com/LeonardoGentile/mobx-router5) plugin 
+which exposes the router5's states as mobx _observable_ variables.  
 
 The React Components exported by this package uses [mobx-router5](https://github.com/LeonardoGentile/mobx-router5) as the source of truth. 
-They _observe_ the mobx-router5 _observables_ and react when they change.
+They _observe_ the `mobx-router5` _observables_ and react when they change.
  
 ## Requirements
 
@@ -97,8 +96,6 @@ import Layout from './components/Layout'
 import * as stores from './stores'; //mobx stores
 import createRouter from './create-router5';
 
-
-// 'true' for using the useLoggerPlugin (for debug)
 const router = createRouter(true);
 
 // Provider will add all the mobx stores (including the routerStore) in context.
@@ -130,14 +127,14 @@ The components will always be in sync with the `routerStore` internal observable
 - `withLink`: higher-order component
 - `NavLink`: component component
 - `getComponent`: helper function 
-- `Route`: Component
+- `RouteView`: Component
 
 #### routeNode - HOC
 
 **Description**   
 
 Function that generates an higher-order component to wrap a *route node* component.  
-This function should be used to *decorate* **route nodes** components, that is, those routes having children routes, see [router5 documentation](http://router5.github.io/docs/understanding-router5.html) on these concepts if you are not familiar with them.   
+This function should be used to *wrap* **route nodes components**, that is, those components associated with routes having children routes, read [router5 documentation](http://router5.github.io/docs/understanding-router5.html) if you are not familiar with these concepts.   
  
 **Signature**  
 
@@ -165,13 +162,13 @@ The newly created `UsersCompNode` HOC is a *wrapper* around `UserComp` and will:
 **Example**
 
 In the following example when navigating from `'users.list'` -> `'users.view'` then `'users'` is the **intersection node**.  
-Wrapping the `UserComp` with `RouteNode` ensures that the during this transition the `UserComp` will re-render 
+Wrapping the `UserComp` with `RouteNode` ensures that during this transition the `UserComp` will re-render 
 and so it will be able to determine which component to show (associated to one of its sub-routes).  
   
 **Note**  
   
 The logic on how to select and render the correct sub-component is up to you, in the example it is used a simple switch.  
-See the [Rendering Routes](#rendering-routes) section below for a possible implementation. 
+See the [Rendering Routes](#rendering-routes) section below for possible implementations. 
   
 ```javascript
 import React from 'react';
@@ -179,7 +176,7 @@ import { routeNode } from 'react-mobx-router5';
 import { UserView, UserList, NotFound } from './components';
 
 function UsersComp(props) {
-    const { previousRoute, route } = props;
+    const { routerStore, previousRoute, route } = props; // injected by routeNode HOC
 
     switch (route.name) {
         case 'users.list':
@@ -446,18 +443,19 @@ Quoting the [router5 documentation](http://router5.github.io/docs/understanding-
   
 This is basically what `routeNode` is for: by wrapping a *node component* (a component associated with a route having children routes) we are telling to re-render only a portion of our app when there is a specific route change. 
 
-At this point only the components wrapped with `RouteNode` are associated with some our app routes, so what about all the other components?
+At this point only the components wrapped with `RouteNode` are associated with some our app routes, so what about all the other components and routes?
   
 > [...] rather than the router updating the view, it is up to the view to listen / bind / subscribe to route changes in order to update itself.   
 > [...] The router is unaware of your view and you need to bind your view to your router's state updates.  
 
  
-In the above [routeNode section](#routenode---hoc) there is simple example where the sub-components of a RouteNode are selected with a simple switch statement. This is a possible implementation.   
+In the above [routeNode section](#routenode---hoc) there is a simple example where the sub-components of a RouteNode are selected with a simple switch statement. This is a possible implementation.   
   
 In this section I present two (opinionated) personal implementations:
+
  - `getComponent` function helper
  - `Route` Component
-  
+    
 Be warned:  
 
   - these are not the only ones, you are free to implement your own
@@ -499,8 +497,14 @@ export default [
 ];
 
 ```
+
+Notice that the component associated with a route node (the ones having children, for example `Sections`) should be already wrapped with `RouteNode`. In other words the `Sections` component should be exported with:
+
+```
+export default routeNode('section')(Sections);
+``` 
   
-By associating a route with a component we might apparently break the router5's principle 
+Also notice that by associating a route with a component we might apparently break the router5's principle 
 > The router is unaware of your view  
 
 but as I will show this isn't true because the `component` field isn't used by the router but by our views!
@@ -510,7 +514,7 @@ but as I will show this isn't true because the `component` field isn't used by t
 
 **Description**   
 
-When using the above routes configuration this helper is used for retrieving the correct component to render for a given `routeNode` and the a given `route`. This represents an alternative to the switch statement.
+When using the above routes configuration this helper is used for retrieving the correct component to render for a given `routeNodeName` and the a given `route`. This represents an alternative to the switch statement.
    
 **Signature**  
 
@@ -519,12 +523,12 @@ When using the above routes configuration this helper is used for retrieving the
 **Params**
 
 - `route`: either the `routerStore.route` __object__ or the _route name_ as a **string**. Usually it's the currently active route
-- `routeNodeName`: the name of the route for the React component from where to re-render (transition node)
-- `routesConfig`: nested routes configuration array (with an extra `component` field for each route)
+- `routeNodeName`: the name of the route for the React component from where to re-render (route node)
+- `routesConfig`: nested routes configuration array (with the extra `component` field for each route)
     
 **Return**  
   
-It returns a `React.Component`: the component to be rendered extracted from the routes configuration for the given `route` and `routeNode` .   
+It returns a `React.Component`: the component to be rendered extracted from the routes configuration for the given `route` and `routeNode`.   
   
 **Example**
 
@@ -536,12 +540,13 @@ import routes from "../../routes";
 
 class Main extends React.Component {
   render(){
-    const { routerStore } = this.props;
+    const { routerStore } = this.props; // injected by routeNode HOC
     const currentRoute = routerStore.route; 
-    // This will extract the correct component amongst the children of ''for the current route 
+    
+    // This will extract the correct component amongst the children of '' for the current route 
     // Notice that the ComponentToRender could also be another routeNode, for example `Section`
     const ComponentToRender = getComponent(currentRoute, '', routes);
-	// Passing the params as prop to re-render if we remain on the same route but only change in params
+	// Passing the params as prop to re-render if we remain on the same route but params change
     return createElement(ComponentToRender, {...currentRoute.params}); 
   }
 }
@@ -559,7 +564,7 @@ import routes from "../../routes";
 
 class Section extends React.Component {
   render(){
-    const { routerStore } = this.props;
+    const { routerStore } = this.props; // injected by routeNode HOC
     const currentRoute = routerStore.route; 
     // This will extract the correct component amongst the children of 'section' for the current route
     // Notice that the ComponentToRender could also be another routeNode, for example `Subsection`
@@ -574,7 +579,7 @@ export default routeNode('section')(Section);
 ```
 
 
-#### Route - Component
+#### RouteView - Component
 
 If you observe the `getComponent` solution you might notice some repetition, that is you always need to grab the component to render and then renders it:
 
@@ -583,40 +588,43 @@ const ComponentToRender = getComponent(currentRoute, 'section', routes);
 return createElement(ComponentToRender, {route}); 
 ```
 
-The `Route` component does these two operations for you. 
+The `RouteView` component does these two operations for you. 
 
 **Description**
   
-It fetch which component to render from the route configuration and renders it, additionally passing the `route` as prop to the generated component.
+It fetch which component to render from the route configuration and renders it.  
+All props not listed below will be passed trough to the new generated component additionally passing the `route` prop.
   
 
 **Props**  
   
 - `route`: the `routerStore.route` __object__. This is required or pass the routerStore instead
-- `routerStore`: If you don't pass the current route then pass the router store and the component will grab routerStore.route for you
-- `routeNodeName`: the name of the route for the React component from where to re-render (transition node)
-- `routes`: nested routes configuration array (with an extra `component` field for each route)
+- `routerStore`: If you don't pass the `route` prop then pass the router store and the component will grab `routerStore.route` for you
+- `routeNodeName`: the name of the route for the React component from where to re-render (route node)
+- `routes`: nested routes configuration array (with the extra `component` field for each route)
 
 **Example**  
 
 ```
 //Main.jsx: the root routeNode ('')
-import React, {createElement, Route} from "react";
-import {routeNode, getComponent} from "react-mobx-router5";
+import React, {createElement} from "react";
+import {routeNode, RouteView} from "react-mobx-router5";
 import routes from "../../routes";
 
 const routeNodeName = '';
 
 class Main extends React.Component {
   render(){
-	const route = this.props.routerStore.route;
-	// The generated component will receive the `route` prop
-    return <Route routes={routes} routeNodeName={routeNodeName} route={route} />;
+	const currentRoute = this.props.routerStore.route;
+	// The generated component will receive an extra `route` prop
+    return <RouteView route={currentRoute} routeNodeName={routeNodeName} routes={routes} otherProp='hello' myOtherProp='bye' />;
   }
 }
 
 export default routeNode('')(Main);
 ```
+
+Notice in the above example that the newly generated component will receive these props: `route`, `otherProp` and `myOtherProp`.  
 
 
 ### About PropTypes
