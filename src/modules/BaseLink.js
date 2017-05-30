@@ -112,7 +112,6 @@ BaseLink.propTypes = {
   //====================================================================
   [storeName]: PropTypes.object,
   route: PropTypes.object,
-  previousRoute: PropTypes.object,
   isActive: PropTypes.bool
 };
 

@@ -49,7 +49,6 @@ function withLink(LinkWrapper, storeName='routerStore') {
     children:         PropTypes.node,
     // computed/injected
     route:            PropTypes.object,
-    previousRoute:    PropTypes.object,
     className:        PropTypes.string,
     isActive:         PropTypes.bool,
     // special

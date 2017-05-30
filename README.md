@@ -156,7 +156,7 @@ Given for example a route name `'users'` associated with a component `UsersComp`
 
 The newly created `UsersCompNode` HOC is a *wrapper* around `UserComp` and will: 
 
- - pass the `routerStore`, `route`, `previousRoute` as props to the *wrapped* `UsersComp` component 
+ - pass the `routerStore`, `route` as props to the *wrapped* `UsersComp` component 
  - trigger a re-rendering of the wrapper and of the wrapped component only **when** the the **nodeName** (in this case `'users'`) is the correct **intersection node** for the current transition (see [understanding router5](http://router5.github.io/docs/understanding-router5.html))
  
 **Example**
@@ -176,7 +176,7 @@ import { routeNode } from 'react-mobx-router5';
 import { UserView, UserList, NotFound } from './components';
 
 function UsersComp(props) {
-    const { routerStore, previousRoute, route } = props; // injected by routeNode HOC
+    const { routerStore, route } = props; // injected by routeNode HOC
 
     switch (route.name) {
         case 'users.list':
@@ -220,7 +220,7 @@ It returns a `ComponentWithRoute` that wraps `BaseComponent`.
 Any component wrapped by this HOC:
   
   - receives all the props passed to the wrapper
-  - is injected with these extra props coming from **mobx-router5**: `routerStore`, `route`, `previousRoute`
+  - is injected with these extra props coming from **mobx-router5**: `routerStore`, `route`
   - is injected with these *computed* extra props: `isActive` and `className` (see below)
   - re-renders on any route change
 
@@ -258,7 +258,7 @@ import { withRoute } from 'react-mobx-router5';
 
 function MyComp(props) {
 	// these are injected by withRoute
-    const { previousRoute, route, isActive, className } = props;
+    const { route, isActive, className } = props;
 	
 	return (
 		<div className={className}>

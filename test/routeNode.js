@@ -56,9 +56,9 @@ describe('routeNode hoc', () => {
     });
   });
 
-  context('Wrapped component (RouteSegment)', function () {
+  context('Wrapped component (RouteComponent)', function () {
 
-    it('should receive props: `routerStore`, `route`, `previousRoute` ', () => {
+    it('should receive props: `routerStore`, `route` ', () => {
       const SegmentCompSpy= spy(FnComp);
       NodeComp = routeNode('')(SegmentCompSpy);
       router.addNode('home', '/home');
@@ -78,7 +78,6 @@ describe('routeNode hoc', () => {
             {
               routerStore: routerStore,
               route: router.getState(),
-              previousRoute: previousRoute
             }
           );
         });

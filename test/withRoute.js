@@ -54,15 +54,10 @@ describe('withRoute HOC', () => {
         const renderCompFn = () =>  mount(
           <CompWithRoute routerStore={routerStore} route="home" />
         );
-        expect(renderCompFn).to.throw('[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.');
+        expect(renderCompFn).to.throw('[react-mobx-router5][withRoute] prop names `route` is reserved.');
       });
 
-      it('should throw an error if it receives a `previousRoute` prop', () => {
-        const renderCompFn = () =>  mount(
-          <CompWithRoute routerStore={routerStore} previousRoute="home" />
-        );
-        expect(renderCompFn).to.throw('[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.');
-      });
+
     });
 
     context('Methods', function() {
@@ -117,7 +112,7 @@ describe('withRoute HOC', () => {
     });
 
 
-    it('should receive props: `routerStore`, `route`, `previousRoute` on any route change (to ensure re-rendering)', () => {
+    it('should receive props: `routerStore`, `route` on any route change (to ensure re-rendering)', () => {
       const WrappedCompSpy = spy(FnComp);
       const CompWithRoute = withRoute(WrappedCompSpy);
 
@@ -135,8 +130,7 @@ describe('withRoute HOC', () => {
 
           expect(WrappedCompSpy).to.have.been.calledWithMatch({
             routerStore: routerStore,
-            route: router.getState(),
-            previousRoute: previousRoute
+            route: router.getState()
           });
         });
       }

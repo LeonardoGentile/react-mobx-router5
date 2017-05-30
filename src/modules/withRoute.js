@@ -23,7 +23,6 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
    *
    * Also the wrapped BaseComponent (and children) will re-render because it's injected with:
    *   - route: the mobx observable routerStore.route, used to trigger a re-rendering of the BaseComponent when the route changes
-   *   - previousRoute: the mobx observable routerStore.previousRoute, same as above
    *   - className: if a prop `routeName` is passed to ComponentWithRoute then it adds an `active` className
    *     to the original className when routeName==routerStore.route
    *   - isActive: boolean, computed and injected when `routeName` is passed
@@ -44,19 +43,19 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
 
     constructor(props) {
       super(props);
+      this.isActive = this.isActive.bind(this); // Bindings
+
       this.routerStore = props[storeName];
       ifNot(
         this.routerStore,
         '[react-mobx-router5][withRoute] missing routerStore'
       );
+
       this.router = this.routerStore.router || null;
       ifNot(
         this.router && this.router.hasPlugin('MOBX_PLUGIN'),
         '[react-mobx-router5][withRoute] missing mobx plugin'
       );
-
-      // Bindings
-      this.isActive = this.isActive.bind(this);
     }
 
     isActive(routeName, routeParams, activeStrict) {
@@ -65,11 +64,11 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
 
     render() {
       ifNot(
-        !this.props.route && !this.props.previousRoute,
-        '[react-mobx-router5][withRoute] prop names `route` and `previousRoute` are reserved.'
+        !this.props.route,
+        '[react-mobx-router5][withRoute] prop names `route` is reserved.'
       );
 
-      const { routeName, activeStrict, routeParams, activeClassName, className } = this.props;
+      const {routeName, routeParams, activeStrict, activeClassName, className } = this.props;
 
       let currentClassName = className;
       let isActive = null;
@@ -79,14 +78,13 @@ function withRoute(BaseComponent, storeName = 'routerStore') {
       }
 
       // De-referencing a mobx-observable will trigger a re-rendering (because of the @observer)
-      const { route, previousRoute } = this.routerStore;
+      const {route} = this.routerStore;
       const newProps = {
         ...this.props,
         isActive,
         className: currentClassName,
         routerStore: this.routerStore,
-        route,
-        previousRoute
+        route
       };
 
       return (
