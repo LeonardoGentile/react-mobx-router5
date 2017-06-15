@@ -47,9 +47,9 @@ Internally the components exported by this package will use `@inject` to grab th
 
 An example would make this more clear:
 
-__stores.js__ (mobx stores)
 
 ```javascript
+//stores.js (mobx stores)
 import tabStore from './TabStore';
 import userStore from './UserStore';
 import {RouterStore} from 'mobx-router5';
@@ -64,9 +64,9 @@ export {
 };
 ```
 
-__create-router5.js__:  
 
 ```javascript
+//create-router5.js
 import {createRouter} from 'router5';
 import loggerPlugin from 'router5/plugins/logger'; 
 import browserPlugin from 'router5/plugins/browser';
@@ -86,9 +86,9 @@ export default function configureRouter(useLoggerPlugin = false) {
 }
 ```
 
-__app.js__:
 
 ```javascript
+//app.js
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'mobx-react';
@@ -407,7 +407,7 @@ Notice in the above example that the newly generated component will receive thes
   
 
 
-##Components for Navigation and Routes Injections 
+## Components for Navigation and Routes Injections 
 
 ### withRoute - HOC
 
