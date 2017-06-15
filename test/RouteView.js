@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import {mount} from 'enzyme';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter} from './utils/test-utils';
-import RouteView from "../src/modules/RouteView";
+import RouteView from '../src/modules/RouteView';
 
 describe('routeNode hoc', () => {
   let router;
@@ -46,7 +46,7 @@ describe('routeNode hoc', () => {
 
   context('Exceptions', function () {
 
-    it('should throw when route or routerStore props not passed', () => {
+    it('should throw when route prop is not passed', () => {
       const RouteComp = (props) => (
         <RouteView routes={routes}/>
       );
