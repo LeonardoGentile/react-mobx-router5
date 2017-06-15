@@ -1,7 +1,7 @@
 import {Component, createElement} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName, ifNot} from './utils';
-import {autorun} from 'mobx';
+import {autorun, computed, toJS} from 'mobx';
 import {inject} from 'mobx-react';
 
 
@@ -28,19 +28,24 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
         );
 
         this.state = {
-          route: this.routerStore.route,
-          previousRoute: this.routerStore.previousRoute,
-          intersectionNode: this.routerStore.intersectionNode,
+          route: this.routerStore.route
         };
+      }
+
+      // Compute a new observable used by autorun
+      @computed get isIntersection() {
+        return this.routerStore.intersectionNode === this.nodeName;
       }
 
       componentDidMount() {
         this.autorunDisposer = autorun(() => {
-          this.setState({
-            route: this.routerStore.route,
-            previousRoute: this.routerStore.previousRoute,
-            intersectionNode: this.routerStore.intersectionNode
-          });
+          // Change state only if this is the correct "transition node" for the current transition
+          // This will re-render this component and so the wrapped RouteSegment component
+          if (this.isIntersection) {
+            this.setState({
+              route: this.routerStore.route
+            });
+          }
         });
       }
 
@@ -48,15 +53,10 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
         this.autorunDisposer();
       }
 
-      // re-render this component and so the route-node (wrapped component)
-      // only if it is the correct "transition node"
-      shouldComponentUpdate(newProps, newState) {
-        return (newState.intersectionNode === this.nodeName);
-      }
-
       render() {
         const {route} = this.state;
-        return createElement(RouteComponent, {...this.props, [storeName]: this.props[storeName], route});
+        const activeRoute = toJS(route); // convert to plain object
+        return createElement(RouteComponent, {...this.props, [storeName]: this.props[storeName], activeRoute});
       }
     }
 
