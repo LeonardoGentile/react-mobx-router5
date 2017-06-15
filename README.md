@@ -124,20 +124,20 @@ The components will always be in sync with the `routerStore` internal observable
 
 - [routeNode](#routenode---hoc): **HOC** for wrapping the 'route nodes' of your app
 - [getComponent](#getcomponent---helper-function): **Helper function** to select what component to render from routes configuration 
-- [RouteView](#routeView--component): **Component** to automatically select and render a component retrieved from the routes configuration 
+- [RouteView](#routeview---component): **Component** to automatically select and render a component retrieved from the routes configuration 
 
 **Components for Navigation and Routes Injections**
 
 - [withRoute](#withroute---hoc): **HOC** to re-render any component on any route change and inject router's observables 
 - [BaseLink](#baselink---component): **Component** to generate simple `a` element not aware of route's change    
 - [Link](#link---component): **Component** resulting from `BaseLink` and `withRoute` composed together
-- [withLink](withlink---hoc): **HOC** for creating custom wrappers around a `<BaseLink/>` component
-- [NavLink](#navlink-component): **Component** resulting from `li` element and `withLink` composed together
+- [withLink](#withlink---hoc): **HOC** for creating custom wrappers around a `<BaseLink/>` component
+- [NavLink](#navlink---component): **Component** resulting from `li` element and `withLink` composed together
  
     
-##Components for Routing and View Selection
+## Components for Routing and View Selection
 
-###routeNode - HOC
+### routeNode - HOC
   
 Quoting the [router5 documentation](http://router5.github.io/docs/understanding-router5.html):
 > On a route change, you only need to re-render a portion of your app.
