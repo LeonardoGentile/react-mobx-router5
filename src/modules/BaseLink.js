@@ -60,7 +60,7 @@ class BaseLink extends Component {
       }
       return this.router.buildPath(routeName, routeParams);
     }
-    return null;
+    return '#';
   }
 
   clickHandler(evt) {

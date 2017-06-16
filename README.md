@@ -545,9 +545,9 @@ function logMeIn(e) {
 function Menu(props) {
   return (
     <nav>
-      <Link routerStore={props.routerStore} routeName='home' routeOptions={{reload: true}}>Home</Link>
-      <Link router={props.router} routeName='home'>About</Link>
-      <Link onClick={logMeIn} >Login</Link>
+      <BaseLink routerStore={props.routerStore} routeName='home' routeOptions={{reload: true}}>Home</Link>
+      <BaseLink router={props.router} routeName='home'>About</Link>
+      <BaseLink onClick={logMeIn} >Login</Link>
     </nav>
   );
 }
