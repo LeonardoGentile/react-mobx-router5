@@ -58,7 +58,7 @@ describe('routeNode hoc', () => {
 
   context('Wrapped component (RouteComponent)', function () {
 
-    it('should receive props: `routerStore`, `activeRoute` (non-observable) ', () => {
+    it('should receive props: `routerStore`, `route`(observable) and `plainRoute` (non-observable) ', () => {
       const SegmentCompSpy= spy(FnComp);
       NodeComp = routeNode('')(SegmentCompSpy);
       router.addNode('home', '/home');
@@ -77,7 +77,8 @@ describe('routeNode hoc', () => {
           expect(SegmentCompSpy).to.have.been.calledWithMatch(
             {
               routerStore: routerStore,
-              activeRoute: router.getState(),
+              route: routerStore.route,
+              plainRoute: router.getState()
             }
           );
         });

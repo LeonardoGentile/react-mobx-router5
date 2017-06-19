@@ -168,7 +168,7 @@ The final usage would be:
 The newly created `RouteNodeInstance` HOC is a *wrapper* around `RouteComponent` and will: 
 
  - forward all the props received to the wrapped `RouteComponent`
- - inject the `activeRoute` (non-observable) and `routerStore` props to the `RouteComponent`  
+ - inject the `route` (observable), `plainRoute` (non-observable) and `routerStore` props to the `RouteComponent`  
  - trigger a re-rendering of itself and of the wrapped `RouteComponent` only **when** the **nodeName** is the correct **intersection node** for the current route transition (see [understanding router5](http://router5.github.io/docs/understanding-router5.html) and the example below).
 
 
@@ -199,10 +199,10 @@ import { routeNode } from 'react-mobx-router5';
 import { UserView, UserList, NotFound } from './components';
 
 function UsersComp(props) {
-	// These are injected by routeNode HOC
-    const { routerStore, activeRoute } = props; 
+    // These are injected by routeNode HOC
+    const { routerStore, route, plainRoute } = props; 
 
-    switch (activeRoute.name) {
+    switch (route.name) {
         case 'users.detail':
             return <UserDetail/>;
         case 'users.view':
@@ -277,7 +277,7 @@ export default [
 
 Notice that the component associated with a route node (the ones having children, for example `Sections`) should already be wrapped with `routeNode`. In other words the `Sections` component should be exported like this:
 
-```
+```javascript
 export default routeNode('section')(Sections);
 ``` 
   
@@ -317,14 +317,14 @@ import routes from "../../routes";
 
 class Main extends React.Component {
   render(){
-	// injected by routeNode HOC
-    const { routerStore, activeRoute } = this.props; 
+    // injected by routeNode HOC
+    const { routerStore, route, plainRoute } = this.props; 
     
     // This will extract the correct component amongst the children of '' for the current route 
     // Notice that the ComponentToRender could also be another routeNode, for example `Section`
-    const ComponentToRender = getComponent(activeRoute, '', routes);
-	// Passing the activeRoute prop will ensure that the ComponentToRender will be re-rendered for each new route
-    return createElement(ComponentToRender, {route: activeRoute}); 
+    const ComponentToRender = getComponent(route, '', routes);
+    // Passing the route prop will ensure that the ComponentToRender will be re-rendered for each new route
+    return createElement(ComponentToRender, {route: route}); 
   }
 }
 
@@ -341,13 +341,13 @@ import routes from "../../routes";
 
 class Section extends React.Component {
   render(){
-	// injected by routeNode HOC
-    const { activeRoute, routerStore } = this.props; 
+    // injected by routeNode HOC
+    const { route, routerStore, plainRoute } = this.props; 
 
     // This will extract the correct component amongst the children of 'section' for the current route
     // Notice that the ComponentToRender could also be another routeNode, for example `Subsection`
-    const ComponentToRender = getComponent(activeRoute, 'section', routes);
-    return createElement(ComponentToRender, {route: activeRoute}); 
+    const ComponentToRender = getComponent(route, 'section', routes);
+    return createElement(ComponentToRender, {route: route}); 
   }
 }
 
@@ -359,9 +359,9 @@ export default routeNode('section')(Section);
 
 The `getComponent` solution introduces some repetition, that is, you always need to grab the component to render and then render it:
 
-```
-const ComponentToRender = getComponent(activeRoute, 'section', routes);
-return createElement(ComponentToRender, {route: activeRoute}); 
+```javascript
+const ComponentToRender = getComponent(route, 'section', routes);
+return createElement(ComponentToRender, {route: route}); 
 ```
 
 The `RouteView` component does these two operations for you. 
@@ -374,13 +374,14 @@ All props not listed below will be passed trough to the new generated component 
 
 **Props**  
   
-- `route`: a route object (**required**). Better to use the **non-observable** `activeRoute` injected by `routeNode` rather than `routerStore.route` to avoid possible inconsistencies. 
+- `route`: a route object (**required**). It **might** be better to pass the **non-observable** `plainRoute` injected by `routeNode` rather than `routerStore.route` 
+  to avoid possible inconsistencies if the subcomponents are observers of `route` (**TODO**: This use case needs more study)  
 - `routeNodeName`: the name of the route for the React component from where to re-render (route node)
 - `routes`: nested routes configuration array (with the extra `component` field for each route)
 
 **Example**  
 
-```
+```javascript
 //Main.jsx: the root routeNode ('')
 import React, {createElement} from "react";
 import {routeNode, RouteView} from "react-mobx-router5";
@@ -390,14 +391,14 @@ const routeNodeName = '';
 
 class Main extends React.Component {
   render(){
-	const {activeRoute, routerStore} = this.props;
-   	return <RouteView 
-   		route={activeRoute} 
-   		routeNodeName={routeNodeName} 
-   		routes={routes} 
-   		// other props
-   		otherProp='hello' 
-   		myOtherProp='bye' />;
+    const {route, routerStore} = this.props;
+    return <RouteView 
+      route={route} 
+      routeNodeName={routeNodeName} 
+      routes={routes} 
+      // other props
+      otherProp='hello' 
+      myOtherProp='bye' />;
   }
 }
 
@@ -475,15 +476,15 @@ import React from 'react';
 import { withRoute } from 'react-mobx-router5';
 
 function MyComp(props) {
-	// these are injected by withRoute
-    const { route, isActive, className } = props;
-	
-	return (
-		<div className={className}>
-			I am {isActive: 'active' ? 'inactive' } <br/>
-			The current route is {route}
-		</div>
-	)	
+  // these are injected by withRoute
+  const { route, isActive, className } = props;
+  
+  return (
+    <div className={className}>
+      I am {isActive: 'active' ? 'inactive' } <br/>
+      The current route is {route}
+    </div>
+  )	
 
 }
 export default withRoute(MyComp);
@@ -495,14 +496,14 @@ import React from 'react';
 import MyComp from './MyComp';
 
 function Container(props) {
-	return (
-		<div>
-			<MyComp
-			  routeName='home'
-			  className='hello'
-			  activeClassName='hyperactive' />
-		</div>
-	)	
+  return (
+    <div>
+      <MyComp
+        routeName='home'
+        className='hello'
+        activeClassName='hyperactive' />
+    </div>
+  )	
 
 }
 export default Container;

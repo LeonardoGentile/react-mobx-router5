@@ -55,8 +55,8 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
 
       render() {
         const {route} = this.state;
-        const activeRoute = toJS(route); // convert to plain object
-        return createElement(RouteComponent, {...this.props, [storeName]: this.props[storeName], activeRoute});
+        const plainRoute = toJS(route); // convert to plain object
+        return createElement(RouteComponent, {...this.props, [storeName]: this.props[storeName], route, plainRoute});
       }
     }
 
