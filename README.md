@@ -6,7 +6,8 @@
 
 # react-mobx-router5
 
-> [Router5](http://router5.github.io/) integration with [mobx](https://mobx.js.org/) and [react](https://facebook.github.io/react/).
+> [Router5](http://router5.github.io/) integration with [mobx](https://mobx.js.org/) and [react](https://facebook.github.io/react/).  
+> **Working Example**: [react-mobx-router5-example](https://github.com/LeonardoGentile/react-mobx-router5-example) 
 
 ## Introduction
 This package represents a routing alternative to react-router.  
