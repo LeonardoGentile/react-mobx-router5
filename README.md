@@ -139,28 +139,26 @@ The components will always be in sync with the `routerStore` internal observable
 ## Components for Routing and View Selection
 
 ### routeNode - HOC
-  
+
 Quoting the [router5 documentation](http://router5.github.io/docs/understanding-router5.html):
 > On a route change, you only need to re-render a portion of your app.
   
-This is basically what `routeNode` is for: by wrapping a *node component* (a component associated with a route having children routes) we are telling to re-render only a portion of our app when there is a specific route change. This is probably the most important component of this package. 
+This is basically what `routeNode` is for: by wrapping a *node component* (a component associated with a route having children routes) we are telling to re-render 
+only a portion of our app when there is a specific route change. This is probably the most important component of this package. 
 
-**Description**   
 
-Function that generates an higher-order component to wrap a *route node* component.  
-This function should be used to *wrap* **route nodes components**, that is, those components associated with routes having children routes, read [router5 documentation](http://router5.github.io/docs/understanding-router5.html) if you are not familiar with these concepts.   
- 
 **Signature**  
 
- `routeNode(nodeName, storeName='routerStore')`
+`routeNode(nodeName, storeName='routerStore')(RouteComponent)`
  
 **Params**  
 
-- `nodeName`: the route name of the component to wrap (`''` if root node)
+- `nodeName`: the name of route to associate to the component (`''` if root node)
 - `storeName` (optional, __default__: `'routerStore'`): the RouterStore name if it differs from the default
+- `RouteComponent`: the component to wrap
 
 **Return**  
-It returns a function `routeNodeWrapper(RouteComponent)`. This function in turn returns a `RouteNode` component: the actual HOC.  
+The `routeNode` function returns another function `routeNodeWrapper(RouteComponent)` that in turn returns a `RouteNode` component: the actual HOC.  
 The final usage would be:
   
 `const RouteNodeInstance = routeNode(nodeName)(RouteComponent)`; 
@@ -186,7 +184,8 @@ In the following example when navigating from `'users.list'` -> `'users.detail'`
 Wrapping the `UserComp` with `RouteNode` ensures that during this transition the `UserComp` will re-render 
 and so it will be able to determine which component to show (associated to one of its sub-routes).  
 
-If the transition was from `'users.list'` -> `'home'` then the intersection node is `''` (the root node) and so `UsersComp` will not re-render. It's the root node responsibility (for example a `Main` component wrapped with `routeNode`) to re-render. 
+If then we navigate from `'users.list'` -> `'home'` then the intersection node is `''` (the root node) and so `UsersComp` will not re-render.  
+In this case it's the root node responsibility (for example a `Main` component wrapped with `routeNode`) to re-render. 
   
 **Note**  
   
@@ -289,9 +288,8 @@ but as I will show this isn't true because the `component` field is not used by 
   
 ### getComponent - Helper function
 
-**Description**   
-
-When using the above routes configuration this helper is used for selecting the correct component to render for a given `route` and a `routeNodeName`. This represents an alternative to the switch statement.
+When using the above routes configuration this helper is used for selecting the correct component to render for a given `route` and a `routeNodeName`. 
+This represents an alternative to the switch statement.
    
 **Signature**  
 
@@ -300,12 +298,12 @@ When using the above routes configuration this helper is used for selecting the 
 **Params**
 
 - `route`: either the `routerStore.route` __object__ or the _route name_ as a **string**. Usually it's the currently active route
-- `routeNodeName`: the name of the route for the React component from where to re-render (route node)
+- `routeNodeName`: the name of the route associated with the React component from where to re-render (Node Component)
 - `routesConfig`: nested routes configuration array (with the extra `component` as shown above)
     
 **Return**  
   
-It returns a `React.Component`: the component to be rendered extracted from the routes configuration for the given `route` and `routeNode`.   
+It returns a `React.Component`: the component to be rendered extracted from the routes configuration.   
   
 **Example**
 
@@ -321,7 +319,7 @@ class Main extends React.Component {
     const { routerStore, route, plainRoute } = this.props; 
     
     // This will extract the correct component amongst the children of '' for the current route 
-    // Notice that the ComponentToRender could also be another routeNode, for example `Section`
+    // Notice that the ComponentToRender could also be another "node component", that is associated with another routeNode, for example `Section`
     const ComponentToRender = getComponent(route, '', routes);
     // Passing the route prop will ensure that the ComponentToRender will be re-rendered for each new route
     return createElement(ComponentToRender, {route: route}); 
@@ -343,10 +341,9 @@ class Section extends React.Component {
   render(){
     // injected by routeNode HOC
     const { route, routerStore, plainRoute } = this.props; 
-
-    // This will extract the correct component amongst the children of 'section' for the current route
-    // Notice that the ComponentToRender could also be another routeNode, for example `Subsection`
-    const ComponentToRender = getComponent(route, 'section', routes);
+    
+    // in this case I use the route name (stirng)
+    const ComponentToRender = getComponent(route.name, 'section', routes);
     return createElement(ComponentToRender, {route: route}); 
   }
 }
@@ -365,14 +362,10 @@ return createElement(ComponentToRender, {route: route});
 ```
 
 The `RouteView` component does these two operations for you. 
-
-**Description**
   
-It fetch which component to render from the route configuration and renders it.  
-All props not listed below will be passed trough to the new generated component additionally forwarding the `route` prop.
-  
-
 **Props**  
+  
+All props not listed below will be passed trough to the new generated component additionally forwarding the `route` prop.
   
 - `route`: a route object (**required**). It **might** be better to pass the **non-observable** `plainRoute` injected by `routeNode` rather than `routerStore.route` 
   to avoid possible inconsistencies if the subcomponents are observers of `route` (**TODO**: This use case needs more study)  
@@ -405,15 +398,13 @@ class Main extends React.Component {
 export default routeNode('')(Main);
 ```
 
-Notice in the above example that the newly generated component will receive these props: `otherProp`, `myOtherProp` and the **extra** `route`
+Notice in the above example that the newly generated component will receive these props: `otherProp`, `myOtherProp` and the **extra** `route`.
   
 
 
 ## Components for Navigation and Routes Injections 
 
 ### withRoute - HOC
-
-**Description**    
 
 Function that generates an higher-order component to wrap any component that need to re-render on route changes.  
 
@@ -512,9 +503,7 @@ export default Container;
 --------
   
 ### BaseLink - Component
-
-**Description**
-  
+ 
 It generates an anchor `a` tag with `href` computed from `props.routeName`.  
 **Note:** This component *won't re-render* on route change.
 
@@ -561,8 +550,6 @@ export default Menu;
  
 ### Link - Component
 
-**Description**
-  
 The `Link` component is `BaseLink` and `withRoute` **composed together**.  
 This means that `Link` will re-render on any route change and an 'active' class will be applied to it when 
 the current route is `props.routeName`.
@@ -570,8 +557,6 @@ the current route is `props.routeName`.
 --------
   
 ### withLink - HOC
-
-**Description**   
 
 Function that generates a higher-order component to create custom wrappers around a `<BaseLink/>` component.  
 Useful for creating any sort of wrappers that will be **aware of route changes**, for example for creating navigation menus.  
@@ -619,8 +604,6 @@ See the `NavLink` component.
 --------
   
 ### NavLink - Component
-
-**Description**
 
 The `NavLink` component is the `li` element and `withLink` composed together.
 

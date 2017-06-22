@@ -47,6 +47,7 @@ function withLink(LinkWrapper, storeName='routerStore') {
     routeName:        PropTypes.string,
     onClick:          PropTypes.func,
     children:         PropTypes.node,
+    dangerouslySetInnerHTML: PropTypes.object,
     // computed/injected
     route:            PropTypes.object,
     className:        PropTypes.string,

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { ifNot } from './utils';
+import {ifNot} from './utils';
 
 // TODO
 const storeName = 'routerStore';
@@ -53,14 +53,15 @@ class BaseLink extends Component {
   }
 
   buildUrl(routeName, routeParams) {
+    let url = '#';
     if (routeName && this.router) {
       // If browser plugin is active
       if (this.router.buildUrl) {
-        return this.router.buildUrl(routeName, routeParams);
+        url = this.router.buildUrl(routeName, routeParams);
       }
-      return this.router.buildPath(routeName, routeParams);
+      else url = this.router.buildPath(routeName, routeParams);
     }
-    return '#';
+    return url;
   }
 
   clickHandler(evt) {
@@ -83,11 +84,15 @@ class BaseLink extends Component {
   }
 
   render() {
-    const {routeName, routeParams, className} = this.props;
+    const {routeName, routeParams, className, dangerouslySetInnerHTML } = this.props;
 
     const href = this.buildUrl(routeName, routeParams);
     const onClick = this.clickHandler;
-    return React.createElement('a', {href: href, className: className, onClick: onClick}, this.props.children);
+    const newProps = {href: href, className: className, onClick: onClick};
+    if (dangerouslySetInnerHTML) {
+      newProps['dangerouslySetInnerHTML'] = dangerouslySetInnerHTML;
+    }
+    return React.createElement('a', newProps, this.props.children);
   }
 }
 
@@ -108,11 +113,14 @@ BaseLink.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,  // could be passed directly or forwarded (computed) from withRoute/withLink
   children: PropTypes.node,
+  dangerouslySetInnerHTML: PropTypes.object,  // Optional, if set then apply it to the generated `a`
   // Optional: received when wrapped with `withRoute` or `withLink` HOCs
   //====================================================================
   [storeName]: PropTypes.object,
   route: PropTypes.object,
   isActive: PropTypes.bool
+
+
 };
 
 export default BaseLink;
