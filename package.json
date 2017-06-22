@@ -130,7 +130,8 @@
         "docs",
         "refactor",
         "style",
-        "perf"
+        "perf",
+        "chore"
       ]
     }
   }

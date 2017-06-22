@@ -683,5 +683,5 @@ PR, suggestions and help is appreciated, please make sure to read the [CONTRIBUT
 - Thanks to [Olivier Tassinari](https://github.com/oliviertassinari) for the [fast fix](https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types/issues/106) and suggestion needed by this package
 - Special thanks to [Thomas Roch](https://github.com/troch) for the awesome [router5](https://github.com/router5/router5) ecosystem
 
-
+  
 
