@@ -44,6 +44,7 @@
     "eqeqeq": 2,
     "no-else-return": 2,
     "no-multi-spaces": 0,
+    "no-console":0,
     // Strict mode
     "strict": 0,
     // Variables
