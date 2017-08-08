@@ -3,7 +3,7 @@ import {createElement} from 'react';
 import {getComponent} from './utils';
 
 /**
- * Route component: it should be used inside a routeNode component
+ * RouteView component: it should be used inside a routeNode component
  *
  * It select and render the correct component associated with the current route for the given routeNodeName
  *
@@ -13,22 +13,25 @@ function RouteView(props) {
 
   const {route, routeNodeName, routes, ...passThroughProps } = props;
 
-  let routeToRender = route;
+  let currentRoute = route;
   let ComponentToRender = null;
 
-  if (!routeToRender) {
-    throw new Error('Route Component requires a route prop');
-  }
-
   try {
-    ComponentToRender = getComponent(routeToRender, routeNodeName, routes);
+    if (!currentRoute) {
+      throw new Error('RouteView component requires a route prop');
+    }
+    const FetchedComponent = getComponent(currentRoute, routeNodeName, routes); // getComponent may throw
+    // Add `{key: route.meta.id}` to props for a full unmount/mount
+    ComponentToRender = createElement(FetchedComponent, {...passThroughProps, route});
   }
   catch (e) {
-    throw e;
+    // Do not render and print error to console
+    console.error(`RouteView: it was not possible to select the correct view for the current route '${currentRoute.name}' having params: `);
+    // This outputs an object on the browser console you can click through
+    console.dir(currentRoute.params);
   }
 
-  // Add ==> {key: route.meta.id}, to props to pass below for a full unmount/mount
-  return ComponentToRender ? createElement(ComponentToRender, {...passThroughProps, route} ) : null;
+  return ComponentToRender;
 }
 
 

@@ -119,8 +119,6 @@ BaseLink.propTypes = {
   [storeName]: PropTypes.object,
   route: PropTypes.object,
   isActive: PropTypes.bool
-
-
 };
 
 export default BaseLink;
