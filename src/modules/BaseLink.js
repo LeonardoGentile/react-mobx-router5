@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {ifNot} from './utils';
 
-// TODO
+// TODO: make the storeName customizable
 const storeName = 'routerStore';
 
 /**
- * BaseLink component: it generates an anchor tag with href computed from props.routeName.
+ * BaseLink component: it generates an anchor element with href computed from props.routeName.
  *
  * This component won't re-render on route change
  *
@@ -84,15 +84,16 @@ class BaseLink extends Component {
   }
 
   render() {
-    const {routeName, routeParams, className, dangerouslySetInnerHTML } = this.props;
+    // Don't add these to the 'a' element
+    let {routeParams, routeOptions, router, routeName, onClick, route, isActive, ...passThroughProps} = this.props;
+    delete passThroughProps[storeName];
 
+    // Computed props to add to 'a'
     const href = this.buildUrl(routeName, routeParams);
-    const onClick = this.clickHandler;
-    const newProps = {href: href, className: className, onClick: onClick};
-    if (dangerouslySetInnerHTML) {
-      newProps['dangerouslySetInnerHTML'] = dangerouslySetInnerHTML;
-    }
-    return React.createElement('a', newProps, this.props.children);
+    onClick = this.clickHandler;
+    const newProps = {...passThroughProps, href, onClick};
+
+    return React.createElement('a', newProps, passThroughProps.children);
   }
 }
 
@@ -105,11 +106,11 @@ BaseLink.defaultProps = {
 
 BaseLink.propTypes = {
   // Defaults
-  routeOptions: PropTypes.object,
   routeParams: PropTypes.object,
+  routeOptions: PropTypes.object,
   // Optional
   router: PropTypes.object,     // when we don't pass/inject the routerStore then we need the router
-  routeName: PropTypes.string,  // not required because of onClick could be passed instead
+  routeName: PropTypes.string,  // not required because onClick could be passed instead
   onClick: PropTypes.func,
   className: PropTypes.string,  // could be passed directly or forwarded (computed) from withRoute/withLink
   children: PropTypes.node,
