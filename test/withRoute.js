@@ -105,9 +105,7 @@ describe('withRoute HOC', () => {
       renderWithStore(routerStore)(CompWithRoute);
       expect(WrappedCompSpy).to.have.been.calledWithMatch({
         routeParams:{},
-        className: '',
-        activeClassName: 'active',
-        activeStrict: false
+        className: ''
       });
     });
 
