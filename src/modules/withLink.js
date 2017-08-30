@@ -28,10 +28,11 @@ function withLink(LinkWrapper, storeName='routerStore') {
    * Note: the `active` class will be applied to the LinkWrapper, not the BaseLink
    */
   function WithLink(props) {
+    const {linkClassName, ...passThroughProps } = props;
     return (
       <LinkWrapper className={props.className} >
-        <BaseLink { ...props } className={props.linkClassName} >
-          {props.children}
+        <BaseLink { ...passThroughProps } className={linkClassName} >
+          {passThroughProps.children}
         </BaseLink>
       </LinkWrapper>
     );
