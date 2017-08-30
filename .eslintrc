@@ -49,7 +49,7 @@
     "strict": 0,
     // Variables
     "no-shadow": 0,
-    "no-unused-vars": [2, { "args": "none" }],
+    "no-unused-vars": [1, { "args": "none" }],
     "no-use-before-define": 0,
     // Style
     "brace-style": [1, "stroustrup"],
