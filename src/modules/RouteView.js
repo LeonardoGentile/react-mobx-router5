@@ -39,7 +39,7 @@ class RouteViewErrorBoundary extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props !== nextProps) {
+    if (this.props.routes !== nextProps.routes || this.props.routeNodeName !== nextProps.routeNodeName || this.props.route !== nextProps.route) {
       this.setState({ hasError: false });
     }
   }
