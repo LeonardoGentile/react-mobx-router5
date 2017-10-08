@@ -56,6 +56,41 @@ describe('routeNode hoc', () => {
       );
       expect(renderComp).to.throw();
     });
+
+    it('should render the default error message with default color when an exception occurs', () => {
+      const route = { name: 'd.h.l' }; // A route without component
+
+      const RouteComp = (props) => (
+        <RouteView routes={routes} route={route} routeNodeName="d.h"/>
+      );
+
+      const renderedL = mount(
+        <RouteComp />
+      );
+
+      expect(renderedL.find('h1')).to.have.text('Something went wrong.');
+      expect(renderedL.find('h1')).to.have.style('color', 'rgb(217, 83, 79)');
+
+    });
+
+    it('should render a custom error message with a custom style when an exception occurs', () => {
+      const route = { name: 'd.h.l' }; // A route without component
+
+      const RouteComp = (props) => (
+        <RouteView routes={routes} route={route} routeNodeName="d.h" errorMessage={'Ay, caramba!'} errorStyle={{color: 'rgb(200, 90, 34)', 'font-weight': 'bold' }}/>
+      );
+
+      const renderedL = mount(
+        <RouteComp />
+      );
+
+      expect(renderedL.find('h1')).to.have.text('Ay, caramba!');
+      expect(renderedL.find('h1')).to.have.style('color', 'rgb(200, 90, 34)');
+      expect(renderedL.find('h1')).to.have.style('font-weight', 'bold');
+
+    });
+
+
   });
 
   context('Render the Component', function () {

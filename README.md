@@ -21,7 +21,7 @@ They _observe_ the `mobx-router5` _observables_ and react when they change.
  
 ## Requirements
 
-- __react >= 15.0.0__
+- __react >= 16.0.0__. For React < 16.0.0 install "^4.0.0" version
 - __mobx >= 3.1.0__
 - __mobx-react >= 4.0.0__
 - __router5 >= 5.0.0__
@@ -371,6 +371,10 @@ All props not listed below will be passed trough to the new generated component 
   to avoid possible inconsistencies if the subcomponents are observers of `route` (**TODO**: This use case needs more study)  
 - `routeNodeName`: the name of the route for the React component from where to re-render (route node)
 - `routes`: nested routes configuration array (with the extra `component` field for each route)
+- `errorMessage`: a string for custom message to display inside an `h1` in case of error during the component selection. *Optional*, **default: 'Something went wrong.'**
+- `errorStyle`: a style object to be applied to the `h1` error description. *Optional*, **default: {color: 'rgb(217, 83, 79)'**
+
+Notice that the RouteView component is internally wrapped with an [Error Boundary Component](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)  (introduced in react 16), this ensure that in case of exception while selecting the component to display the entire app won't crash and an error message will be displayed instead. The error message is rendered inside an `h1`, it is customizabile using the `errorMessage` and `errorStyle` props passed to `routeView`.
 
 **Example**  
 

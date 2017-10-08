@@ -13,5 +13,7 @@
     <orderEntry type="library" name="mocha-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="chai-DefinitelyTyped" level="project" />
     <orderEntry type="library" name="chai-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="mocha-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="chai-enzyme-DefinitelyTyped" level="application" />
   </component>
 </module>

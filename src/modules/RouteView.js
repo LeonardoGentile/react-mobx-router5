@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, createElement} from 'react';
 import PropTypes from 'prop-types';
-import {createElement} from 'react';
 import {getComponent} from './utils';
 
 
@@ -18,9 +17,9 @@ function RouteView(props) {
   if (!currentRoute) {
     throw new Error('RouteView component requires a route prop');
   }
-  const FetchedComponent = getComponent(currentRoute, routeNodeName, routes); // getComponent may throw
+  const SelectedComponent = getComponent(currentRoute, routeNodeName, routes); // getComponent may throw
   // Add `{key: route.meta.id}` to props for a full unmount/mount
-  return createElement(FetchedComponent, {...passThroughProps, route});
+  return createElement(SelectedComponent, {...passThroughProps, route});
 }
 
 RouteView.displayName = 'RouteView';
@@ -33,8 +32,7 @@ RouteView.propTypes = {
 
 
 
-
-class ErrorBoundRouteView extends React.Component {
+class RouteViewErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
@@ -59,21 +57,27 @@ class ErrorBoundRouteView extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <h1>{this.props.errorMessage || 'Something went wrong.'}</h1>;
+      return <h1 style={this.props.errorStyle}>{this.props.errorMessage}</h1>;
     }
-    const {errorMessage, ...passThroughProps } = this.props;
-    return <RouteView {...passThroughProps} />
+    const {errorMessage, errorStyle, ...passThroughProps } = this.props;
+    return <RouteView {...passThroughProps} />;
   }
 }
 
-ErrorBoundRouteView.propTypes = {
+RouteViewErrorBoundary.propTypes = {
   routes: PropTypes.array.isRequired,
   routeNodeName: PropTypes.string.isRequired,
   route: PropTypes.object.isRequired,
-  errorMessage: PropTypes.string
+  errorMessage: PropTypes.string,
+  errorStyle: PropTypes.object
+};
+
+RouteViewErrorBoundary.defaultProps = {
+  errorMessage: 'Something went wrong.',
+  errorStyle: {color: 'rgb(217, 83, 79)'}
 };
 
 
-export default ErrorBoundRouteView;
+export default RouteViewErrorBoundary;
 
 
