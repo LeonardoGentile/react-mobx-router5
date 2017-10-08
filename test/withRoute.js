@@ -1,5 +1,4 @@
 import React from 'react';
-import {findRenderedComponentWithType} from 'react-addons-test-utils';
 import {expect} from 'chai';
 import {spy} from 'sinon';
 import {mount} from 'enzyme';
@@ -21,15 +20,15 @@ describe('withRoute HOC', () => {
 
   context('Mobx Provider/Inject', function() {
     it('should inject the routerStore in the ComponentWithRoute wrapper props', () => {
-      const tree = renderWithProvider(routerStore)(CompWithRoute);
-      const child = findRenderedComponentWithType(tree, CompWithRoute);
-      expect(child.wrappedInstance.props.routerStore).to.equal(routerStore);
+      const wrapper = renderWithProvider(routerStore)(CompWithRoute);
+      const child = wrapper.find(CompWithRoute);
+      expect(child.instance().wrappedInstance.props.routerStore).to.equal(routerStore);
     });
 
     it('should add the router instance into the injected routerStore', () => {
-      const tree = renderWithProvider(routerStore)(CompWithRoute);
-      const child = findRenderedComponentWithType(tree, CompWithRoute);
-      expect(child.wrappedInstance.props.routerStore.router).to.equal(router);
+      const wrapper = renderWithProvider(routerStore)(CompWithRoute);
+      const child = wrapper.find(CompWithRoute);
+      expect(child.instance().wrappedInstance.props.routerStore.router).to.equal(router);
     });
   });
 

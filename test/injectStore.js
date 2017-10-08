@@ -1,5 +1,5 @@
-import { PropTypes } from 'react';
-import { findRenderedComponentWithType } from 'react-addons-test-utils';
+import PropTypes from 'prop-types';
+// import { findRenderedComponentWithType } from 'react-addons-test-utils';
 import { expect } from 'chai';
 import { mobxPlugin, RouterStore } from 'mobx-router5';
 import { inject } from 'mobx-react';
@@ -20,7 +20,7 @@ describe('Mobx-react Provider/Inject-ing routerStore', () => {
 
   it('should not add the routerStore to the child props', () => {
     const tree = renderWithProvider(routerStore)(Child);
-    const child = findRenderedComponentWithType(tree, Child);
+    const child = tree.find(Child);
     expect(child.props.routerStore).to.be.undefined;
   });
 
@@ -28,18 +28,18 @@ describe('Mobx-react Provider/Inject-ing routerStore', () => {
     ChildWithInjectedStore.wrappedComponent.propTypes = {
       routerStore: PropTypes.object.isRequired
     };
-    const tree = renderWithProvider(routerStore)(ChildWithInjectedStore);
-    const child = findRenderedComponentWithType(tree, ChildWithInjectedStore);
-    expect(child.wrappedInstance.props.routerStore).to.equal(routerStore);
+    const wrapper = renderWithProvider(routerStore)(ChildWithInjectedStore);
+    const child = wrapper.find(ChildWithInjectedStore);
+    expect(child.instance().wrappedInstance.props.routerStore).to.equal(routerStore);
   });
 
   it('should not add the router instance to the injected routerStore prop when mobXPlugin is not used', () => {
     ChildWithInjectedStore.wrappedComponent.propTypes = {
       routerStore: PropTypes.object.isRequired
     };
-    const tree = renderWithProvider(routerStore)(ChildWithInjectedStore);
-    const child = findRenderedComponentWithType(tree, ChildWithInjectedStore);
-    expect(child.wrappedInstance.props.routerStore.router).to.be.null;
+    const wrapper = renderWithProvider(routerStore)(ChildWithInjectedStore);
+    const child = wrapper.find(ChildWithInjectedStore);
+    expect(child.instance().wrappedInstance.props.routerStore.router).to.be.null;
   });
 
   it('should add the router instance to the injected routerStore prop when mobxPlugin is used', () => {
@@ -47,8 +47,8 @@ describe('Mobx-react Provider/Inject-ing routerStore', () => {
       routerStore: PropTypes.object.isRequired
     };
     router.usePlugin(mobxPlugin(routerStore));
-    const tree = renderWithProvider(routerStore)(ChildWithInjectedStore);
-    const child = findRenderedComponentWithType(tree, ChildWithInjectedStore);
-    expect(child.wrappedInstance.props.routerStore.router).to.equal(router);
+    const wrapper = renderWithProvider(routerStore)(ChildWithInjectedStore);
+    const child = wrapper.find(ChildWithInjectedStore);
+    expect(child.instance().wrappedInstance.props.routerStore.router).to.equal(router);
   });
 });

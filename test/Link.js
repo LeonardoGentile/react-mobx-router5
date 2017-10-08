@@ -1,5 +1,4 @@
 import React from 'react';
-import {findRenderedComponentWithType} from 'react-addons-test-utils';
 import {expect} from 'chai';
 import {spy} from 'sinon';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
@@ -18,9 +17,9 @@ describe('Link component', () => {
   });
 
   it('should inject the routerStore in the Link wrapper', () => {
-    const tree = renderWithProvider(routerStore)(Link);
-    const child = findRenderedComponentWithType(tree, Link);
-    expect(child.wrappedInstance.props.routerStore).to.equal(routerStore);
+    const wrapper = renderWithProvider(routerStore)(Link); //TOFIX, tree in undefined
+    const child = wrapper.find(Link);
+    expect(child.instance().wrappedInstance.props.routerStore).to.equal(routerStore);
   });
 
   it('should throw an exception when routerStore is not injected', () => {
