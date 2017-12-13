@@ -1,7 +1,7 @@
 import {Component, createElement} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName, ifNot} from './utils';
-import {autorun, computed, toJS} from 'mobx';
+import {reaction, computed, toJS} from 'mobx';
 import {inject} from 'mobx-react';
 
 
@@ -32,25 +32,28 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
         };
       }
 
-      // Compute a new observable used by autorun
+      // Compute a new observable used by reaction
       @computed get isIntersection() {
         return this.routerStore.intersectionNode === this.nodeName;
       }
 
       componentDidMount() {
-        this.autorunDisposer = autorun(() => {
-          // Change state only if this is the correct "transition node" for the current transition
-          // This will re-render this component and so the wrapped RouteSegment component
-          if (this.isIntersection) {
-            this.setState({
-              route: this.routerStore.route
-            });
+        // Change state only if this is the correct "transition node" for the current transition
+        // This will re-render this component and so the wrapped RouteSegment component
+        this.reactionDisposer = reaction(
+          () => this.isIntersection,
+          (intersection) =>  {
+            if (intersection) {
+              this.setState({ 
+                route: this.routerStore.route 
+              });
+            }
           }
-        });
+        );
       }
 
       componentWillUnmount() {
-        this.autorunDisposer();
+        this.reactionDisposer();
       }
 
       render() {
