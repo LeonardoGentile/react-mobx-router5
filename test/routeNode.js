@@ -19,11 +19,11 @@ describe('routeNode hoc', () => {
     NodeComp = routeNode('')(FnComp);
   });
 
-  context('Exceptions', function () {
+  context('Exceptions', function() {
 
     it('should throw an error if routerStore is not passed/injected into the component', () => {
       const renderComp = () => mount(
-        <NodeComp />
+        <NodeComp/>
       );
       // It will be mobx-react to throw, not my comp
       expect(renderComp).to.throw();
@@ -32,7 +32,7 @@ describe('routeNode hoc', () => {
     // NOTE: This will also invalidates propTypes
     it('should throw an error if routerStore is passed but empty/null', () => {
       const renderComp = () => mount(
-        <NodeComp routerStore={null} />
+        <NodeComp routerStore={null}/>
       );
       expect(renderComp).to.throw('[react-mobx-router5][routeNode] missing routerStore');
     });
@@ -41,38 +41,38 @@ describe('routeNode hoc', () => {
       router = createTestRouter();
       routerStore = new RouterStore();
       const renderComp = () => mount(
-        <NodeComp routerStore={routerStore} />
+        <NodeComp routerStore={routerStore}/>
       );
       expect(renderComp).to.throw('[react-mobx-router5][routeNode] missing mobx plugin');
     });
   });
 
-  context('Wrapper component (RouteNode)', function () {
+  context('Wrapper component (RouteNode)', function() {
     it('should receive the routerStore prop (and router instance)', () => {
       const output = mount(
-        <NodeComp routerStore={routerStore} />
+        <NodeComp routerStore={routerStore}/>
       );
       expect(output.instance().wrappedInstance.props.routerStore.router).to.equal(router);
     });
   });
 
-  context('Wrapped component (RouteComponent)', function () {
+  context('Wrapped component (RouteComponent)', function() {
 
     it('should receive props: `routerStore`, `route`(observable) and `plainRoute` (non-observable) ', () => {
-      const SegmentCompSpy= spy(FnComp);
+      const SegmentCompSpy = spy(FnComp);
       NodeComp = routeNode('')(SegmentCompSpy);
       router.addNode('home', '/home');
       router.addNode('section', '/section');
       router.setOption('defaultRoute', 'home');
-      router.start('home', function () {
+      router.start('home', function() {
         const previousRoute = router.getState();
         navigateToSection(previousRoute);
       });
 
       function navigateToSection(previousRoute) {
-        router.navigate('section', {}, {}, function () {
+        router.navigate('section', {}, {}, function() {
           mount(
-            <NodeComp routerStore={routerStore} />
+            <NodeComp routerStore={routerStore}/>
           );
           expect(SegmentCompSpy).to.have.been.calledWithMatch(
             {

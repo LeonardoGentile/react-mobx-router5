@@ -19,8 +19,8 @@ Child.displayName = 'Child';
 export {Child};
 
 
-export const createTestRouter = () => {
-  return createRouter()
+export const createTestRouter = (routes=null) => {
+  return createRouter(routes)
     .usePlugin(browserPlugin());
 };
 
