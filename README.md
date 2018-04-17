@@ -678,6 +678,7 @@ Check the [doc](https://github.com/oliviertassinari/babel-plugin-transform-react
 
 ## Contributing
 PR, suggestions and help is appreciated, please make sure to read the [CONTRIBUTING.md](./CONTRIBUTING.md) file.
+For development a version of node >=8.11 is needed as some dev packages require it (for example semantic-release), see `.nvmrc`
 
 ## Acknowledgments
 
