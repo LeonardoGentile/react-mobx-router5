@@ -70,7 +70,7 @@
     "cheerio": "1.0.0-rc.2",
     "commitizen": "2.9.6",
     "coveralls": "^2.11.14",
-    "cz-conventional-changelog": "2.0.0",
+    "cz-conventional-changelog": "2.1.0",
     "del": "^2.2.2",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-16": "1.0.1",
@@ -90,10 +90,11 @@
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "router5": "^5.0.0",
-    "semantic-release": "^6.3.6",
-    "semantic-release-conventional-commits": "1.0.2",
+    "semantic-release": "^15.1.7",
+    "semantic-release-conventional-commits": "2.0.0",
     "sinon": "^2.0.0-pre.3",
-    "sinon-chai": "^2.9.0"
+    "sinon-chai": "^2.9.0",
+    "travis-deploy-once": "4.4.1"
   },
   "peerDependencies": {
     "react": "^16.0.0",
@@ -112,7 +113,8 @@
     "build": "node tools/build",
     "publish:docs": "easystatic deploy docs --repo LeonardoGentile/react-mobx-router5",
     "start": "easystatic start docs",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "config": {
     "commitizen": {
