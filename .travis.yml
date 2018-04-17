@@ -9,9 +9,8 @@ branches:
 notifications:
   email: false
 node_js:
-  - '7'
+  - '8'
   - '6'
-  - '4'
 before_script:
   - npm prune
 script:
@@ -20,5 +19,5 @@ script:
   - npm run build
 after_success:
   - npm run coveralls
-  - npm run semantic-release
+  - npx travis-deploy-once "npx semantic-release"
 
