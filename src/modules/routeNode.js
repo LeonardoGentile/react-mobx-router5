@@ -33,15 +33,17 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
       }
 
       // Compute a new observable used by autorun
-      @computed get isIntersection() {
-        return this.routerStore.intersectionNode === this.nodeName;
+      @computed get shouldUpdate() {
+        const isIntersection = this.routerStore.intersectionNode === this.nodeName;
+        const isNodeToActivate = this.routerStore.toActivate.indexOf(this.nodeName) > -1;
+        return isIntersection || isNodeToActivate
       }
 
       componentDidMount() {
         this.autorunDisposer = autorun(() => {
           // Change state only if this is the correct "transition node" for the current transition
           // This will re-render this component and so the wrapped RouteSegment component
-          if (this.isIntersection) {
+          if (this.shouldUpdate) {
             this.setState({
               route: this.routerStore.route
             });
