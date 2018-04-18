@@ -77,7 +77,7 @@ describe('routeNode hoc', () => {
       const route = { name: 'd.h.l' }; // A route without component
 
       const RouteComp = (props) => (
-        <RouteView routes={routes} route={route} routeNodeName="d.h" errorMessage={'Ay, caramba!'} errorStyle={{color: 'rgb(200, 90, 34)', 'font-weight': 'bold' }}/>
+        <RouteView routes={routes} route={route} routeNodeName="d.h" errorMessage={'Ay, caramba!'} errorStyle={{color: 'rgb(200, 90, 34)', 'fontWeight': 'bold' }}/>
       );
 
       const renderedL = mount(
