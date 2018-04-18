@@ -22,10 +22,10 @@ They _observe_ the `mobx-router5` _observables_ and react when they change.
 ## Requirements
 
 - __react >= 16.0.0__. For React < 16.0.0 install "^4.0.0" version
-- __mobx >= 3.1.0__
-- __mobx-react >= 4.0.0__
+- __mobx >= 4.0.0__
+- __mobx-react >= 5.0.0__
 - __router5 >= 5.0.0__
-- __mobx-router5 >= 3.0.0__
+- __mobx-router5 >= 4.0.0__
 
 These are considered `peerDependencies` that means they should exist in your installation, you should install them yourself to make this plugin work. 
 The package won't install them as dependencies.
