@@ -106,7 +106,7 @@ describe('getComponent for current route and node', () => {
 
     it("should throw for node: 'd.h' ", () => {
       const getComp = () => getComponent('d.h.i', 'd.h', routes);
-      expect(getComp).to.throw('route segment does not have a component field');
+      expect(getComp).to.throw("Route segment 'i' does not have a component field");
     });
   });
 
