@@ -1,9 +1,8 @@
 import {Component, createElement} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName, ifNot} from './utils';
-import {autorun, computed, toJS} from 'mobx';
+import {autorun, toJS} from 'mobx';
 import {inject} from 'mobx-react';
-
 
 function routeNode(nodeName, storeName = 'routerStore') { // route node Name, routerStore name
   return function routeNodeWrapper(RouteComponent) { // component Name
@@ -30,18 +29,15 @@ function routeNode(nodeName, storeName = 'routerStore') { // route node Name, ro
         this.state = {
           route: this.routerStore.route
         };
-      }
 
-      // Compute a new observable used by autorun
-      @computed get isIntersection() {
-        return this.routerStore.intersectionNode === this.nodeName;
+        this.shouldUpdateNode = this.routerStore.shouldUpdateNodeFactory(this.nodeName);
       }
 
       componentDidMount() {
         this.autorunDisposer = autorun(() => {
-          // Change state only if this is the correct "transition node" for the current transition
+          // Change state only if this should update
           // This will re-render this component and so the wrapped RouteSegment component
-          if (this.isIntersection) {
+          if (this.shouldUpdateNode.get()) {
             this.setState({
               route: this.routerStore.route
             });
