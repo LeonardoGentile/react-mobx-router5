@@ -24,7 +24,7 @@ They _observe_ the `mobx-router5` _observables_ and react when they change.
 - __react >= 16.0.0__. For React < 16.0.0 install "^4.0.0" version
 - __mobx >= 4.0.0__
 - __mobx-react >= 5.0.0__
-- __router5 >= 5.0.0__
+- __router5 >= 6.1.2__
 - __mobx-router5 >= 4.0.0__
 
 These are considered `peerDependencies` that means they should exist in your installation, you should install them yourself to make this plugin work. 

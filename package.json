@@ -101,7 +101,7 @@
     "mobx": "^4.0.0",
     "mobx-react": "^5.0.0",
     "mobx-router5": "^4.1.0",
-    "router5": ">= 6.1.0 < 7.0.0"
+    "router5": ">= 6.1.2 < 7.0.0"
   },
   "scripts": {
     "commit": "git-cz",
