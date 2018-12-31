@@ -1,14 +1,14 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Mocha utils" type="mocha-javascript-test-runner" factoryName="Mocha" singleton="false">
+  <configuration default="false" name="Mocha utils" type="mocha-javascript-test-runner" singleton="false">
     <node-interpreter>project</node-interpreter>
     <node-options />
+    <mocha-package>$PROJECT_DIR$/node_modules/mocha</mocha-package>
     <working-directory>$PROJECT_DIR$</working-directory>
     <pass-parent-env>true</pass-parent-env>
-    <envs />
     <ui>bdd</ui>
     <extra-mocha-options>--compilers js:babel-register --recursive --require ./test/utils/test-setup.js</extra-mocha-options>
     <test-kind>TEST_FILE</test-kind>
     <test-file>$PROJECT_DIR$/test/utils.js</test-file>
-    <method />
+    <method v="2" />
   </configuration>
 </component>
