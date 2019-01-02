@@ -1,8 +1,12 @@
 {
   "env": {
-    "mocha": true
+    "jest": true
   },
   "plugins": ["import"],
+  
+  "globals": {
+    "chaiExpect": true
+  },
   "rules": {
     "import/no-extraneous-dependencies": [
       "error",
