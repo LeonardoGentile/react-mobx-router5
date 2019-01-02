@@ -1,5 +1,4 @@
 import React from 'react';
-import {spy} from 'sinon';
 import {mount} from 'enzyme';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter, FnComp, renderWithProvider, renderWithStore} from './utils/test-utils';

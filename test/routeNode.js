@@ -3,8 +3,6 @@ import {mount} from 'enzyme';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter, FnComp} from './utils/test-utils';
 import routeNode from '../src/modules/routeNode';
-import {spy} from 'sinon';
-
 
 describe('routeNode hoc', () => {
   let router;
