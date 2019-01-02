@@ -11,6 +11,8 @@ chai.use(sinonChai);
 chai.use(chaiEnzyme());
 
 
+global.chaiExpect = chai.expect;
+
 // Setup for enzyme: http://airbnb.io/enzyme/docs/guides/jsdom.html
 const doc = jsdom.jsdom('<!doctype html><html><body></body></html>', {
   url: 'http://localhost'

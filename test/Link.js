@@ -1,6 +1,4 @@
 import React from 'react';
-import {expect} from 'chai';
-import {spy} from 'sinon';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter, renderWithProvider} from './utils/test-utils';
 import {mount, shallow} from 'enzyme';
@@ -16,30 +14,30 @@ describe('Link component', () => {
     router.usePlugin(mobxPlugin(routerStore));
   });
 
-  it('should inject the routerStore in the Link wrapper', () => {
+  test('should inject the routerStore in the Link wrapper', () => {
     const wrapper = renderWithProvider(routerStore)(Link); //TOFIX, tree in undefined
     const child = wrapper.find(Link);
-    expect(child.instance().wrappedInstance.props.routerStore).to.equal(routerStore);
+    expect(child.instance().wrappedInstance.props.routerStore).toBe(routerStore);
   });
 
-  it('should throw an exception when routerStore is not injected', () => {
+  test('should throw an exception when routerStore is not injected', () => {
     const renderTreeFn = () => shallow(
       <Link />
     );
-    expect(renderTreeFn).to.throw();
+    expect(renderTreeFn).toThrowError();
   });
 
-   it('should render an hyperlink element with href', () => {
+   test('should render an hyperlink element with href', () => {
     router.addNode('home', '/home');
     router.setOption('defaultRoute', 'home');
     router.start();
     const output = mount(
       <Link routerStore={routerStore} routeName={'home'}/>
     );
-    expect(output.find('a')).to.have.attr('href', '/home');
+    chaiExpect(output.find('a')).to.have.attr('href', '/home');
   });
 
-  it('should add an active className to the hyperlink', () => {
+  test('should add an active className to the hyperlink', () => {
     router.addNode('home', '/home');
     router.addNode('section', '/section');
     router.setOption('defaultRoute', 'home');
@@ -47,10 +45,10 @@ describe('Link component', () => {
     const output = mount(
       <Link routerStore={routerStore} routeName={'home'} className="just-a-class-name" />
     );
-    expect(output.find('a')).to.have.attr('class', 'just-a-class-name active');
+    chaiExpect(output.find('a')).to.have.attr('class', 'just-a-class-name active');
   });
 
-  it('should not add an active className to the hyperlink', () => {
+  test('should not add an active className to the hyperlink', () => {
     router.setOption('defaultRoute', 'section');
     router.addNode('home', '/home');
     router.addNode('section', '/section');
@@ -58,45 +56,45 @@ describe('Link component', () => {
     const output = mount(
       <Link routerStore={routerStore} routeName={'home'} className="just-a-class-name" />
     );
-    expect(output.find('a')).to.have.className('just-a-class-name');
+    chaiExpect(output.find('a')).to.have.className('just-a-class-name');
   });
 
-  it('should call the onClick cb when the hyperlink is clicked', () => {
+  test('should call the onClick cb when the hyperlink is clicked', () => {
     router.start();
-    const onClickSpy = spy();
+    const onClickSpy = jest.fn();
     const output = mount(
       <Link routerStore={routerStore} onClick={onClickSpy} />
     );
     output.find('a').simulate('click');
-    expect(onClickSpy).to.have.been.calledOnce;
+    expect(onClickSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should call the onClick cb instead of navigation when routeName is also passed', () => {
+  test('should call the onClick cb instead of navigation when routeName is also passed', () => {
     router.addNode('home', '/home');
     router.start();
-    const onClickSpy = spy();
-    const navigateSpy = spy(router, 'navigate');
+    const onClickSpy = jest.fn();
+    const navigateSpy = jest.fn(router, 'navigate');
     const output = mount(
       <Link routerStore={routerStore} onClick={onClickSpy} routeName={'home'}/>
     );
     output.find('a').simulate('click');
-    expect(onClickSpy).to.have.been.calledOnce;
-    expect(navigateSpy).to.have.not.been.called;
+    expect(onClickSpy).toHaveBeenCalledTimes(1);
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
-  it('should call router `navigate` when routeName is also passed and hyperlink clicked', () => {
+  test('should call router `navigate` when routeName is also passed and hyperlink clicked', () => {
     router.addNode('home', '/home');
     router.addNode('section', '/section');
     router.start();
-    const onClickSpy = spy();
-    const navigateSpy = spy(router, 'navigate');
+    const onClickSpy = jest.fn();
+    const navigateSpy = jest.spyOn(router, 'navigate');
     const output = mount(
       <Link routerStore={routerStore} routeName={'section'}/>
     );
     output.find('a').simulate('click', {button:0});
-    expect(onClickSpy).to.have.not.been.called;
-    expect(navigateSpy).to.have.been.calledOnce;
-    expect(navigateSpy).to.have.been.calledWith('section', {}, {});
+    expect(onClickSpy).not.toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledTimes(1);
+    expect(navigateSpy).toHaveBeenCalledWith('section', {}, {});
   });
 
 });

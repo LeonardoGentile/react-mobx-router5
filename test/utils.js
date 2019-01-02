@@ -1,5 +1,4 @@
 import {getComponent} from '../src/modules/utils';
-import {expect} from 'chai';
 
 describe('getComponent for current route and node', () => {
   let routes;
@@ -16,7 +15,7 @@ describe('getComponent for current route and node', () => {
       L = {name: 'l'},
       M = {name: 'm'};
 
-  before(function () {
+  beforeAll(function () {
     routes = [
       { name: 'a', path: '/a', component: A },
       { name: 'b', path: '/b', component: B },
@@ -37,76 +36,76 @@ describe('getComponent for current route and node', () => {
 
   // Nodes are: '', 'd', 'd.h'
 
-  context("Route: 'a' ", function() {
+  describe("Route: 'a' ", function() {
 
-    it("should get the component for node: '' ", () => {
+    test("should get the component for node: '' ", () => {
       const comp = getComponent('a', '', routes);
-      expect(comp).to.equal(A);
+      expect(comp).toBe(A);
     });
 
-    it("should throw for node: 'd' ", () => {
+    test("should throw for node: 'd' ", () => {
       const getComp = () => getComponent('a', 'd', routes);
-      expect(getComp).to.throw('could not find route or component');
+      expect(getComp).toThrowError('could not find route or component');
     });
 
-    it("should throw for node: 'd.h' ", () => {
+    test("should throw for node: 'd.h' ", () => {
       const getComp = () => getComponent('a', 'd.h', routes);
-      expect(getComp).to.throw('could not find route or component');
+      expect(getComp).toThrowError('could not find route or component');
     });
   });
 
-  context("Route: 'd.f' ", function() {
-    it("should get the component for node: '' ", () => {
+  describe("Route: 'd.f' ", function() {
+    test("should get the component for node: '' ", () => {
       const comp = getComponent('d.f', '', routes);
-      expect(comp).to.equal(D);
+      expect(comp).toBe(D);
     });
 
-    it("should get the component for node: 'd' ", () => {
+    test("should get the component for node: 'd' ", () => {
       const comp = getComponent('d.f', 'd', routes);
-      expect(comp).to.equal(F);
+      expect(comp).toBe(F);
     });
 
-    it("should get the component for node: 'd.h' ", () => {
+    test("should get the component for node: 'd.h' ", () => {
       const getComp = () => getComponent('d.f', 'd.h', routes);
-      expect(getComp).to.throw('could not find route or component');
+      expect(getComp).toThrowError('could not find route or component');
     });
 
   });
 
-  context("Route: 'd.h.m' ", function() {
+  describe("Route: 'd.h.m' ", function() {
 
-    it("should get the component for node: '' ", () => {
+    test("should get the component for node: '' ", () => {
       const comp = getComponent('d.h.m', '', routes);
-      expect(comp).to.equal(D);
+      expect(comp).toBe(D);
     });
 
-    it("should get the component for node: 'd' ", () => {
+    test("should get the component for node: 'd' ", () => {
       const comp = getComponent('d.h.m', 'd', routes);
-      expect(comp).to.equal(H);
+      expect(comp).toBe(H);
     });
 
-    it("should get the component for node: 'd.h' ", () => {
+    test("should get the component for node: 'd.h' ", () => {
       const comp = getComponent('d.h.m', 'd.h', routes);
-      expect(comp).to.equal(M);
+      expect(comp).toBe(M);
     });
 
   });
 
-  context("Component undefined for route: 'd.h.i' ", function() {
+  describe("Component undefined for route: 'd.h.i' ", function() {
 
-    it("should get the component for node: '' ", () => {
+    test("should get the component for node: '' ", () => {
       const comp = getComponent('d.h.i', '', routes);
-      expect(comp).to.equal(D);
+      expect(comp).toBe(D);
     });
 
-    it("should get the component for node: 'd' ", () => {
+    test("should get the component for node: 'd' ", () => {
       const comp = getComponent('d.h.i', 'd', routes);
-      expect(comp).to.equal(H);
+      expect(comp).toBe(H);
     });
 
-    it("should throw for node: 'd.h' ", () => {
+    test("should throw for node: 'd.h' ", () => {
       const getComp = () => getComponent('d.h.i', 'd.h', routes);
-      expect(getComp).to.throw("Route segment 'i' does not have a component field");
+      expect(getComp).toThrowError("Route segment 'i' does not have a component field");
     });
   });
 

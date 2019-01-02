@@ -1,5 +1,4 @@
 import React from 'react';
-import {expect} from 'chai';
 import {mount} from 'enzyme';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter} from './utils/test-utils';
@@ -19,7 +18,7 @@ describe('routeNode hoc', () => {
   const MComp = (props) => <div id="m-comp"/>;
   MComp.displayName = 'MComp';
 
-  before(function () {
+  beforeAll(function () {
     routes = [
       {name: 'a', path: '/a'},
       {name: 'b', path: '/b'},
@@ -44,9 +43,9 @@ describe('routeNode hoc', () => {
 
   });
 
-  context('Exceptions', function () {
+  describe('Exceptions', function () {
 
-    it('should throw when route prop is not passed', () => {
+    test('should throw when route prop is not passed', () => {
       const RouteComp = (props) => (
         <RouteView routes={routes}/>
       );
@@ -54,10 +53,10 @@ describe('routeNode hoc', () => {
       const renderComp = () => mount(
         <RouteComp />
       );
-      expect(renderComp).to.throw();
+      expect(renderComp).toThrowError();
     });
 
-    it('should render the default error message with default color when an exception occurs', () => {
+    test('should render the default error message with default color when an exception occurs', () => {
       const route = { name: 'd.h.l' }; // A route without component
 
       const RouteComp = (props) => (
@@ -68,12 +67,12 @@ describe('routeNode hoc', () => {
         <RouteComp />
       );
 
-      expect(renderedL.find('h1')).to.have.text('Something went wrong.');
-      expect(renderedL.find('h1')).to.have.style('color', 'rgb(217, 83, 79)');
+      chaiExpect(renderedL.find('h1')).to.have.text('Something went wrong.');
+      chaiExpect(renderedL.find('h1')).to.have.style('color', 'rgb(217, 83, 79)');
 
     });
 
-    it('should render a custom error message with a custom style when an exception occurs', () => {
+    test('should render a custom error message with a custom style when an exception occurs', () => {
       const route = { name: 'd.h.l' }; // A route without component
 
       const RouteComp = (props) => (
@@ -84,18 +83,18 @@ describe('routeNode hoc', () => {
         <RouteComp />
       );
 
-      expect(renderedL.find('h1')).to.have.text('Ay, caramba!');
-      expect(renderedL.find('h1')).to.have.style('color', 'rgb(200, 90, 34)');
-      expect(renderedL.find('h1')).to.have.style('font-weight', 'bold');
+      chaiExpect(renderedL.find('h1')).to.have.text('Ay, caramba!');
+      chaiExpect(renderedL.find('h1')).to.have.style('color', 'rgb(200, 90, 34)');
+      chaiExpect(renderedL.find('h1')).to.have.style('font-weight', 'bold');
 
     });
 
 
   });
 
-  context('Render the Component', function () {
+  describe('Render the Component', function () {
 
-    it('Find and Render the Component associated with the route d.h.m ', () => {
+    test('Find and Render the Component associated with the route d.h.m ', () => {
 
       const route = {
         name: 'd.h.m'
@@ -104,17 +103,17 @@ describe('routeNode hoc', () => {
       const renderedD = mount(
         <RouteView routes={routes} route={route} routeNodeName=""/>
       );
-      expect(renderedD.find('div')).to.have.attr('id', 'd-comp');
+      chaiExpect(renderedD.find('div')).to.have.attr('id', 'd-comp');
 
       const renderedH = mount(
         <RouteView routes={routes} route={route} routeNodeName="d"/>
       );
-      expect(renderedH.find('div')).to.have.attr('id', 'h-comp');
+      chaiExpect(renderedH.find('div')).to.have.attr('id', 'h-comp');
 
       const renderedM = mount(
         <RouteView routes={routes} route={route} routeNodeName="d.h"/>
       );
-      expect(renderedM.find('div')).to.have.attr('id', 'm-comp');
+      chaiExpect(renderedM.find('div')).to.have.attr('id', 'm-comp');
 
     });
 

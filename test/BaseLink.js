@@ -1,5 +1,4 @@
 import React from 'react';
-import {expect} from 'chai';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter} from './utils/test-utils';
 import {shallow} from 'enzyme';
@@ -16,26 +15,31 @@ describe('BaseLink component', () => {
     router.usePlugin(mobxPlugin(routerStore));
   });
 
-  context('Exceptions', function() {
-    it('should not throw an error if `routeName`, `router` and `onClick` props are missing', () => {
-      const renderTreeFn = () => shallow(
-        <BaseLink />
-      );
-      expect(renderTreeFn).to.not.throw();
-    });
-
-    it('should not throw an error if only `onClick` prop is passed', () => {
-      function cb(e){
-        e.preventDefault();
-        return null;
+  describe('Exceptions', function() {
+    test('should not throw an error if `routeName`, `router` and `onClick` props are missing',
+      () => {
+        const renderTreeFn = () => shallow(
+          <BaseLink/>
+        );
+        expect(renderTreeFn).not.toThrowError();
       }
-      const renderTreeFn = () => shallow(
-        <BaseLink onClick={cb}/>
-      );
-      expect(renderTreeFn).to.not.throw();
-    });
+    );
 
-    it('should throw an error if prop `routeName` passed but not props: `router` or `routerStore`', () => {
+    test('should not throw an error if only `onClick` prop is passed',
+      () => {
+        function cb(e) {
+          e.preventDefault();
+          return null;
+        }
+
+        const renderTreeFn = () => shallow(
+          <BaseLink onClick={cb}/>
+        );
+        expect(renderTreeFn).not.toThrowError();
+      }
+    );
+
+    test('should throw an error if prop `routeName` passed but not props: `router` or `routerStore`', () => {
       router = createRouter();
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');
@@ -43,10 +47,10 @@ describe('BaseLink component', () => {
       const renderTreeFn = () => shallow(
         <BaseLink routeName={'home'}/>
       );
-      expect(renderTreeFn).to.throw('[react-mobx-router5][BaseLink] missing router instance');
+      expect(renderTreeFn).toThrowError('[react-mobx-router5][BaseLink] missing router instance');
     });
 
-    it('should not throw an error if props `routeName` and `router` are passed', () => {
+    test('should not throw an error if props `routeName` and `router` are passed', () => {
       routerStore = new RouterStore();
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');
@@ -54,48 +58,50 @@ describe('BaseLink component', () => {
       const renderTreeFn = () => shallow(
         <BaseLink routeName={'home'} router={router}/>
       );
-      expect(renderTreeFn).to.not.throw();
+      expect(renderTreeFn).not.toThrowError();
     });
 
-    it('should not throw an error if props `routeName` and `routerStore` defined', () => {
+    test('should not throw an error if props `routeName` and `routerStore` defined', () => {
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');
       router.start();
       const renderTreeFn = () => shallow(
         <BaseLink routeName={'home'} routerStore={routerStore}/>
       );
-      expect(renderTreeFn).to.not.throw();
+      expect(renderTreeFn).not.toThrowError();
     });
 
-    it('should throw an error if props passed: `router/routerStore` && `routeName` but `browserPlugin` is not used', () => {
+    test('should throw an error if props passed: `router/routerStore` && `routeName` but `browserPlugin` is not used', () => {
       router = createRouter();
       const renderTreeFn = () => shallow(
-        <BaseLink routeName={'home'} router={router} />
+        <BaseLink routeName={'home'} router={router}/>
       );
-      expect(renderTreeFn).to.throw('[react-mobx-router5][BaseLink] missing browser plugin, href might build incorrectly');
+      expect(renderTreeFn).toThrowError(
+        '[react-mobx-router5][BaseLink] missing browser plugin, href might build incorrectly'
+      );
     });
 
   });
 
-  context('Hyperlink', function() {
-    it('should render an hyperlink element', () => {
+  describe('Hyperlink', function() {
+    test('should render an hyperlink element', () => {
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');
       router.start();
       const output = shallow(
         <BaseLink router={router} routeName={'home'}/>
       );
-      expect(output.find('a')).to.have.attr('href', '/home');
+      chaiExpect(output.find('a')).to.have.attr('href', '/home');
     });
 
-    it('should not have an active className', () => {
+    test('should not have an active className', () => {
       router.addNode('home', '/home');
       router.setOption('defaultRoute', 'home');
       router.start();
       const output = shallow(
-        <BaseLink router={router} routeName={'home'} className="just-a-class-name" />
+        <BaseLink router={router} routeName={'home'} className="just-a-class-name"/>
       );
-      expect(output.find('a')).to.have.attr('class', 'just-a-class-name');
+      chaiExpect(output.find('a')).to.have.attr('class', 'just-a-class-name');
     });
   });
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import {expect} from 'chai';
 import {mount} from 'enzyme';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter, FnComp} from './utils/test-utils';
@@ -19,47 +18,47 @@ describe('routeNode hoc', () => {
     NodeComp = routeNode('')(FnComp);
   });
 
-  context('Exceptions', function() {
+  describe('Exceptions', function() {
 
-    it('should throw an error if routerStore is not passed/injected into the component', () => {
+    test('should throw an error if routerStore is not passed/injected into the component', () => {
       const renderComp = () => mount(
         <NodeComp/>
       );
       // It will be mobx-react to throw, not my comp
-      expect(renderComp).to.throw();
+      expect(renderComp).toThrowError();
     });
 
     // NOTE: This will also invalidates propTypes
-    it('should throw an error if routerStore is passed but empty/null', () => {
+    test('should throw an error if routerStore is passed but empty/null', () => {
       const renderComp = () => mount(
         <NodeComp routerStore={null}/>
       );
-      expect(renderComp).to.throw('[react-mobx-router5][routeNode] missing routerStore');
+      expect(renderComp).toThrowError('[react-mobx-router5][routeNode] missing routerStore');
     });
 
-    it('should throw an error if router5-mobx plugin is not used', () => {
+    test('should throw an error if router5-mobx plugin is not used', () => {
       router = createTestRouter();
       routerStore = new RouterStore();
       const renderComp = () => mount(
         <NodeComp routerStore={routerStore}/>
       );
-      expect(renderComp).to.throw('[react-mobx-router5][routeNode] missing mobx plugin');
+      expect(renderComp).toThrowError('[react-mobx-router5][routeNode] missing mobx plugin');
     });
   });
 
-  context('Wrapper component (RouteNode)', function() {
-    it('should receive the routerStore prop (and router instance)', () => {
+  describe('Wrapper component (RouteNode)', function() {
+    test('should receive the routerStore prop (and router instance)', () => {
       const output = mount(
         <NodeComp routerStore={routerStore}/>
       );
-      expect(output.instance().wrappedInstance.props.routerStore.router).to.equal(router);
+      expect(output.instance().wrappedInstance.props.routerStore.router).toBe(router);
     });
   });
 
-  context('Wrapped component (RouteComponent)', function() {
+  describe('Wrapped component (RouteComponent)', function() {
 
-    it('should receive props: `routerStore`, `route`(observable) and `plainRoute` (non-observable) ', () => {
-      const SegmentCompSpy = spy(FnComp);
+    test('should receive props: `routerStore`, `route`(observable) and `plainRoute` (non-observable) ', () => {
+      const SegmentCompSpy = jest.fn(FnComp);
       NodeComp = routeNode('')(SegmentCompSpy);
       router.addNode('home', '/home');
       router.addNode('section', '/section');
@@ -71,20 +70,25 @@ describe('routeNode hoc', () => {
 
       function navigateToSection(previousRoute) {
         router.navigate('section', {}, {}, function() {
+
           mount(
             <NodeComp routerStore={routerStore}/>
           );
-          expect(SegmentCompSpy).to.have.been.calledWithMatch(
-            {
+
+          expect(SegmentCompSpy).toHaveBeenCalledWith(
+            expect.objectContaining({
               routerStore: routerStore,
               route: routerStore.route,
               plainRoute: router.getState()
-            }
+            }),
+            {}
           );
+
         });
       }
 
     });
+
   });
 
 });
