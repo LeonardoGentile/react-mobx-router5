@@ -59,9 +59,9 @@ class RouteViewErrorBoundary extends Component {
     const {errorMessage, errorStyle, errorViewComponent, errorViewComponentProps, ...passThroughProps } = this.props;
     if (this.state.hasError) {
       if (errorViewComponent) {
-        return createElement(errorViewComponent, errorViewComponentProps)
+        return createElement(errorViewComponent, errorViewComponentProps);
       }
-      return <h1 style={errorStyle}>{errorMessage}</h1>
+      return <h1 style={errorStyle}>{errorMessage}</h1>;
     }
     return <RouteView {...passThroughProps} />;
   }

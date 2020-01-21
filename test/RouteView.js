@@ -3,6 +3,7 @@ import {mount} from 'enzyme';
 import {mobxPlugin, RouterStore} from 'mobx-router5';
 import {createTestRouter} from './utils/test-utils';
 import RouteView from '../src/modules/RouteView';
+import PropTypes from 'prop-types';
 
 describe('routeNode hoc', () => {
   let router;
@@ -91,10 +92,13 @@ describe('routeNode hoc', () => {
 
     test('should render a custom component when an exception occurs', () => {
       const route = { name: 'd.h.l' }; // A route without component
-      const errorViewComponent = (props) => <div style={{color: 'rgb(0, 0, 0)'}}>{props.message}</div>
+      const errorViewComponent = (props) => <div style={{color: 'rgb(0, 0, 0)'}}>{props.message}</div>;
+      errorViewComponent.propTypes = {
+        message: PropTypes.string
+      };
 
       const RouteComp = (props) => (
-        <RouteView routes={routes} route={route} routeNodeName="d.h" errorMessage={''}  errorViewComponent={errorViewComponent} errorViewComponentProps={{message : "My custom component"}} />
+        <RouteView routes={routes} route={route} routeNodeName="d.h" errorMessage={''}  errorViewComponent={errorViewComponent} errorViewComponentProps={{message : 'My custom component'}} />
       );
 
       const renderedL = mount(
