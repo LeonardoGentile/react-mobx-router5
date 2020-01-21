@@ -56,10 +56,13 @@ class RouteViewErrorBoundary extends Component {
   }
 
   render() {
+    const {errorMessage, errorStyle, errorViewComponent, errorViewComponentProps, ...passThroughProps } = this.props;
     if (this.state.hasError) {
-      return <h1 style={this.props.errorStyle}>{this.props.errorMessage}</h1>;
+      if (errorViewComponent) {
+        return createElement(errorViewComponent, errorViewComponentProps)
+      }
+      return <h1 style={errorStyle}>{errorMessage}</h1>
     }
-    const {errorMessage, errorStyle, ...passThroughProps } = this.props;
     return <RouteView {...passThroughProps} />;
   }
 }
@@ -69,7 +72,9 @@ RouteViewErrorBoundary.propTypes = {
   routeNodeName: PropTypes.string.isRequired,
   route: PropTypes.object.isRequired,
   errorMessage: PropTypes.string,
-  errorStyle: PropTypes.object
+  errorStyle: PropTypes.object,
+  errorViewComponent: PropTypes.node,
+  errorViewComponentProps: PropTypes.object
 };
 
 RouteViewErrorBoundary.defaultProps = {
